@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samadhan Kendra - Empowering Communities, Enabling Change</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* MODERN UI/UX COLOR PALETTE */
+            --primary: #34495E;
+            --primary-light: #5DADE2;
+            --primary-dark: #2C3E50;
+            --accent: #27AE60;
+            --accent-dark: #1E8449;
+            --bg: #FDFDFD;
+            --text: #34495E;
+            --text-light: #95A5A6;
+            --card-bg: #FFFFFF;
+            --footer-bg: var(--primary-dark);
+            --header-bg: #FFFFFF;
+
+            /* Shadow Variables */
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.10);
+            --shadow-strong: rgba(0, 0, 0, 0.18);
+
+            --border-radius-soft: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            min-height: 100vh; /* Ensure body takes full height for scroll-to-top to work if no content */
+            position: relative; /* For scroll-to-top positioning */
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--header-bg);
+            color: var(--primary);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .site-logo {
+            height: 60px;
+            width: auto;
+            vertical-align: middle;
+            filter: drop-shadow(0 2px 6px var(--shadow-medium));
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: inherit;
+        }
+
+        /* Desktop Navigation */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            position: relative;
+            margin-left: 25px;
+        }
+
+        nav ul li a:not(.header-cta-button) {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color var(--transition-speed) ease, transform 0.2s ease;
+            position: relative;
+            padding: 5px 0;
+            display: block;
+        }
+
+        nav ul li a:not(.header-cta-button)::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            display: block;
+            bottom: 0;
+            left: 50%;
+            background: var(--accent);
+            transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
+        }
+
+        nav ul li a:not(.header-cta-button):hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        nav ul li a:not(.header-cta-button):hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+            border-radius: var(--border-radius-soft);
+            min-width: 200px;
+            z-index: 1001;
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed) ease;
+        }
+
+        .nav-item-has-dropdown:hover > .dropdown-menu {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu li a {
+            color: var(--primary);
+            padding: 8px 18px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: var(--bg);
+            color: var(--accent);
+        }
+
+        /* Header CTA Button */
+        .header-cta-button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 8px var(--shadow-medium);
+            transition: all var(--transition-speed) ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 25px;
+        }
+
+        .header-cta-button:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 5px 12px var(--shadow-strong);
+        }
+
+        /* Mobile Navigation Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 28px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 2px;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            transition: all var(--transition-speed) ease;
+            border-radius: 2px;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-toggle.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* --- General Section Styling (for "Our Journey") --- */
+        .page-section {
+            padding: 60px 30px; /* Consistent padding */
+            text-align: center;
+            max-width: 1100px; /* Max width for content */
+            margin: 0 auto; /* Center the section */
+            background-color: var(--card-bg); /* Use card background for a subtle lift */
+            border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator */
+        }
+
+        .page-section h2 {
+            font-size: 2.5rem; /* Large, prominent heading */
+            font-weight: 800;
+            color: var(--primary); /* Use primary color for main headings */
+            margin-bottom: 30px; /* Space below heading */
+            position: relative;
+            display: inline-block; /* For the underline effect */
+        }
+
+        .page-section h2::after {
+            content: '';
+            position: absolute;
+            width: 60%; /* Underline width */
+            height: 3px; /* Underline thickness */
+            background: var(--accent); /* Accent color for underline */
+            bottom: -12px; /* Position below text */
+            left: 20%; /* Center the underline */
+            border-radius: 2px;
+        }
+
+        .page-section .journey-content p {
+            max-width: 800px;
+            margin: 20px auto; /* Added top/bottom margin for paragraphs */
+            font-size: 1.1rem;
+            color: var(--text);
+            line-height: 1.8;
+            padding: 0 15px; /* Added horizontal padding */
+            text-align: justify; /* Justify text for a cleaner look */
+        }
+
+        /* --- Scroll to Top Button --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px var(--shadow-medium);
+            transition: all var(--transition-speed) ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 12px var(--shadow-strong);
+        }
+
+        /* --- Responsive Adjustments --- */
+        /* Tablet and larger phones (up to 768px) */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            .header-left {
+                gap: 8px;
+            }
+
+            header .site-logo {
+                height: 50px;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--header-bg);
+                box-shadow: none;
+                padding: 80px 0 20px 0;
+                border-radius: 0;
+                opacity: 0;
+                transform: translateY(-100%);
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                display: flex;
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .nav-menu ul {
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+            }
+
+            .nav-menu ul li {
+                margin: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-menu li a:not(.header-cta-button) {
+                padding: 12px 20px;
+                font-size: 1rem;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+
+            .nav-menu li:last-child a:not(.header-cta-button) {
+                 border-bottom: none;
+            }
+
+            .nav-item-has-dropdown > a {
+                 position: relative;
+            }
+            .nav-item-has-dropdown > a::after {
+                content: '\f107';
+                font-family: "RemixIcon";
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                transition: transform var(--transition-speed) ease;
+            }
+
+            .nav-item-has-dropdown.open > a::after {
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+            .dropdown-menu {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                background-color: rgba(0,0,0,0.02);
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dropdown-menu.active-mobile {
+                display: block;
+            }
+
+            .dropdown-menu li a {
+                padding: 10px 30px;
+                font-size: 0.95rem;
+                border-bottom: 1px solid rgba(0,0,0,0.03);
+            }
+            .dropdown-menu li:last-child a {
+                border-bottom: none;
+            }
+
+            .header-cta-button {
+                margin: 20px auto;
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .scroll-to-top {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+
+            .page-section {
+                padding: 40px 15px; /* Adjust padding for smaller screens */
+            }
+
+            .page-section h2 {
+                font-size: 1.8rem; /* Smaller font size for heading on mobile */
+                margin-bottom: 20px;
+            }
+
+            .page-section h2::after {
+                width: 50%;
+                left: 25%;
+                bottom: -8px;
+            }
+
+            .page-section .journey-content p {
+                font-size: 0.95rem; /* Smaller font size for content on mobile */
+                margin: 15px auto;
+            }
+        }
+
+        /* Smaller phones (up to 480px) */
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            header .site-logo {
+                height: 35px;
+            }
+
+            .nav-menu li a:not(.header-cta-button) {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+
+            .dropdown-menu li a {
+                font-size: 0.85rem;
+                padding: 8px 20px;
+            }
+
+            .page-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .page-section .journey-content p {
+                font-size: 0.9rem;
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <a href="#">
+                <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
+            </a>
+            <h1>Samadhan Kendra</h1>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="nav-item-has-dropdown">
+                    <a href="#about-us-section">About us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="ourJourney.html">Our Journey</a></li>
+                        <li><a href="ourvision.html">Vision</a></li>
+                        <li><a href="ourmission.html">Mission</a></li>
+                        <li><a href="managment.html">Management And Administrative structure</a></li>
+                    </ul>
+                </li>
+                <li><a href="programmes.html">Programs</a></li>
+                <li><a href="founder.html">Founder</a></li>
+                <li><a href="download.html">Download</a></li>
+                <li><a href="gallary.html">Gallary</a></li>
+                <li><a href="contact.html">Contact us</a></li>
+               <li class="nav-item-has-dropdown">
+                    <a href="#about-us-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
+                    <ul class="dropdown-menu">
+                             <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
+                        <li><a href="raghopur.html">RAGHOPUR</a></li>
+                        <li><a href="bidupur.html">BIDUPUR</a></li>
+                        <li><a href="admin.html">ADMIN</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Our Journey Section -->
+    <section class="page-section" id="our-journey-section">
+        <h2>Our Journey: Empowering Communities for Over Two Decades</h2>
+        <div class="journey-content">
+            <p>At Samadhan Kendra (SK), our founding philosophy is deeply rooted in the principle of holistic development—of the people, by the people, and for the people. Since our inception in 2004, we have passionately championed a democratic process of inclusive growth, focusing primarily on the poor and marginalized sections of society.</p>
+            <p>For twenty-one years now, SK, a registered Society under the Society Registration Act 1860, has remained unwavering in its commitment. We've dedicated ourselves to fostering sustainable development initiatives that directly translate into tangible improvements in the lives of the underprivileged. Our journey is a testament to the enduring power of collective action and a belief that true progress is achieved when every voice is heard and every individual has the opportunity to thrive.</p>
+            <p>Our story at Samadhan Kendra (SK) began in 2004, born from a profound belief in holistic development—driven by the people, for the people, and centered on the people. As a registered Society under the Society Registration Act 1860, we set out with a clear mission: to champion a truly democratic and inclusive development model. Our primary focus has always been on uplifting the poor and marginalized, ensuring their voices are heard and their needs are met.</p>
+            <p>Fast forward twenty-one years, and our commitment remains as strong as ever. We continue to strive for sustainable development, implementing programs that directly enhance the quality of life for the poor and underprivileged. Every step of our journey reflects our dedication to empowering communities and creating a more equitable society. </p>
+        
+            <p>The bedrock of Samadhan Kendra's (SK) existence, established in 2004, is a timeless philosophy: holistic development orchestrated by the people, for the people, and in service of the people. As a registered entity under the Society Registration Act 1860, we have consistently upheld a democratic approach to inclusive development, with a steadfast focus on empowering the most vulnerable—those from poor and marginalized backgrounds.</p>
+            <p>Now, into our twenty-first year, our resolve has only deepened. We continue to forge ahead, committed to instigating sustainable change that directly enriches the lives of the poor and underprivileged. Our journey isn't just about programs; it's about building a legacy of self-reliance, dignity, and lasting improvement within the communities we serve.</p>
+            
+        </div>
+    </section>
+
+    <a href="#" class="scroll-to-top" id="scrollToTopBtn">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <script>
+        const mobileMenuToggle = document.getElementById('mobile-menu');
+        const navMenu = document.querySelector('.nav-menu');
+        const dropdownParent = document.querySelector('.nav-item-has-dropdown');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        // Function to close the mobile menu
+        function closeMobileMenu() {
+            mobileMenuToggle.classList.remove('open');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+            // Also close dropdown if open
+            if (dropdownParent) {
+                dropdownParent.classList.remove('open');
+            }
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove('active-mobile');
+            }
+        }
+
+        mobileMenuToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            mobileMenuToggle.classList.toggle('open');
+            navMenu.classList.toggle('active');
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            } else {
+                document.body.style.overflow = 'auto';
+                // Close dropdown when main menu closes
+                if (dropdownParent) {
+                    dropdownParent.classList.remove('open');
+                }
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('active-mobile');
+                }
+            }
+        });
+
+        // Toggle dropdown on mobile click (for About Us)
+        if (dropdownParent) {
+            dropdownParent.addEventListener('click', function (e) {
+                // Only toggle if in mobile view AND the main menu is active
+                if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
+                    // Prevent default behavior only if the click is on the parent link itself, not a submenu item
+                    if (e.target.closest('a') === this.querySelector('a')) {
+                        e.preventDefault();
+                    }
+                    dropdownParent.classList.toggle('open');
+                    dropdownMenu.classList.toggle('active-mobile');
+                }
+            });
+        }
+
+        // Close mobile menu when a navigation link is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // If it's a direct link within a dropdown menu, close the whole menu
+                if (link.closest('.dropdown-menu')) {
+                    closeMobileMenu();
+                } 
+                // If it's a main nav link and not the dropdown toggle itself on mobile
+                else if (window.innerWidth <= 768 && !link.closest('.nav-item-has-dropdown')) {
+                     closeMobileMenu();
+                } 
+                // For desktop links or other cases, let default behavior or smooth scroll handle
+            });
+        });
+
+        // Scroll-to-top button logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        window.onscroll = function () {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.classList.add("show");
+            } else {
+                scrollToTopBtn.classList.remove("show");
+            }
+        };
+
+        scrollToTopBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Handle the "LOG - IN" button in the header nav
+        document.querySelector('a.header-cta-button').addEventListener('click', function (e) {
+            e.preventDefault();
+            const messageBox = document.createElement('div');
+            messageBox.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                z-index: 1001;
+                text-align: center;
+                max-width: 90%;
+                font-family: 'Inter', sans-serif;
+                color: var(--primary-dark);
+            `;
+            messageBox.innerHTML = `
+                <h4 style="margin-bottom: 15px; font-size: 1.5rem; color: var(--accent);">Login Feature</h4>
+                <p style="margin-bottom: 25px; font-size: 1.1rem;">Log In functionality is under development.</p>
+                <button style="
+                    padding: 12px 25px;
+                    background-color: var(--primary-light);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    transition: background-color 0.3s ease;
+                " onmouseover="this.style.backgroundColor='var(--primary-dark)'" onmouseout="this.style.backgroundColor='var(--primary-light)'">Close</button>
+            `;
+
+            document.body.appendChild(messageBox);
+
+            messageBox.querySelector('button').addEventListener('click', () => {
+                document.body.removeChild(messageBox);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samadhan Kendra - Empowering Communities, Enabling Change</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* UPDATED MODERN UI/UX COLOR PALETTE */
+            --primary: #4A2C6B; /* Calming dark purple */
+            --primary-light: #8B6BC1; /* Lighter shade of purple */
+            --primary-dark: #331E4A; /* Darker shade of purple */
+            --accent: #FFC107; /* Vibrant gold/orange */
+            --accent-dark: #FFA000; /* Darker shade of gold/orange */
+            --bg: #F8F8F8; /* Very light grey */
+            --text: #212121; /* Dark charcoal */
+            --text-light: #9E9E9E; /* Medium grey */
+            --card-bg: #FFFFFF; /* Pure white */
+            --footer-bg: var(--primary-dark);
+            --header-bg: #FFFFFF;
+
+            /* Shadow Variables */
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.10);
+            --shadow-strong: rgba(0, 0, 0, 0.18);
+
+            --border-radius-soft: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            min-height: 100vh; /* Ensure body takes full height for scroll-to-top to work if no content */
+            position: relative; /* For scroll-to-top positioning */
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--header-bg);
+            color: var(--primary);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .site-logo {
+            height: 60px;
+            width: auto;
+            vertical-align: middle;
+            filter: drop-shadow(0 2px 6px var(--shadow-medium));
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: inherit;
+        }
+
+        /* Desktop Navigation */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            position: relative;
+            margin-left: 25px;
+        }
+
+        nav ul li a:not(.header-cta-button) {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color var(--transition-speed) ease, transform 0.2s ease;
+            position: relative;
+            padding: 5px 0;
+            display: block;
+        }
+
+        nav ul li a:not(.header-cta-button)::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            display: block;
+            bottom: 0;
+            left: 50%;
+            background: var(--accent);
+            transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
+        }
+
+        nav ul li a:not(.header-cta-button):hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        nav ul li a:not(.header-cta-button):hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+            border-radius: var(--border-radius-soft);
+            min-width: 200px;
+            z-index: 1001;
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed) ease;
+        }
+
+        .nav-item-has-dropdown:hover > .dropdown-menu {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu li a {
+            color: var(--primary);
+            padding: 8px 18px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: var(--bg);
+            color: var(--accent);
+        }
+
+        /* Header CTA Button */
+        .header-cta-button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 8px var(--shadow-medium);
+            transition: all var(--transition-speed) ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 25px;
+        }
+
+        .header-cta-button:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 5px 12px var(--shadow-strong);
+        }
+
+        /* Mobile Navigation Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 28px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 2px;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            transition: all var(--transition-speed) ease;
+            border-radius: 2px;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-toggle.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* --- General Section Styling for content --- */
+        .page-section {
+            padding: 60px 5%; /* Adjusted padding for full width with side spacing */
+            text-align: center;
+            width: 100%; /* Full width */
+            margin: 40px 0; /* Adjusted margin for full width */
+            background: linear-gradient(135deg, var(--bg) 0%, rgba(255, 255, 255, 0.9) 100%); 
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 10px 30px var(--shadow-medium);
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .page-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 1px 1px 3px var(--shadow-light);
+        }
+
+        .page-section h2::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            background: var(--accent);
+            bottom: -15px;
+            left: 20%;
+            border-radius: 2px;
+        }
+
+        /* Inner container to constrain text width within full-width sections */
+        .content-container {
+            max-width: 1100px; /* Still keep a max-width for readable content */
+            margin: 0 auto; /* Center the content within the full-width section */
+            text-align: left; /* Align content to the left within the container */
+        }
+        
+        /* --- Annual Report Section (Download Only) Styles --- */
+        #annual-report-section { /* Changed ID from pdf-viewer-section */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px; /* Adjusted padding */
+            background: linear-gradient(135deg, var(--primary-light) 5%, var(--card-bg) 95%);
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 10px 30px var(--shadow-medium);
+            margin: 40px auto;
+            max-width: 1200px; /* Max width for the section */
+            opacity: 0; /* Hidden initially for fade-in */
+            transform: translateY(20px); /* Slightly down for animation */
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+            animation-delay: 0.2s; /* Delay to appear after page load */
+        }
+
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #annual-report-section h2 { /* Changed ID */
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 1px 1px 3px var(--shadow-light);
+        }
+
+        #annual-report-section h2::after { /* Changed ID */
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 4px;
+            background: var(--accent);
+            bottom: -15px;
+            left: 10%;
+            border-radius: 2px;
+        }
+
+        .download-info-text {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .download-button-container {
+            margin-top: 20px; /* Adjusted margin */
+            text-align: center;
+        }
+
+        .download-button {
+            background-color: var(--accent);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none; /* For the <a> tag */
+            display: inline-flex; /* Use flex for icon and text alignment */
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px var(--shadow-medium);
+            transition: background-color var(--transition-speed) ease, transform 0.2s ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .download-button i {
+            font-size: 1.3rem;
+        }
+
+        .download-button:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-strong);
+        }
+
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--footer-bg);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 25px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 -3px 10px var(--shadow-medium);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px; /* Space above footer */
+        }
+
+        /* --- Scroll to Top Button --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px var(--shadow-medium);
+            transition: all var(--transition-speed) ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 12px var(--shadow-strong);
+        }
+
+        /* --- Modal Message Box for form submission --- */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .message-box-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .message-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .message-box-overlay.show .message-box {
+            transform: scale(1);
+        }
+
+        .message-box h4 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .message-box p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .message-box button {
+            padding: 10px 20px;
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .message-box button:hover {
+            background-color: var(--primary-dark);
+        }
+
+
+        /* --- Responsive Adjustments --- */
+        /* Tablet and larger phones (up to 768px) */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            .header-left {
+                gap: 8px;
+            }
+
+            header .site-logo {
+                height: 50px;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--header-bg);
+                box-shadow: none;
+                padding: 80px 0 20px 0;
+                border-radius: 0;
+                opacity: 0;
+                transform: translateY(-100%);
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                display: flex;
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .nav-menu ul {
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+            }
+
+            .nav-menu ul li {
+                margin: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-menu li a:not(.header-cta-button) {
+                padding: 12px 20px;
+                font-size: 1rem;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+
+            .nav-menu li:last-child a:not(.header-cta-button) {
+                 border-bottom: none;
+            }
+
+            .nav-item-has-dropdown > a {
+                 position: relative;
+            }
+            .nav-item-has-dropdown > a::after {
+                content: '\f107';
+                font-family: "RemixIcon";
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                transition: transform var(--transition-speed) ease;
+            }
+
+            .nav-item-has-dropdown.open > a::after {
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+            .dropdown-menu {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                background-color: rgba(0,0,0,0.02);
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dropdown-menu.active-mobile {
+                display: block;
+            }
+
+            .dropdown-menu li a {
+                padding: 10px 30px;
+                font-size: 0.95rem;
+                border-bottom: 1px solid rgba(0,0,0,0.03);
+            }
+            .dropdown-menu li:last-child a {
+                border-bottom: none;
+            }
+
+            .header-cta-button {
+                margin: 20px auto;
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .scroll-to-top {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+
+            #annual-report-section { /* Changed ID */
+                padding: 40px 15px;
+                margin: 20px auto;
+            }
+            #annual-report-section h2 { /* Changed ID */
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+            #annual-report-section h2::after { /* Changed ID */
+                width: 70%;
+                left: 15%;
+            }
+            .download-info-text {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            .download-button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .download-button i {
+                font-size: 1.1rem;
+            }
+
+            footer {
+                margin-top: 40px;
+            }
+        }
+
+        /* Smaller phones (up to 480px) */
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            header .site-logo {
+                height: 35px;
+            }
+
+            .nav-menu li a:not(.header-cta-button) {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+
+            .dropdown-menu li a {
+                font-size: 0.85rem;
+                padding: 8px 20px;
+            }
+
+            #annual-report-section h2 { /* Changed ID */
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+            }
+            #annual-report-section h2::after { /* Changed ID */
+                width: 60%;
+                left: 20%;
+            }
+            .download-info-text {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            .download-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .download-button i {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <a href="#">
+                <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
+            </a>
+            <h1>Samadhan Kendra</h1>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="nav-item-has-dropdown">
+                    <a href="#about-us-section">About us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="ourJourney.html">Our Journey</a></li>
+                        <li><a href="ourvision.html">Vision</a></li>
+                        <li><a href="ourmission.html">Mission</a></li>
+                        <li><a href="managment.html">Management And Administrative structure</a></li>
+                    </ul>
+                </li>
+                <li><a href="programmes.html">Programs</a></li>
+                <li><a href="founder.html">Founder</a></li>
+                <li><a href="download.html">Annual Report</a></li> <!-- Updated link for new section ID -->
+                <li><a href="gallary.html">Gallary</a></li>
+                <li><a href="contact.html">Contact us</a></li>
+                <li class="nav-item-has-dropdown">
+                    <a href="#about-us-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
+                    <ul class="dropdown-menu">
+                             <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
+                        <li><a href="raghopur.html">RAGHOPUR</a></li>
+                        <li><a href="bidupur.html">BIDUPUR</a></li>
+                        <li><a href="admin.html">ADMIN</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Annual Report Section (Download Only) -->
+    <section id="annual-report-section">
+        <h2>वार्षिक रिपोर्ट 2024-25</h2>
+        <p class="download-info-text">हमारी वार्षिक रिपोर्ट डाउनलोड करने के लिए नीचे दिए गए बटन पर क्लिक करें।</p>
+
+        <div class="download-button-container">
+            <a href="https://drive.google.com/uc?export=download&id=13dl0dF1BMzPaBPS_JQf-frtf33UArKIP" download="Annual_Report_2024-25.pdf" class="download-button">
+                <i class="ri-download-line"></i> PDF डाउनलोड करें
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Samadhan Kendra. All rights reserved. | Built with purpose.</p>
+    </footer>
+
+    <a href="#" class="scroll-to-top" id="scrollToTopBtn">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <!-- Modal Message Box HTML -->
+    <div class="message-box-overlay" id="messageBoxOverlay">
+        <div class="message-box">
+            <h4 id="messageBoxTitle"></h4>
+            <p id="messageBoxContent"></p>
+            <button id="messageBoxCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Existing Header & Modal JavaScript
+        const mobileMenuToggle = document.getElementById('mobile-menu');
+        const navMenu = document.querySelector('.nav-menu');
+        const dropdownParent = document.querySelector('.nav-item-has-dropdown');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        // Function to close the mobile menu
+        function closeMobileMenu() {
+            mobileMenuToggle.classList.remove('open');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+            // Also close dropdown if open
+            if (dropdownParent) {
+                dropdownParent.classList.remove('open');
+            }
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove('active-mobile');
+            }
+        }
+
+        mobileMenuToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            mobileMenuToggle.classList.toggle('open');
+            navMenu.classList.toggle('active');
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            } else {
+                document.body.style.overflow = 'auto';
+                // Close dropdown when main menu closes
+                if (dropdownParent) {
+                    dropdownParent.classList.remove('open');
+                }
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('active-mobile');
+                }
+            }
+        });
+
+        // Toggle dropdown on mobile click (for About Us)
+        if (dropdownParent) {
+            dropdownParent.addEventListener('click', function (e) {
+                // Only toggle if in mobile view AND the main menu is active
+                if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
+                    // Prevent default behavior only if the click is on the parent link itself, not a submenu item
+                    if (e.target.closest('a') === this.querySelector('a')) {
+                        e.preventDefault();
+                    }
+                    dropdownParent.classList.toggle('open');
+                    dropdownMenu.classList.toggle('active-mobile');
+                }
+            });
+        }
+
+        // Close mobile menu when a navigation link is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // If it's a direct link within a dropdown menu, close the whole menu
+                if (link.closest('.dropdown-menu')) {
+                    closeMobileMenu();
+                } 
+                // If it's a main nav link and not the dropdown toggle itself on mobile
+                else if (window.innerWidth <= 768 && !link.closest('.nav-item-has-dropdown')) {
+                     closeMobileMenu();
+                } 
+                // For desktop links or other cases, let default behavior or smooth scroll handle
+            });
+        });
+
+        // Scroll-to-top button logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        window.onscroll = function () {
+            // Check if element exists before accessing its classList
+            if (scrollToTopBtn) {
+                if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                    scrollToTopBtn.classList.add("show");
+                } else {
+                    scrollToTopBtn.classList.remove("show");
+                }
+            }
+        };
+
+        // Check if element exists before adding event listener
+        if (scrollToTopBtn) {
+            scrollToTopBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+        }
+
+        // Smooth scroll for navigation links (excluding the "LOG - IN" button to allow its custom handler)
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            if (!anchor.classList.contains('header-cta-button')) {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+
+                    // Check if targetSection exists before scrolling
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        console.warn(`Attempted to scroll to non-existent section: ${targetId}`);
+                    }
+                });
+            }
+        });
+
+        // Handle the "LOG - IN" button in the header nav
+        document.querySelector('a.header-cta-button').addEventListener('click', function (e) {
+            e.preventDefault();
+            showMessageBox('लॉगिन सुविधा', 'लॉगिन कार्यक्षमता विकास के अधीन है।', false);
+        });
+
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxTitle = document.getElementById('messageBoxTitle');
+        const messageBoxContent = document.getElementById('messageBoxContent');
+        const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
+
+        // Function to display the custom message box
+        function showMessageBox(title, content, isSuccess) {
+            messageBoxTitle.textContent = title;
+            messageBoxContent.textContent = content;
+            
+            // Apply success/error styling if needed
+            if (isSuccess) {
+                messageBoxTitle.style.color = 'var(--accent)';
+            } else {
+                messageBoxTitle.style.color = 'var(--primary-dark)';
+            }
+
+            messageBoxOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+        }
+
+        // Function to hide the custom message box
+        function hideMessageBox() {
+            messageBoxOverlay.classList.remove('show');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        }
+
+        // Event listener for closing the message box
+        messageBoxCloseBtn.addEventListener('click', hideMessageBox);
+        messageBoxOverlay.addEventListener('click', function(e) {
+            if (e.target === messageBoxOverlay) { // Close only if clicking on the overlay itself
+                hideMessageBox();
+            }
+        });
+    </script>
+</body>
+
+</html>

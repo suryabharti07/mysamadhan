@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samadhan Kendra - Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* UPDATED MODERN UI/UX COLOR PALETTE */
+            --primary: #4A2C6B; /* Calming dark purple */
+            --primary-light: #8B6BC1; /* Lighter shade of purple */
+            --primary-dark: #331E4A; /* Darker shade of purple */
+            --accent: #FFC107; /* Vibrant gold/orange */
+            --accent-dark: #FFA000; /* Darker shade of gold/orange */
+            --bg: #F8F8F8; /* Very light grey */
+            --text: #212121; /* Dark charcoal */
+            --text-light: #9E9E9E; /* Medium grey */
+            --card-bg: #FFFFFF; /* Pure white */
+            --footer-bg: var(--primary-dark);
+            --header-bg: var(--card-bg);
+
+            /* Shadow Variables */
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.10);
+            --shadow-strong: rgba(0, 0, 0, 0.18);
+
+            --border-radius-soft: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--header-bg);
+            color: var(--primary);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .site-logo {
+            height: 60px;
+            width: auto;
+            vertical-align: middle;
+            filter: drop-shadow(0 2px 6px var(--shadow-medium));
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: inherit;
+        }
+
+        /* Desktop Navigation */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            position: relative;
+            margin-left: 25px;
+        }
+
+        nav ul li a:not(.header-cta-button) {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color var(--transition-speed) ease, transform 0.2s ease;
+            position: relative;
+            padding: 5px 0;
+            display: block;
+        }
+
+        nav ul li a:not(.header-cta-button)::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            display: block;
+            bottom: 0;
+            left: 50%;
+            background: var(--accent);
+            transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
+        }
+
+        nav ul li a:not(.header-cta-button):hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        nav ul li a:not(.header-cta-button):hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+            border-radius: var(--border-radius-soft);
+            min-width: 200px;
+            z-index: 1001;
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed) ease;
+        }
+
+        .nav-item-has-dropdown:hover > .dropdown-menu {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu li a {
+            color: var(--primary);
+            padding: 8px 18px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: var(--bg);
+            color: var(--accent);
+        }
+
+        /* Header CTA Button */
+        .header-cta-button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 8px var(--shadow-medium);
+            transition: all var(--transition-speed) ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 25px;
+        }
+
+        .header-cta-button:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 5px 12px var(--shadow-strong);
+        }
+
+        /* Mobile Navigation Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 28px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 2px;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            transition: all var(--transition-speed) ease;
+            border-radius: 2px;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-toggle.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* --- Gallery Section Styles --- */
+        .gallery-section {
+            padding: 60px 5%;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg) 0%, rgba(255, 255, 255, 0.9) 100%); 
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 10px 30px var(--shadow-medium);
+            margin: 40px auto;
+            max-width: 1200px; /* Limiting width for aesthetic */
+        }
+
+        .gallery-section h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 1px 1px 3px var(--shadow-light);
+        }
+
+        .gallery-section h2::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 4px;
+            background: var(--accent);
+            bottom: -15px;
+            left: 10%;
+            border-radius: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 25px; /* Space between images */
+            padding: 0 20px; /* Inner padding for grid */
+        }
+
+        .gallery-item {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            overflow: hidden; /* Ensures image corners are rounded */
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            border: 1px solid rgba(0,0,0,0.08); /* Subtle border */
+            cursor: pointer; /* Indicate clickable */
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px) scale(1.03); /* Lift and slightly enlarge */
+            box-shadow: 0 12px 30px var(--shadow-strong); /* More pronounced shadow */
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px; /* Fixed height for consistent look */
+            object-fit: cover; /* Ensures images fill the space without distortion */
+            display: block; /* Remove extra space below image */
+            transition: transform var(--transition-speed) ease; /* Smooth scale on hover */
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05); /* Zoom image slightly on hover */
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--footer-bg);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 25px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 -3px 10px var(--shadow-medium);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px; /* Space above footer */
+        }
+
+        /* --- Scroll to Top Button --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px var(--shadow-medium);
+            transition: all var(--transition-speed) ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 12px var(--shadow-strong);
+        }
+
+        /* --- Modal Message Box for form submission (re-purposed for general messages) --- */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .message-box-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .message-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .message-box-overlay.show .message-box {
+            transform: scale(1);
+        }
+
+        .message-box h4 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .message-box p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .message-box button {
+            padding: 10px 20px;
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .message-box button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* --- Lightbox Gallery Styles --- */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Darker overlay for images */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 20px; /* Padding for small screens */
+        }
+
+        .lightbox-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* For title below image */
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh; /* Adjust height based on viewport */
+            object-fit: contain; /* Ensure image fits without cropping */
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease; /* For initial pop-in effect */
+        }
+
+        .lightbox-overlay.show .lightbox-image {
+            transform: scale(1);
+        }
+
+        .lightbox-close, .lightbox-nav {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            user-select: none; /* Prevent text selection */
+            z-index: 2001; /* Ensure buttons are above image */
+        }
+
+        .lightbox-close {
+            top: 20px;
+            right: 20px;
+        }
+
+        .lightbox-nav.prev {
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .lightbox-nav.next {
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .lightbox-close:hover, .lightbox-nav:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(1.1); /* For nav buttons */
+        }
+
+        .lightbox-close:hover {
+            transform: scale(1.1); /* For close button */
+        }
+
+        .lightbox-title {
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            text-align: center;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+
+        /* --- Responsive Adjustments --- */
+        /* Tablet and larger phones (up to 768px) */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            .header-left {
+                gap: 8px;
+            }
+
+            header .site-logo {
+                height: 50px;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--header-bg);
+                box-shadow: none;
+                padding: 80px 0 20px 0;
+                border-radius: 0;
+                opacity: 0;
+                transform: translateY(-100%);
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                display: flex;
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .nav-menu ul {
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+            }
+
+            .nav-menu ul li {
+                margin: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-menu li a:not(.header-cta-button) {
+                padding: 12px 20px;
+                font-size: 1rem;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+
+            .nav-menu li:last-child a:not(.header-cta-button) {
+                 border-bottom: none;
+            }
+
+            .nav-item-has-dropdown > a {
+                 position: relative;
+            }
+            .nav-item-has-dropdown > a::after {
+                content: '\f107';
+                font-family: "RemixIcon";
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .nav-item-has-dropdown.open > a::after {
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+            .dropdown-menu {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                background-color: rgba(0,0,0,0.02);
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dropdown-menu.active-mobile {
+                display: block;
+            }
+
+            .dropdown-menu li a {
+                padding: 10px 30px;
+                font-size: 0.95rem;
+                border-bottom: 1px solid rgba(0,0,0,0.03);
+            }
+            .dropdown-menu li:last-child a {
+                border-bottom: none;
+            }
+
+            .header-cta-button {
+                margin: 20px auto;
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .scroll-to-top {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+
+            .gallery-section {
+                padding: 40px 15px;
+                margin: 20px auto;
+            }
+            .gallery-section h2 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+            .gallery-section h2::after {
+                width: 70%;
+                left: 15%;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for smaller screens */
+                gap: 15px;
+            }
+            .gallery-item img {
+                height: 200px; /* Smaller height for mobile */
+            }
+
+            /* Lightbox specific for mobile */
+            .lightbox-close, .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+            }
+            .lightbox-nav.prev {
+                left: 10px;
+            }
+            .lightbox-nav.next {
+                right: 10px;
+            }
+            .lightbox-title {
+                font-size: 1rem;
+                margin-top: 10px;
+                max-width: 90%;
+            }
+        }
+
+        /* Smaller phones (up to 480px) */
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            header .site-logo {
+                height: 35px;
+            }
+
+            .nav-menu li a:not(.header-cta-button) {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+
+            .dropdown-menu li a {
+                font-size: 0.85rem;
+                padding: 8px 20px;
+            }
+
+            .gallery-section h2 {
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+            }
+            .gallery-section h2::after {
+                width: 60%;
+                left: 20%;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+                padding: 0 10px;
+            }
+            .gallery-item img {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <a href="#">
+                <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
+            </a>
+            <h1>Samadhan Kendra</h1>
+        </div>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li class="nav-item-has-dropdown">
+                    <a href="#about-us-section">About Us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="ourJourney.html">Our Journey</a></li>
+                        <li><a href="ourvision.html">Vision</a></li>
+                        <li><a href="ourmission.html">Mission</a></li>
+                        <li><a href="managment.html">Management And Administrative Structure</a></li>
+                    </ul>
+                </li>
+                <li><a href="programmes.html">Programs</a></li>
+                <li><a href="founder.html">Founder</a></li>
+                <li><a href="download.html">Annual Report</a></li> 
+                <li><a href="gallary.html">Gallery</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li class="nav-item-has-dropdown">
+                    <a href="#about-us-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
+                    <ul class="dropdown-menu">
+                            <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
+                        <li><a href="raghopur.html">RAGHOPUR</a></li>
+                        <li><a href="bidupur.html">BIDUPUR</a></li>
+                        <li><a href="admin.html">ADMIN</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="gallery-section" class="gallery-section">
+        <h2>Our Gallery</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhbibdNOUIJKxw1Gvwl-u4VKMvMXqMa6RdMjR_iBfnxR4FzhYjtfgGaWTxOT5qwnxIL1jBgucfuDKr9S9k4IH2t3g1XyVpxaWXV3H_bLwLeVTbL8NCC8L5h5JTmCFzNVCN8zwvg0rQJ-aLk3gWy0Mo2BF1X8Ockjz-PKN6k-_QptXV9mAlJmEH-zsotBm3W" alt="Women engaged in a training or discussion session.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiFh2cFvBMfBFkrRun__hyUJM_8DfN0tQKXlxIGGLDu46-xpW35K7ivg_CRgXVcemE40AiAxTzhyltbj8xJV1KePTn37pXayJd9ZBUbaNU56_TuQwCCwN26WrJMXmZE7MrJpDYyAdRdcpzchG7zTND2UzTbiu-A_0oLFSbwJD9P-HrLK0nZ5s8O_vcKl8Bs" alt="A group of people, including children, participating in an outdoor community event.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgyg1dgvlZXdpnQpeLYBJ4jxPx9OSiTvy406KNIHIJfjDyvl9LSDtj0Iq3hthVA09Q66hWCt1OmpOJip6wyRtootrjcAR1CkelavxLX8ykFyaon39ah8pEHqZluqKgaiLu5tDpOjN20v_-YcltfA7sJT_SzL5t7CyWT7BnhFxph-D8n4szQX_nOywmgX66k" alt="A speaker addressing a rural community gathering.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhgxFTFPdZhWZFeWoC1aOZs_6QQQyHuFMer1ZYuew8hGTWUek6VZzQxTpV3RYwz5gwknq0SwbrBZIs9E-5VOWZoZKhmMF8rcknpkeHytyoQKC01-qDqBxkww6YYG29Ma1AEXluw3IOL5KLbU4yuOKYbqhRsxhvKmqKzJQkreEIYLtouEoGV7oGGyV7-mDFd" alt="A large crowd gathered for an outdoor public event.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjAYPPIFvCqhKb_tzzYWIux319LwZwXkMQ92bDn6edgSEZmJaY3SsoqlNSl9xlspelRQAcl-zVojGt3pgQ1O2BqqVjxm2MUSTSAqsdUh2r1CahPg6D7dc88cwL7joIiVn3ag6ynYhJOpO2j7ksyD3Dzlzig9S0haSqszFLAgH09wdOOHVDVMKGmv_YpWtI9" alt="Women engaged in a training session or workshop.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjGmc-VQVCvsIbzY5uqzA7T7sSTbkunZx6wHiveDSlkLwy13ApL_kmEGxLkmpXPi9IwpLUoM--VIMgBygXx7DXPyhm1jhrn6wFzAkIvqru4kSIEY-AnHc3PdwuYMc_lVSJrVoRgRvjORP7GawKlBdV79UXWW9t_aWus4KxtXtjaw7ydJ1kvIb8l5QjBmJXE" alt="Community members gathered around tables for an activity or discussion.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgsWqnEjdCgMASPA6UNtVgsKbmNkZKMgRQkINhf0r9RLdB7RXIaljwQFqEw8FjDvMzBVlHrdQodaVMKy-fz6I88WoBA3ItzxZPjWTjRFOJ_IpAQLd7kzHryhYsZgmqN-__kvyR305MZCBL1hMmuEXPjhKd9eOk0JJUH843t123Dj8w7BiK_QcNqbEX_mG9Y" alt="A group of men in an outdoor setting, possibly a meeting.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiE8nyPg3nHY3LBLzze03US1xeePSuj6Eq4c7X-D75BEy7zp1WajZHKIiVbVKlpZtlfisHiy29HFjPcI_fV9VDMuPYy7ZJGrZy3fcfDwtRheMwEik1tiNAdPegYZ88VzEFwB6J2uJOL52iOGAy_X-47K4UgmI9iYmJKXf3yC06NGqqHV_EbMZX0iKTLmWM1" alt="An indoor gathering with people sitting and listening to a speaker.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEipROcN5nyuo48Wfs_11ShFUJqKkh6rRt0FnxSnheE4lSLEz9gkEvtGc28lJFzY7uQPzA2QNN6I1tPQPCKHUOTEgAFjBMvnlLVHl9H2jggsQ7XaprlRrxi5lsUUVzkgHPGMhsQ7-CN1NDyo_fmKcExSDLE4VAcItRTX1Ee1_N3MetgmXmdpCeb1BUEeIpKm" alt="Children engaged in a classroom or learning environment.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEglYgCZXmdIQBnABlUw1B1eeo37uFogfa-__mSuuMYW6MyKvCDawMT1kDBnLMM9lCsg2Yx03mt-abojzaVgXcFclj7W_FGOlXQy8noUI1iMNv-22HVP0EXmX323yhrDKVJe1fnvnBsFsGOjBEA_86GxT4tpCvTI8INhTI5wDgK1v9R5hw8weHveSH6-aFZh" alt="A group of individuals standing together in an outdoor setting.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhpnRvCCvs11zDDzmzw2_bm39jMkGBW9svq7YvvLYYqjpJMRHJ8bjgmPgBtc5s6mW_uYImsqpQbxP3SfM_NINm1wYI8hrP88SNkOcADBV_ISVurDz-oFasaHDXaz5AGZ1qlxWocJQFD6iK85WuJ2Kfo1ZuwHy_9q0RER6qiZkJsEM6rDE5whML0au5iotp3" alt="A speaker on a stage addressing an audience.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEj24bMlwU-7krIpAII5zbT2m3M7Zayr1cEd7jIJfp-WyhyRjSD8L125jEwGrlrAZiF7nvS8iIKa6buL2as7amADapY7UiO4ZacxtlFw0SupSvSLAz6-JEHIbDwLtycC0MmCoPI_OdyMnhVUbDB4J3qmdlDd6Bwr3QE5I1ZbqvCQRQZC8V6Qd2S-rx4lJeOO" alt="People receiving assistance or supplies from volunteers.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjeR9Ud_tiOlRlmVRGXZUf3_ibJ8bOZHiRRKuER4o9hNcDfI337glQsKG3kLtydf8FkbAdQ91arQLtUua4cQioN6CI1EeQTAL5bzt1CKU4mUFV1xlDvmlb9Bt0rwv6XvnT2c7gALgmnNWZKF_ob_qT9rflHA20_P5LJqSxZHi156cajp3bhKM2_TCedOy9u" alt="A diverse group of men and women listening intently.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgTTcurD_E18QgRP5lqxLBOvuTBzaE6Zpd-BMjYAgFL8QlbWKdOEp2LELnaGbyHM9H_dYB2985tfQgcK8asKB2TD-dpsm6L6_5iuTyt4g8aEjtRsgV39kBbQgVrgNgvpeZtclzer68URtlXeCoyVmaw58gjKo2FGeppdbkgJmTY5DGdzGoEfIifJJWt21_a" alt="Children participating in an interactive learning session.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhoOABtBtZr5EXDtVaCOP_T8slY9tXZLOreYGT-AQFu4Lfq7XHf-D_SPrjxBe2uiN3g6J4Tes9wLNw8gTqp2pYs1Lp50wCf2XVRWzcAFdFDc1T0-WoskZyKlcWknzHc-xAPkKteSLFrC0W1dbwiTfajs6_2lQQGrwI6mO6LBh5Mfm_EdTZq1Its7o88w7vm" alt="An outdoor gathering with people sitting and standing.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEijaCFX9C1b1srC7XI_WiM7bLbpo6FhnVNcYnL_ZIBB5z3uG8y5YT2NtqU2kO66SC9klCU2xtaPG6obAgNcij0avn64aJuJAdFXg7KYhGoce-Zlsve25mFkMx2HEbSl_a7e1HGZ8pjoUyaG9G_5CpaSvR8A_MV716I0ki8PffNxxmq8-OlNAs0Z312aFWLD" alt="Community members actively participating in a program.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiWhh0mB7_kpR9m1ZrmTI-Uh8IpjgVkvqiEY0Qj8ThC8hcIC-nN5icadd4-YT74mTqgkWSX4eXoeidZpcT7HjxDNXfdRjQNpq-lJGGNDzCnqoHWt9eTzxElycn4Hdvcuiuk5O-fu5M8CMkUTRGPToxzEpE0rCS3bKd0KlN8OswksR5GYfMQSDb3qSuryfpu" alt="Dignitaries and community members at an event.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjuJLWgWmN25t0dtbNAdvcoFj3c8eZSew30EBXQvy85suVfrvXZ7PebytA3BvreHZdDlZiSL3N4IedVA75GJjYsxvPDriE3IdSwqkE2u-v7aEhFSzirAih7bM2xvuTqy4pqgWmZxUYu09u8A-HOL9SG3NMjbCBZRkI6xn8ixzUz7oui_9VrmuJk-ZCLlXTr" alt="Award ceremony with a large gathering.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhj_Sktl_6SHBldC9Fnquqec2CBBoBEUaDasjFrFsoL4fWUlAs-vplnmx-_t3LHVyuUWDVSVU4t9O2LnpZmnsoJJFP-J9MKP5VvK2bE14hESwKhfF97ucRQsyVV8lO__hZNIxPKH3gwXAmnap4_6sXjK4WdnMvxP-Id_nAgNTQ2_0iVqepDSmlCnGW4HZDT" alt="A large community gathering outdoors.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjxDEe8Q-LBZyvqx7JSJQBSb8EbCdl4CXPGKx0_h4Hh1D7jY7HzxABC-EzBpH9lQvPZVSA4XmsXsweqNvYv0Ct5j9o5_mZYPb3N8hRXXq2u7NF09mfvvg0aWduM320szrmNJIawOCxmMgtGMqMvo5MhCezm1AOi1GBv6h7FOWhir6AA_UNflOfjuzof_mJc" alt="Children and adults watching a performance or presentation.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjA4G5qc7UTeFdU_goK0UfSwH1Hi_-Dg9sdiPku5gHQfNwjO6TtenmrlbOEm0hEE9f9wvPxchHQuKD8jG84m5MBxv9Wuq-RwaiC6qZNASXGVsTGn_yyan6DTJEU4Po-EwSN06_ADtM2IR7JnrKy1pLqAMBxGhiIn7D58nhvMwMmdVAX33ukL02p1vP7_Z10" alt="Students seated in rows in a classroom.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjdZXf76n7qU8rz3WGAd7UFLOO1ZmoTD8dwkUffve9AXcit-I-tGhXWXt6LdD6hksjJEB9dVG9XZoOYMPhxC2eyLPdQSiiyENZUHwJdLz08FJxirszHq8OcVHUS41rEy7NspqzhZdwD7Y4davaQK2CBrBZ-jxvOS-K6ZAYD-UB4uuotfDEcZMX8sIL0vYxP" alt="A health worker examining a child during a camp.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhVwPo6XLeTEJJbrJzyykGJHbpc5GRIMmRTFosgFc0oDvBkYvOPYQD_cnXbYIQoIl2OFJHU473XHCQKLFwP3GgFgQOXB69KqKjViBDRUPch4gkl4-nK8TsZo2GzPo1smPWuP0QjSJATD1Rm8gzy2d47IsoLKPutFCR_ZC8qYb9fEMCGOEtjmXYkK9DgBEk-" alt="Agricultural equipment being demonstrated or used in a field.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEi5NHSOTm5yhJm-hTNqfnQxyPheNGIgs-7Q18Rm3SctvxHR0jliikOEqWFuU41HzZ3KIdCasYZwVlqPvxEbAp9xvUbH9dv2LfbGVTklYXmCoF18g6N2VCJPv91kq-I28r3YoW6VV3LcnxIt2r_YXrJIR3JCTMQYBaMZOE0lvOI1mVgTbTsA-Cx5F_MdrDQ6" alt="Women in traditional attire attending a workshop.">
+            </div>
+            <!-- Newly added images from photo2.html -->
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLaNAfR2zCOqk39DC1sTxZXGRc4PqRHvyBcA7ZMKnmzU_M9pnZuKW4LUvu0IzHJXpcATRmITiQ66MgvjI8xnM2TLJ_gkEj0CFI3Mc9GhKs6VfPni_2uE5iXpK4h4jr69doZ3l1CZppBPL4iqboGkc3qMCNEDkxw9YoVdU3xdVZax3zJOewKQSBC6Tgl3SR/s320/IMG-20250625-WA0031.jpg" alt="A group of people, possibly children, gathered for an event.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPBcb2_qOMVHgifFELsKqSd7i6dCV_rnkHy0e_-n22e63kgjNmPf_ikmDkFFSn8s3KOuZF-EXVUKsPuy9H3T8q79da-VVc5PKZ_4hZ20tCTe9HlXcAYHhI3-ZXpVq7zwneKFkti3g204pUkteabkZplYHiIfJn2or1Yp3imVosFMJHVXSWq5e4fLSUGKqK/s320/IMG-20250625-WA0032.jpg" alt="A group of individuals in a formal setting, possibly a meeting or presentation.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjT2P_KByqu-IJXhHX_i5oxqHLvbT_S7A41ngdrOEo8BBo93XIv1CzCGtlxOtxUJZSnMLBdNzxG951SFPGljvNVJeG0R3sG751M4hOsq64KASGlhrBIS3KWeZx9samP7Xn_5H4BIfIg6mTzWA7DXMkUvleC7eZLJzUAF3-TTeHsGcYw_vVknWHWs2EwcMTi/s320/IMG-20250625-WA0033.jpg" alt="A group of people gathered outdoors, possibly for a training or workshop.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnx-SF3-gTpJ-G3hkgpLM1PgTZ2WNuBD8otFQs171XsIHckfZFdqyatOjmcOBPkotUT5ilno_u0Y632clnPwSpu4fOWqFyOlnOddkuX6J3oEyEDUL046ehIB2ZEUuzzi7i3xjQ67dL-iySVhDtfhv1V_baOx7Az-1JnRnNtxBQUXE076je_MGLa_9GUh6t/s320/IMG-20250625-WA0034.jpg" alt="A man speaking to a group of men in a field or open area.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjf2hDK9zyHduhsPAwmemOXfrqgS4MtA-GYhcTedgqcOwrDu7s-mGfcw_9ifICAsgK9LLy5nECKVhpHB3wv_-WccZlyRZDOFNBevRS13KOcdkKLj6uWMP_QCNNtd1aRHylSBp0Q9bvqKm3pMjhnUSS8G9D2cw29q7xVFiiQ5qaYRSjcfqVUT1Y9ayTkAm4q/s320/IMG-20250625-WA0035.jpg" alt="A group of people, including women, sitting and listening to a presentation.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2yMW_tFfIE7zkl0kpHRP-NxdtTdawkVwQCqGR16R3CHbArv8MIuVvLVfuRn-_qFO5YEYOGhdX1rSdCL2wxWbOjf2gne_F-HCwDDWFtkm4HcuKxx7rEbX-ZZEOIfkKBiYAn_qjkgsumAmYN9ToqSGThjzN6h1vdeDhPr7RttOHn0bXo0GoBFk039HTzFeL/s320/IMG-20250625-WA0036.jpg" alt="A group of children gathered around a speaker.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTCi-6gqTEbNbwhcZUtiU-ibWXx-VJPTk4-ABt54eCHk0DVLnR71uXuBR5doE1FGMeI-yeokoT9eIup3FoGnLXcKwm2G_LZ8pLJJLaqHfpzQeMNvhSg4koCEqWxpEo2MI-8VcYHiWm0UZgmr-LigfrYzHhIqMIkV_j231SdAhXeZ_RjjX1kus8hYntKBJ1/s320/IMG-20250625-WA0037.jpg" alt="Children participating in an outdoor activity.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNC7TXPvesNjd15x-nxrFRPVzFgOLtdnxO_96nelIRGuJfQ5ragFbofl3SAhiED-CyldUhBjzZ9x9JWy4beyxiP5YLCm1aCc47_IJ1ETKCWX8fTHE2ZkU5rKo6M_Qr3GHNoy7Lrq43D98jezwkNan7Qc02-BOONGJufSJObR2OcG7IszwVgl6fmT6tLy6B/s320/IMG-20250625-WA0038.jpg" alt="A group of people in a rural setting, engaged in a discussion.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEEBIllPBBCc4xXf2g2Uo_gJ7ggjIgfuHgNK-6eDHn9YIfsmhZIYTd8QykXkSwX3KXOfhFS78KfvJP_BBspCJpCf50O6FC9-IokepDBWAGCqhg5kDT84mKDU5vFVIXFkQ54gBrlTE8CAZ53HH1W7MHQQNeS9Y1bKMKSUYWm8p7mg1lVteKPqqNwJXwNhbL/s320/IMG-20250625-WA0039.jpg" alt="A group of women in a meeting or training session.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGysvzL7h-cdBtEkAD0Yo6KQhOQcPpDLKDcGzp8ab9pPNPwsz0B5sDr3lTMVROLv8AZ1G8sJDnMQKjnw0VbnhUXOMZxBuXvSy0LiN5GhhnBHbDheQ1vAMXvoTDyvyLwK2k23Gm8cC4QJXByVaJH6ZFXqoXRxL_amq408N1Hr6AzlQvUYwbhCPbu6fz0zol/s320/IMG-20250625-WA0040.jpg" alt="A child interacting with an adult in an outdoor setting.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqxoyTRHQLKAYliVq3P3PYRpLcht9igU5ZWTdVaF4vZzPr5r6_kUHHOWxUkkc7y-fTfToixDspIIJpys8KQDFHLt0eq_3bHXlCl3I9Pmk4KLFFROgmD5Wd7LN9WsqfDkuLwMInc_oveKON_CJF32Jj4t3gMts-T8eZGDDOvfl9BIPnEUE56pEgnCLoyo4e/s320/IMG-20250625-WA0041.jpg" alt="People gathered around a speaker for a presentation.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4fbI2xxchpVZRHhmZcbkRqh7xloDAsGw9WcdzZ2XPHa6plJVeKmfdgDvAkc12LfGWR4EOsctrrsmszGFKU9hqinxYeftJ1gdFptuF4tdFVphRQmRbZS4sXj9c243rS6wrHR17FicQSWCZdx8dVcASOqeDQDiEB6OCYMeh71lFEwqJ6mZHIa_2g3-nzX3c/s320/IMG-20250625-WA0042.jpg" alt="A large crowd gathered for a public address.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgQRkt4_nWxdgyyLN5Zp1uCf-HTzNgGNfuyVU92C587Guj0mbSGPfIx61ZoYEmiVobsgf1pA-ondDS35lKatJZlevV7jAlfhAbKc95NU_eRBNkgYHHr5b6Zn6RBQIe_YyBRU9frSdyB43Tfmwd8nV6wze0Y1QpO3Px8DUSUd1iX-1NFNLM9zx6BRayDD0Xj/s320/IMG-20250625-WA0043.jpg" alt="Students engaged in a learning activity in a classroom.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqrnaITUKArSCWvwY9-Qh5jMZ2RymBqbyomDM7a-ZCHMlC09kGu3Uik9W2ZBT7t9pgm9Yz6cLGB3PO6r1tZsfYPnSSOPNsR0sglFvBMcIyLV7S-XpCoF9y1H56VJMZTGPXM4r5sJBA6V1EhWtHsDo1_n2ZDbHnS1DfsBryoicf9KsLX7KkVWhN9wjmcD6S/s320/IMG-20250625-WA0044.jpg" alt="A group of women involved in a vocational training session.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizBXK1uwqxM_1Lr3qyQSLDQiW99hmfADUXQDLsHAk-5yF20O3gc6grHGjYDAwVFjWzxJh3wMQTZ5Eimc1YOAQSJe8r-nYGHHf-gZqB9fD5zddA1I2dZeI5xS1z2tqeG3c5xwTLc4RaHJfCnz0kFEr7LqQrOyrEx6GVLIVoPtP29zGqmRWMtYpAEnK7NGTZ/s320/IMG-20250625-WA0001.jpg" alt="A man speaking to a group of people, possibly during a workshop.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7irhJ5ksQoYaKHhtP4sIPa0LdtU6qbKmWzjHUWB5dilfJ0IQZPXWGPhA9uUKUtWDatPxPV1NTStp9dkpl-P3o8YrCXDzTtkEmuXtkPCKQFKXgsKYr1ng9QLqQrEd8G-8_zXz-RdkYoxIvyywHPauMadOQ5SFN92okkJ8s9Ho7t4xHG2LFPkxl-eCqo4FG/s320/IMG-20250625-WA0002.jpg" alt="A woman in traditional attire speaking to a group.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjfzsKI3lCv2CngWUi-aw0crzoIebYXhM0EHxHVSinW0kPsbTwyL6_sMCIzwTbfgRF3sCuSLy-LSZLxSav8c9TceTaxQ4SO0gnqryQPa3gSJwrdkQUFFRCOgW1XKy1bHVb_VxyLv6XOq633G9TpIvSDLB1op9kcv4kuem8l8htC9n8NJwioGHY3pVNlqk0j/s320/IMG-20250625-WA0003.jpg" alt="A group of young men participating in a program.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_HeJHjQ6PTM3HiVP9PRRt8xz78FT3O02ku6zOJVF7_6ungoEpUxFg54zIaEZ3D1R2lG5Go6BtzBfrTKJ5V1mgvrtPMXEqo5RENkqhcI0FNp9KNa_PVuFaH5Y3jI2ADZxqxYP2ZoDEncQjvNSr7LpjzXzAQZdhN_k9P2pyhqB3GIaUQ9-oHmSR7Fpd0Lcca/s320/IMG-20250625-WA0004.jpg" alt="Adults and children gathered outdoors, possibly for an event.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPaOG1vPECFSy3oAr2nOE4I7X9x8z__xepwCsgZHHq3YT3UKv2vYi1FAZncSvs-W5mo0Xl_5EbUEhv89jLjzfuX9f7Ed7LtkP9p2wSjj4_J9c8WNpdBrWgmZibn72o8ncIOkopv_tfr2BteYMbPeMCf1eTbnxuk3rJqHz0nnzBrxm9J4hN7fUzHX0qibIt/s320/IMG-20250625-WA0005.jpg" alt="A group of people, including women, attending a meeting.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixKhc2h5UvcXqHP4Aqb4sEqtLRdhoeKBVBQ2S5JpNVWTtex64vU-BzDtOWm5dWP02TaRLHlaYeBanmXD8oSa2-NFHMFusRQabBuF2serc2lTNVSMeybHQXKQiMxPPKKBwS4RBQ3zU7HdSPwvtMyQ7e8P2omD1DV_kEqww-1NrT4vgXghZbg_NlDAuPaTLF/s320/IMG-20250625-WA0006.jpg" alt="A speaker addressing a mixed audience.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibHy_V7Te6pxVg2DYcwG8j912RR4rgQyb0TrasT8QnDyyTbCT_rv6pzC3RSWoJzOl9ZVndiFieGa1w99UidMgOGUgmFj7BeFhnW5aQPYCrCznsP5g2-jD63KvGndfmwO_7Ej3S3mzWNf29p-uyP2b_qS0UnUD0krt_CVpfWrs8jlObiYP5mzCmYBk2NH5N/s320/IMG-20250625-WA0007.jpg" alt="A group of men and women sitting in a semi-circle.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEir0a_MwyQUh6CAe9x4c0frZZTyY4kWwBHn_5JM8Mi0nd-m7lKf02C9yZNk4IJC6z-HifzUmI205loGXzUVt1x6XlzYAXAaJxS1Zx5pRRFRvsyZlgr17W17DTVGNgP3loJ5z7EgXsKhyHH9DEdGl6hkwrpnWhAUXyBsTx2ibDTN7J2bBZTllj87KMpbH6vN/s320/IMG-20250625-WA0008.jpg" alt="People gathered in an outdoor setting for an event.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhF11c72KT572GSLyVTjpANsRH4FngoaiF5hMYQ-06FPNvAb_R6a4CvClYyACnu7hSWRGPzMNv1osO4JmD_nwtJuQKWlAbIyoq6xfRav5wvUXLRXYB68XbXFSiF8udAZABceCLRcUUvmBseUyBs1ajZbI6kS81YPs-KDPbxlHBNlJlZWYkRW4Q1_UROS-WR/s320/IMG-20250625-WA0009.jpg" alt="A group of women standing together with a banner.">
+            </div>
+            <div class="gallery-item">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiI4eiLhiB47cH_a7EcLNqG1aTbLUiD7zOcReuC59k9C7WPPlnvBjTo2Nu3Ntjdh8eAbW1VAVo4Ox8vM_kTxPXTgrNLr29AmtR6lBaiHEOpm-oJGBYrYJRKnFVOsND6CYyxNRxV00T77NtcFnxr-3rbL0yYjE28BUXi1uDVsnT5lJnohcCnAnYWgmer_LUx/s320/IMG-20250625-WA0010.jpg" alt="A large crowd gathered for a demonstration or rally.">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Samadhan Kendra. All rights reserved. | Built with purpose.</p>
+    </footer>
+
+    <a href="#" class="scroll-to-top" id="scrollToTopBtn">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <!-- Modal Message Box HTML -->
+    <div class="message-box-overlay" id="messageBoxOverlay">
+        <div class="message-box">
+            <h4 id="messageBoxTitle"></h4>
+            <p id="messageBoxContent"></p>
+            <button id="messageBoxCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- Lightbox Overlay HTML -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose">&times;</button>
+            <img src="" alt="Gallery Image" class="lightbox-image" id="lightboxImage">
+            <div class="lightbox-title" id="lightboxTitle"></div>
+            <button class="lightbox-nav prev" id="lightboxPrev"><i class="ri-arrow-left-s-line"></i></button>
+            <button class="lightbox-nav next" id="lightboxNext"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // Existing Header & Modal JavaScript
+        const mobileMenuToggle = document.getElementById('mobile-menu');
+        const navMenu = document.querySelector('.nav-menu');
+        const dropdownParent = document.querySelector('.nav-item-has-dropdown');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // Function to close the mobile menu
+        function closeMobileMenu() {
+            mobileMenuToggle.classList.remove('open');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+            // Also close dropdown if open
+            if (dropdownParent) {
+                dropdownParent.classList.remove('open');
+            }
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove('active-mobile');
+            }
+        }
+
+        mobileMenuToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            mobileMenuToggle.classList.toggle('open');
+            navMenu.classList.toggle('active');
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            } else {
+                document.body.style.overflow = 'auto';
+                // Close dropdown when main menu closes
+                if (dropdownParent) {
+                    dropdownParent.classList.remove('open');
+                }
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('active-mobile');
+                }
+            }
+        });
+
+        // Toggle dropdown on mobile click (for About Us)
+        if (dropdownParent) {
+            dropdownParent.addEventListener('click', function (e) {
+                // Only toggle if in mobile view AND the main menu is active
+                if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
+                    // Prevent default behavior only if the click is on the parent link itself, not a submenu item
+                    if (e.target.closest('a') === this.querySelector('a')) {
+                        e.preventDefault();
+                    }
+                    dropdownParent.classList.toggle('open');
+                    dropdownMenu.classList.toggle('active-mobile');
+                }
+            });
+        }
+
+        // Close mobile menu when a navigation link is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // If it's a direct link within a dropdown menu, close the whole menu
+                if (link.closest('.dropdown-menu')) {
+                    closeMobileMenu();
+                } 
+                // If it's a main nav link and not the dropdown toggle itself on mobile
+                else if (window.innerWidth <= 768 && !link.closest('.nav-item-has-dropdown')) {
+                     closeMobileMenu();
+                } 
+                // For desktop links or other cases, let default behavior or smooth scroll handle
+            });
+        });
+
+        // Scroll-to-top button logic
+        window.onscroll = function () {
+            // Check if element exists before accessing its classList
+            if (scrollToTopBtn) {
+                if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                    scrollToTopBtn.classList.add("show");
+                } else {
+                    scrollToTopBtn.classList.remove("show");
+                }
+            }
+        };
+
+        // Check if element exists before adding event listener
+        if (scrollToTopBtn) {
+            scrollToTopBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+        }
+
+        // Smooth scroll for navigation links (excluding the "LOG - IN" button to allow its custom handler)
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            if (!anchor.classList.contains('header-cta-button')) {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+
+                    // Check if targetSection exists before scrolling
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        console.warn(`Attempted to scroll to non-existent section: ${targetId}`);
+                    }
+                });
+            }
+        });
+
+        // Handle the "LOG - IN" button in the header nav
+        document.querySelector('a.header-cta-button').addEventListener('click', function (e) {
+            e.preventDefault();
+            showMessageBox('Login Feature', 'Login functionality is under development.', false);
+        });
+
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxTitle = document.getElementById('messageBoxTitle');
+        const messageBoxContent = document.getElementById('messageBoxContent');
+        const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
+
+        // Function to display the custom message box
+        function showMessageBox(title, content, isSuccess) {
+            messageBoxTitle.textContent = title;
+            messageBoxContent.textContent = content;
+            
+            // Apply success/error styling if needed
+            if (isSuccess) {
+                messageBoxTitle.style.color = 'var(--accent)';
+            } else {
+                messageBoxTitle.style.color = 'var(--primary-dark)';
+            }
+
+            messageBoxOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+        }
+
+        // Function to hide the custom message box
+        function hideMessageBox() {
+            messageBoxOverlay.classList.remove('show');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        }
+
+        // Event listener for closing the message box
+        messageBoxCloseBtn.addEventListener('click', hideMessageBox);
+        messageBoxOverlay.addEventListener('click', function(e) {
+            if (e.target === messageBoxOverlay) { // Close only if clicking on the overlay itself
+                hideMessageBox();
+            }
+        });
+
+
+        // --- Lightbox Gallery JavaScript ---
+        const galleryItems = document.querySelectorAll('.gallery-item img');
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+
+        let currentImageIndex = 0;
+        const imageUrls = [];
+        const imageAlts = [];
+
+        // Populate image data arrays
+        galleryItems.forEach((img, index) => {
+            imageUrls.push(img.src);
+            imageAlts.push(img.alt);
+            // Add click listener to each image
+            img.addEventListener('click', () => openLightbox(index));
+        });
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            updateLightboxContent();
+            lightboxOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when lightbox is open
+        }
+
+        function closeLightbox() {
+            lightboxOverlay.classList.remove('show');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        }
+
+        function updateLightboxContent() {
+            lightboxImage.src = imageUrls[currentImageIndex];
+            lightboxImage.alt = imageAlts[currentImageIndex];
+            lightboxTitle.textContent = imageAlts[currentImageIndex] || ''; // Display alt text as title, or empty string if no alt
+        }
+
+        function showNextImage() {
+            currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+            updateLightboxContent();
+        }
+
+        function showPrevImage() {
+            currentImageIndex = (currentImageIndex - 1 + imageUrls.length) % imageUrls.length;
+            updateLightboxContent();
+        }
+
+        // Event Listeners for Lightbox Controls
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', showPrevImage);
+        lightboxNext.addEventListener('click', showNextImage);
+
+        // Close lightbox when clicking on the overlay itself (not the image/buttons)
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target === lightboxOverlay) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            if (lightboxOverlay.classList.contains('show')) {
+                if (e.key === 'ArrowLeft') {
+                    showPrevImage();
+                } else if (e.key === 'ArrowRight') {
+                    showNextImage();
+                } else if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
