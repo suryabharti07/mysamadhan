@@ -315,6 +315,62 @@
             100% { width: 0%; }
         }
 
+        /* --- Report Banner Section --- */
+        .report-banner {
+            margin: 20px auto;
+            max-width: 95%;
+            background-image: url('https://media.licdn.com/dms/image/v2/C4E16AQFvG_WSQY9fPA/profile-displaybackgroundimage-shrink_200_800/profile-displaybackgroundimage-shrink_200_800/0/1653638787913?e=2147483647&v=beta&t=DWiDlLBCqs2r3yxRF2IHzTXwFWKfH6FAUmW4E8e24ls');
+            background-size: cover; /* Ensures the image covers the entire banner */
+            background-position: center; /* Centers the background image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 5px 15px var(--shadow-medium);
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+            z-index: 5; /* Below hero to ensure hero shadows are prominent */
+        }
+
+        .report-banner a {
+            text-decoration: none;
+            display: block;
+            color: white;
+            padding: 15px 25px;
+            text-align: center;
+            transition: background-color var(--transition-speed) ease;
+            /* Add a semi-transparent overlay to ensure text readability */
+            background-color: rgba(0, 0, 0, 0.4); /* Dark overlay */
+        }
+
+        .report-banner a:hover {
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
+        }
+
+        .report-banner .banner-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .report-banner h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .report-banner i {
+            font-size: 1.8rem;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .report-banner a:hover i {
+            transform: translateX(5px);
+        }
+
         /* --- Hero Section (Call to Action) --- */
         .hero {
             display: flex;
@@ -780,6 +836,20 @@
                 bottom: 10px;
             }
 
+            /* Responsive adjustments for the banner */
+            .report-banner {
+                margin: 15px auto;
+            }
+            .report-banner a {
+                padding: 12px 20px;
+            }
+            .report-banner h3 {
+                font-size: 1.2rem;
+            }
+            .report-banner i {
+                font-size: 1.5rem;
+            }
+
             .hero {
                 min-height: 45vh;
                 padding: 40px 15px;
@@ -883,13 +953,6 @@
 
             footer {
                 font-size: 0.85rem;
-                padding: 20px 15px;
-            }
-
-            .scroll-to-top {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
             }
         }
 
@@ -946,6 +1009,24 @@
                 width: 120px;
                 height: 5px;
                 bottom: 8px;
+            }
+
+            /* Responsive adjustments for the banner */
+            .report-banner {
+                margin: 10px auto;
+            }
+            .report-banner a {
+                padding: 10px 15px;
+            }
+            .report-banner h3 {
+                font-size: 1rem;
+            }
+            .report-banner i {
+                font-size: 1.3rem;
+            }
+            .report-banner .banner-content {
+                flex-direction: column; /* Stack on very small screens if needed */
+                gap: 5px;
             }
 
             .hero h2 {
@@ -1044,6 +1125,15 @@
         <div class="slider-timer"></div>
     </div>
 
+    <!-- Report Banner Section -->
+    <section class="report-banner">
+        <a href="https://mysamadhan.in/reportedu" target="_blank" rel="noopener noreferrer">
+            <div class="banner-content">
+                <h3>Access the Daily Report of Apna Vidyalaya</h3>
+                <i class="ri-arrow-right-line"></i>
+            </div>
+        </a>
+    </section>
 
     <!-- Hero Section (Call to Action) -->
     <section class="hero">
