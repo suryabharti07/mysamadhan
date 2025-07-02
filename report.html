@@ -102,38 +102,40 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <div id="mainContainer" class="flex flex-col lg:flex-row p-5 gap-5 justify-center items-start">
-        <!-- Chart Wrapper Section -->
-        <div id="chartWrapper" class="relative flex-1 w-full lg:max-w-xl bg-white rounded-xl p-6 shadow-xl transition-all duration-300 ease-in-out">
-            <canvas id="teacherChart" class="block w-full h-96"></canvas>
-            <!-- Error message display -->
-            <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
-                <span class="font-semibold">Error:</span> <span id="errorMessageText"></span>
+    <!-- Main Content Container Wrapper for PC screen fit -->
+    <div class="max-w-screen-2xl mx-auto p-5 lg:p-10">
+        <div id="mainContainer" class="flex flex-col lg:flex-row gap-5 justify-center items-start">
+            <!-- Chart Wrapper Section -->
+            <div id="chartWrapper" class="relative flex-1 w-full bg-white rounded-xl p-6 shadow-xl transition-all duration-300 ease-in-out">
+                <canvas id="teacherChart" class="block w-full h-96"></canvas>
+                <!-- Error message display -->
+                <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+                    <span class="font-semibold">Error:</span> <span id="errorMessageText"></span>
+                </div>
             </div>
-        </div>
 
-        <!-- Ranking Table Wrapper Section -->
-        <div id="rankingTableWrapper" class="flex-1 w-full lg:max-w-lg bg-white rounded-xl shadow-xl overflow-y-auto max-h-[80vh] p-4">
-            <h2 class="text-xl font-semibold mb-4 text-center">Teachers Ranking</h2>
-            <!-- Search Bar moved to be above the table -->
-            <div class="mb-4 flex justify-center">
-                <input type="text" id="teacherSearch" placeholder="Search teacher by name..."
-                       class="p-2 rounded-lg border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full max-w-md"
-                       list="teacherNames">
-                <datalist id="teacherNames"></datalist>
+            <!-- Ranking Table Wrapper Section -->
+            <div id="rankingTableWrapper" class="flex-1 w-full bg-white rounded-xl shadow-xl overflow-y-auto max-h-[80vh] p-4">
+                <h2 class="text-xl font-semibold mb-4 text-center">Teachers Ranking</h2>
+                <!-- Search Bar moved to be above the table -->
+                <div class="mb-4 flex justify-center">
+                    <input type="text" id="teacherSearch" placeholder="Search teacher by name..."
+                           class="p-2 rounded-lg border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full max-w-md"
+                           list="teacherNames">
+                    <datalist id="teacherNames"></datalist>
+                </div>
+                <table id="rankingTable" class="min-w-full divide-y divide-gray-200">
+                    <thead class="ranking-table-header">
+                        <tr>
+                            <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider rounded-tl-lg w-1/4">Ranking</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider rounded-tr-lg w-3/4">Teacher Name</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Filled dynamically -->
+                    </tbody>
+                </table>
             </div>
-            <table id="rankingTable" class="min-w-full divide-y divide-gray-200">
-                <thead class="ranking-table-header">
-                    <tr>
-                        <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider rounded-tl-lg w-1/4">Ranking</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider rounded-tr-lg w-3/4">Teacher Name</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <!-- Filled dynamically -->
-                </tbody>
-            </table>
         </div>
     </div>
 
