@@ -2,394 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Samadhan EDU - Google Form</title>
+  <title>Samadhan EDU - Go to Search</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Remix Icon CDN for icons in navigation -->
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
-  <!-- Google Font: Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* CSS Variables for consistent theming - UPDATED FOR MODERN UI/UX */
-    :root {
-      --primary: #3B82F6; /* A clean, vibrant blue */
-      --secondary: #BFDBFE; /* A lighter shade of blue for accents */
-      --background: #F8FAFC; /* A very light, almost white background */
-      --text-dark: #1F2937; /* Dark charcoal grey for main text */
-      --text-light: #6B7280; /* Medium grey for secondary text */
-      --border-color: #D1D5DB; /* Light grey for borders */
-      --table-header-bg: #EFF6FF; /* Very light blue for table headers */
-      --table-even-row-bg: #F9FAFB; /* Very subtle off-white for even table rows */
-      --popup-button-primary: #3B82F6; /* Primary blue for main buttons */
-      --popup-button-secondary: #10B981; /* A friendly green for secondary actions */
-      --header-bg: #ffffff; /* White background for the header */
-    }
-
-    /* Universal Box-sizing */
-    * {
-      box-sizing: border-box;
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8FAFC;
       margin: 0;
       padding: 0;
-    }
-
-    /* HTML and Body Styling for full viewport control */
-    html, body {
-      height: 100%; /* Ensure html and body take full viewport height */
-      /* Removed overflow: hidden; from html/body to allow content to scroll naturally */
-    }
-
-    body {
-      font-family: 'Inter', sans-serif; /* Applied new font */
-      background: var(--background);
-      color: var(--text-dark);
+      color: #1F2937;
       display: flex;
-      flex-direction: column; /* Arrange children in a column */
-      justify-content: flex-start; /* Start content from the top */
-      align-items: stretch; /* Stretch children to fill available width */
-      padding-top: 0; /* Removed padding-top as header is no longer fixed */
-      /* No horizontal or bottom padding for edge-to-edge display */
-    }
-
-    /* New Header Styling - NO LONGER FIXED */
-    header {
-      background-color: var(--header-bg);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      width: 100%;
-      /* Removed position: fixed; top: 0; left: 0; */
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      padding: 15px 30px;
-      flex-wrap: wrap; /* Allow header content to wrap */
+      height: 100vh;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .site-logo {
-      height: 50px; /* Adjust logo size */
-      width: auto;
-    }
-
-    header h1 {
-      font-size: 1.8rem; /* Adjusted for header context - MADE SMALLER */
-      color: var(--primary);
-      margin-bottom: 0; /* Override previous h1 margin */
-    }
-
-    /* Navigation Menu */
-    .nav-menu ul {
-      list-style: none;
-      display: flex;
-      gap: 30px; /* Space between main nav items */
-    }
-
-    .nav-menu li {
-      position: relative;
-    }
-
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--text-dark);
+    button {
+      padding: 14px 28px;
+      background-color: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
       font-weight: 500;
-      padding: 10px 0;
-      display: block;
-      transition: color 0.3s ease;
-    }
-
-    .nav-menu a:hover {
-      color: var(--primary);
-    }
-
-    /* Dropdown Menus */
-    .nav-item-has-dropdown .dropdown-menu {
-      display: none;
-      position: absolute;
-      background-color: var(--header-bg);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      list-style: none;
-      min-width: 200px;
-      z-index: 1;
-      border-radius: 8px;
-      padding: 10px 0;
-      top: 100%; /* Position below the parent item */
-      left: 0;
-    }
-
-    .nav-item-has-dropdown:hover .dropdown-menu {
-      display: block; /* Show dropdown on hover */
-    }
-
-    .dropdown-menu li {
-      width: 100%; /* Ensure dropdown items take full width */
-    }
-
-    .dropdown-menu a {
-      padding: 10px 20px;
-      white-space: nowrap; /* Prevent text wrapping */
-      font-size: 15px;
-    }
-
-    /* Mobile Menu Toggle (Hamburger Icon) */
-    .menu-toggle {
-      display: none; /* Hidden by default on desktop */
-      flex-direction: column;
-      justify-content: space-around;
-      width: 30px;
-      height: 25px;
       cursor: pointer;
-      z-index: 200; /* Ensure it's above nav on mobile */
     }
 
-    .menu-toggle span {
-      display: block;
-      width: 100%;
-      height: 3px;
-      background-color: var(--primary);
-      border-radius: 5px;
-      transition: all 0.3s ease-in-out;
-    }
-
-    /* Animation for mobile menu toggle */
-    .menu-toggle.active span:nth-child(1) {
-      transform: translateY(11px) rotate(45deg);
-    }
-
-    .menu-toggle.active span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .menu-toggle.active span:nth-child(3) {
-      transform: translateY(-11px) rotate(-45deg);
-    }
-
-    /* Main content area to fill remaining vertical space */
-    main {
-        flex: 1; /* Allows main to grow and take all available space */
-        width: 100%; /* Ensure main takes full width */
-        display: flex;
-        justify-content: center; /* Center form container horizontally */
-        align-items: stretch; /* Stretch children to fill available height */
-        padding: 0; /* No padding for main for true edge-to-edge */
-    }
-
-    /* Form Container Styling for Fullscreen */
-    .form-container {
-        width: 100%; /* Takes full width of its parent (main) */
-        height: 100%; /* Takes full height of its parent (main) */
-        margin: 0; /* No margins for true edge-to-edge */
-        background-color: var(--background); /* Use background variable for consistency */
-        border-radius: 0; /* No border-radius for full edge-to-edge */
-        box-shadow: none; /* No box-shadow for full edge-to-edge */
-        /* Changed overflow to auto to allow the page to scroll if content exceeds viewport */
-        overflow: auto; /* Allow form container to scroll if its content is too long */
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Center title horizontally */
-        padding: 0; /* No padding for the container itself, controlled by children */
-    }
-
-    /* Google Form Iframe Styling for Fullscreen */
-    .google-form-iframe {
-        width: 100%; /* Takes full width of its parent */
-        flex: 1; /* Allows iframe to take remaining vertical space */
-        border: none;
-        border-radius: 0; /* No border-radius for full edge-to-edge */
-        box-shadow: none; /* No box-shadow */
-        overflow: hidden !important; /* Force hide scrollbar for the iframe */
-    }
-
-    /* Media Queries for Mobile Responsiveness */
-    @media (max-width: 992px) {
-      header {
-        padding: 15px 20px;
-      }
-
-      .nav-menu {
-        display: none; /* Hide nav menu by default on smaller screens */
-        flex-direction: column;
-        width: 100%;
-        background-color: var(--header-bg);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        position: absolute;
-        top: 80px; /* Position below header */
-        left: 0;
-        padding: 20px 0;
-        opacity: 0;
-        pointer-events: none; /* Disable interaction when hidden */
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-      }
-
-      .nav-menu.active {
-        display: flex; /* Show nav menu when active */
-        opacity: 1;
-        pointer-events: all; /* Enable interaction when active */
-      }
-
-      .nav-menu ul {
-        flex-direction: column;
-        gap: 0; /* Remove gap for vertical stacking */
-        width: 100%;
-      }
-
-      .nav-menu li {
-        width: 100%;
-        text-align: center;
-        border-bottom: 1px solid #f0f0f0; /* Separator for menu items */
-      }
-
-      .nav-menu li:last-child {
-        border-bottom: none;
-      }
-
-      .nav-menu a {
-        padding: 15px 0; /* Larger clickable area */
-      }
-
-      .nav-item-has-dropdown .dropdown-menu {
-        position: static; /* Stack dropdown items normally within the mobile menu */
-        box-shadow: none;
-        width: 100%;
-        padding: 0;
-        background-color: #f8f8f8; /* Slightly different background for sub-items */
-        border-radius: 0;
-      }
-
-      .nav-item-has-dropdown:hover .dropdown-menu {
-        display: none; /* Hide hover effect on mobile */
-      }
-      /* Ensure dropdown is visible on click for mobile */
-      .nav-item-has-dropdown.active .dropdown-menu {
-        display: flex;
-        flex-direction: column;
-      }
-
-
-      .dropdown-menu a {
-        padding: 10px 30px; /* Indent dropdown items */
-      }
-
-      .menu-toggle {
-        display: flex; /* Show hamburger icon */
-      }
-
-      body {
-        padding-top: 0; /* Adjust body padding for mobile header - no fixed header */
-      }
-    }
-
-    @media (max-width: 576px) { /* Adjust breakpoint for very small phones */
-      header {
-        padding: 10px 15px;
-      }
-      .site-logo {
-        height: 40px;
-      }
-      header h1 {
-        font-size: 1.6rem; /* Even smaller font for very small mobile */
-      }
-
-      body {
-        padding-top: 0; /* Further adjust body padding - no fixed header */
-      }
+    button:hover {
+      background-color: #2563EB;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-        <a href="#">
-            <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
-        </a>
-        <h1>Samadhan Kendra</h1>
-    </div>
-
-    <!-- Mobile Menu Toggle -->
-    <div class="menu-toggle" id="mobile-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
-    <nav class="nav-menu">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li class="nav-item-has-dropdown">
-                <a href="#about-us-section">About us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                <ul class="dropdown-menu">
-                        <li><a href="ourJourney.html">Our Journey</a></li>
-                        <li><a href="ourvision.html">Vision</a></li>
-                        <li><a href="ourmission.html">Mission</a></li>
-                        <li><a href="managment.html">Management And Administrative structure</a></li>
-                </ul>
-            </li>
-            <li><a href="programmes.html">Programs</a></li>
-            <li><a href="founder.html">Founder</a></li>
-            <li><a href="download.html">Download</a></li>
-            <li><a href="gallary.html">Gallary</a></li>
-            <li><a href="contact.html">Contact us</a></li>
-
-            <li class="nav-item-has-dropdown">
-                <a href="#login-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                <ul class="dropdown-menu">
-                          <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
-                        <li><a href="raghopur.html">RAGHOPUR</a></li>
-                        <li><a href="bidupur.html">BIDUPUR</a></li>
-                        <li><a href="admin.html">ADMIN</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-  </header>
-
-  <main>
-    <div class="form-container">
-        <iframe src="https://script.google.com/macros/s/AKfycbyMbmjWO2BOnHojURo5FEk1Fv4PUG6ZvpHoFYu8w52gLI8LgRaM_QPT8eXBE3HYL32ytQ/exec" class="google-form-iframe" scrolling="no">Loading…</iframe>
-    </div>
-  </main>
-
+  <button onclick="goToSearch()">Go to Search</button>
 
   <script>
-    // Ensure the DOM is fully loaded before attaching event listeners
-    document.addEventListener("DOMContentLoaded", () => {
-      // Mobile Menu Toggle Logic
-      const mobileMenuToggle = document.getElementById('mobile-menu');
-      const navMenu = document.querySelector('.nav-menu');
-      const dropdownToggles = document.querySelectorAll('.nav-item-has-dropdown > a');
-
-      mobileMenuToggle.addEventListener('click', () => {
-        mobileMenuToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-      });
-
-      // Toggle dropdowns for mobile view
-      dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', (event) => {
-          // Prevent default only if on a mobile size and it's a dropdown toggle
-          if (window.innerWidth <= 992) { // Use the same breakpoint as CSS
-            event.preventDefault(); // Prevent navigating to href if it's a dropdown parent
-            const parentLi = toggle.closest('.nav-item-has-dropdown');
-            parentLi.classList.toggle('active'); // Toggle active class on parent LI
-          }
-        });
-      });
-
-      // Close mobile menu and dropdowns when a menu item is clicked (optional, but good UX)
-      navMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          // Only close if it's a direct link, not a dropdown parent that just opened
-          if (window.innerWidth <= 992 && !link.closest('.nav-item-has-dropdown')) {
-            mobileMenuToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            // Close any open dropdowns
-            dropdownToggles.forEach(dt => dt.closest('.nav-item-has-dropdown').classList.remove('active'));
-          }
-        });
-      });
-    });
+    function goToSearch() {
+      window.open('https://script.google.com/macros/s/AKfycbyMbmjWO2BOnHojURo5FEk1Fv4PUG6ZvpHoFYu8w52gLI8LgRaM_QPT8eXBE3HYL32ytQ/exec', '_blank');
+    }
   </script>
 </body>
 </html>
