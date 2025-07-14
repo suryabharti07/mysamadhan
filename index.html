@@ -1,1352 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Samadhan Kendra - Empowering Communities, Enabling Change</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Header</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            /* MODERN UI/UX COLOR PALETTE */
-            --primary: #34495E;
-            --primary-light: #5DADE2;
-            --primary-dark: #2C3E50;
-            --accent: #27AE60;
-            --accent-dark: #1E8449;
-            --bg: #FDFDFD;
-            --text: #34495E;
-            --text-light: #95A5A6;
-            --card-bg: #FFFFFF;
-            --footer-bg: var(--primary-dark);
-            --header-bg: #FFFFFF;
-
-            /* Shadow Variables */
-            --shadow-light: rgba(0, 0, 0, 0.05);
-            --shadow-medium: rgba(0, 0, 0, 0.10);
-            --shadow-strong: rgba(0, 0, 0, 0.18);
-
-            --border-radius-soft: 8px;
-            --transition-speed: 0.3s;
-        }
-
-        /* Base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            scroll-behavior: smooth;
-        }
-
-        /* --- Header --- */
-        header {
-            background: var(--header-bg);
-            color: var(--primary);
-            padding: 10px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 15px var(--shadow-medium);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        header .site-logo {
-            height: 60px;
-            width: auto;
-            vertical-align: middle;
-            filter: drop-shadow(0 2px 6px var(--shadow-medium));
-        }
-
-        header h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: inherit;
-        }
-
-        /* Desktop Navigation */
-        nav {
-            display: flex;
-            align-items: center;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
+            background-color: #f8f9fa; /* Light grey background */
+        }
+        /* Custom styles for Google Cloud logo text color - no longer directly used but kept for reference if similar styling is needed */
+        .google-cloud-logo .google-text {
+            color: #4285F4; /* Google Blue */
+        }
+        .google-cloud-logo .cloud-text {
+            color: #5f6368; /* Google Grey */
+        }
+        /* Custom styling for the three-dot menu icon */
+        .three-dots-icon {
+            font-size: 1.25rem; /* Equivalent to text-xl */
+            color: #5f6368;
         }
 
-        nav ul li {
-            position: relative;
-            margin-left: 25px;
-        }
-
-        nav ul li a:not(.header-cta-button) {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: color var(--transition-speed) ease, transform 0.2s ease;
-            position: relative;
-            padding: 5px 0;
-            display: block;
-        }
-
-        nav ul li a:not(.header-cta-button)::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            display: block;
-            bottom: 0;
-            left: 50%;
-            background: var(--accent);
-            transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
-        }
-
-        nav ul li a:not(.header-cta-button):hover::after {
-            width: 100%;
-            left: 0;
-        }
-
-        nav ul li a:not(.header-cta-button):hover {
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* Dropdown Menu Styles */
+        /* Dropdown specific styles for desktop (hover) */
         .dropdown-menu {
-            display: none;
             position: absolute;
-            top: 100%;
+            background-color: white;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            min-width: 160px;
+            border-radius: 0.375rem; /* rounded-md */
+            overflow: hidden;
+            padding: 0.5rem 0;
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+            top: 100%; /* Position below the parent link */
             left: 0;
-            background-color: var(--card-bg);
-            box-shadow: 0 8px 20px var(--shadow-medium);
-            border-radius: var(--border-radius-soft);
-            min-width: 200px;
-            z-index: 1001;
-            padding: 8px 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(8px);
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed) ease;
         }
 
-        .nav-item-has-dropdown:hover > .dropdown-menu {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-menu li {
-            margin: 0;
-        }
-
-        .dropdown-menu li a {
-            color: var(--primary);
-            padding: 8px 18px;
-            text-decoration: none;
-            display: block;
-            white-space: nowrap;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
-
-        .dropdown-menu li a:hover {
-            background-color: var(--bg);
-            color: var(--accent);
-        }
-
-        /* Header CTA Button */
-        .header-cta-button {
-            padding: 8px 20px;
-            font-size: 0.9rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 3px 8px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-left: 25px;
-        }
-
-        .header-cta-button:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 5px 12px var(--shadow-strong);
-        }
-
-        /* Mobile Navigation Toggle */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-around;
-            width: 28px;
-            height: 22px;
-            cursor: pointer;
-            z-index: 1001;
-            padding: 2px;
-        }
-        
-        .menu-toggle span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary);
-            transition: all var(--transition-speed) ease;
-            border-radius: 2px;
-        }
-
-        .nav-menu.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .menu-toggle.open span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .menu-toggle.open span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.open span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
-        /* --- Slider Section (Hero Image Slider) --- */
-        .slider {
-            position: relative;
-            width: 100%; 
-            height: 75vh; /* Adjusted height for desktop to accommodate 'contain' */
-            margin-top: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px var(--shadow-medium);
-            border-bottom-left-radius: var(--border-radius-soft);
-            border-bottom-right-radius: var(--border-radius-soft);
-        }
-
-        .slides {
-            display: flex;
-            height: 100%;
-            animation: slide 20s infinite linear;
-        }
-
-        .slides img {
-            width: 100vw;
-            height: 100%;
-            object-fit: contain; /* Set to contain for desktop to show full image */
-            filter: brightness(0.85);
-            flex-shrink: 0;
-            margin-right: 20px; /* Default gap for desktop */
-            background-color: var(--primary-dark); /* Background for contained images */
-        }
-
-        /* Keyframes for desktop slider animation */
-        @keyframes slide {
-            0% { transform: translateX(0); }
-            22.5% { transform: translateX(0); }
-            25% { transform: translateX(calc(-100vw - 20px)); }
-
-            25.01% { transform: translateX(calc(-100vw - 20px)); }
-            47.5% { transform: translateX(calc(-100vw - 20px)); }
-            50% { transform: translateX(calc(-200vw - 40px)); }
-
-            50.01% { transform: translateX(calc(-200vw - 40px)); }
-            72.5% { transform: translateX(calc(-200vw - 40px)); }
-            75% { transform: translateX(calc(-300vw - 60px)); }
-
-            75.01% { transform: translateX(calc(-300vw - 60px)); }
-            97.5% { transform: translateX(calc(-300vw - 60px)); }
-            100% { transform: translateX(0); }
-        }
-
-        /* Slider Timer Styles */
-        .slider-timer {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 180px;
-            height: 7px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 3.5px;
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        .slider-timer::after {
-            content: '';
-            display: block;
-            height: 100%;
-            width: 0;
-            background-color: var(--accent);
-            border-radius: 3.5px;
-            animation: timer-fill 5s infinite linear;
-        }
-
-        @keyframes timer-fill {
-            0% { width: 0%; }
-            90% { width: 100%; }
-            90.01% { width: 0%; }
-            100% { width: 0%; }
-        }
-
-        /* --- Report Banner Section --- */
-        .report-banner {
-            margin: 20px auto;
-            max-width: 95%;
-            background-image: url('https://media.licdn.com/dms/image/v2/C4E16AQFvG_WSQY9fPA/profile-displaybackgroundimage-shrink_200_800/profile-displaybackgroundimage-shrink_200_800/0/1653638787913?e=2147483647&v=beta&t=DWiDlLBCqs2r3yxRF2IHzTXwFWKfH6FAUmW4E8e24ls');
-            background-size: cover; /* Ensures the image covers the entire banner */
-            background-position: center; /* Centers the background image */
-            background-repeat: no-repeat; /* Prevents the image from repeating */
-            border-radius: var(--border-radius-soft);
-            box-shadow: 0 5px 15px var(--shadow-medium);
-            overflow: hidden;
-            transition: all var(--transition-speed) ease;
-            position: relative;
-            z-index: 5; /* Below hero to ensure hero shadows are prominent */
-        }
-
-        .report-banner a {
-            text-decoration: none;
-            display: block;
-            color: white;
-            padding: 15px 25px;
-            text-align: center;
-            transition: background-color var(--transition-speed) ease;
-            /* Add a semi-transparent overlay to ensure text readability */
-            background-color: rgba(0, 0, 0, 0.4); /* Dark overlay */
-        }
-
-        .report-banner a:hover {
-            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
-        }
-
-        .report-banner .banner-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .report-banner h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0;
-            color: white;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .report-banner i {
-            font-size: 1.8rem;
-            color: white;
-            transition: transform 0.3s ease;
-        }
-
-        .report-banner a:hover i {
-            transform: translateX(5px);
-        }
-
-        /* --- Hero Section (Call to Action) --- */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 50vh;
-            text-align: center;
-            background: linear-gradient(to right, var(--primary-light), var(--primary-dark));
-            color: white;
-            padding: 60px 20px;
-            position: relative;
-            z-index: 10;
-            overflow: hidden;
-            border-radius: var(--border-radius-soft);
-            margin: 30px auto;
-            max-width: 95%;
-            box-shadow: 0 8px 20px var(--shadow-medium);
-        }
-
-        .hero::before, .hero::after {
-            content: '';
-            position: absolute;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .hero h2 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            font-weight: 800;
-            text-shadow: 1px 1px 6px var(--shadow-medium);
-            max-width: 800px;
-        }
-
-        .hero p {
-            max-width: 700px;
-            font-size: 1.1rem;
-            opacity: 0.98;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        /* Hero CTA button */
-        .hero .cta-button {
-            padding: 14px 30px;
-            font-size: 1.05rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 5px 12px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-left: 0;
-        }
-
-        .hero .cta-button:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 7px 18px var(--shadow-strong);
-        }
-
-        /* --- Section Defaults --- */
-        .section {
-            padding: 60px 30px;
-            text-align: center;
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .section h3 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 50px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section h3::after {
-            content: '';
-            position: absolute;
-            width: 60%;
-            height: 3px;
-            background: var(--accent);
-            bottom: -12px;
-            left: 20%;
-            border-radius: 2px;
-        }
-
-        /* --- Impact Slider (Text Slider) --- */
-        .impact-slider {
-            background: linear-gradient(120deg, var(--bg), rgba(93, 173, 226, 0.05));
-            padding: 80px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .impact-slider h3 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 50px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .impact-slider h3::after {
-            content: '';
-            position: absolute;
-            width: 60%;
-            height: 3px;
-            background: var(--accent);
-            bottom: -12px;
-            left: 20%;
-            border-radius: 2px;
-        }
-
-        .impact-slides-container {
-            position: relative;
-            min-height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .impact-slide {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: 18px;
-            box-shadow: 0 12px 30px var(--shadow-light);
-            padding: 40px 30px;
-            position: absolute;
-            width: 90%;
-            border: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        .impact-slide.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-            position: relative;
-            box-shadow: 0 15px 40px var(--shadow-medium);
-            border: 1px solid var(--primary-light);
-        }
-
-        .impact-slide h4 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 18px;
-            line-height: 1.2;
-            letter-spacing: -0.2px;
-        }
-
-        .impact-slide p {
-            font-size: 1.05rem;
-            color: var(--text);
-            line-height: 1.7;
-            max-width: 700px;
-            margin: 0 auto;
-            font-weight: 400;
-        }
-
-        .impact-dots {
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
-            gap: 12px;
-        }
-
-        .impact-dots span {
-            width: 12px;
-            height: 12px;
-            background: var(--text-light);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background var(--transition-speed) ease, transform 0.2s ease, border-color var(--transition-speed) ease;
-            border: 2px solid transparent;
-        }
-
-        .impact-dots span.active {
-            background: var(--accent);
-            transform: scale(1.2);
-            border-color: var(--primary-light);
-        }
-
-        .impact-dots span:hover {
-            transform: scale(1.1);
-        }
-
-        /* --- Initiatives Section (Services) --- */
-        #initiatives {
-            background-color: var(--card-bg);
-            padding: 80px 30px;
-            border-top: 1px solid rgba(0,0,0,0.05);
-        }
-
-        #initiatives h3 {
-            color: var(--primary);
-            margin-bottom: 60px;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .card {
-            background-color: var(--bg);
-            border-radius: var(--border-radius-soft);
-            padding: 25px;
-            box-shadow: 0 6px 15px var(--shadow-light);
-            text-align: left;
-            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 25px var(--shadow-medium);
-        }
-
-        .card h4 {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-weight: 700;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .card h4 i {
-            color: var(--accent);
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.6rem;
-        }
-        
-        .card h4::before {
-            content: ''; 
-        }
-
-        .card p {
-            font-size: 0.95rem;
-            color: var(--text-light);
-            line-height: 1.6;
-        }
-
-        /* --- Footer --- */
-        footer {
-            background-color: var(--footer-bg);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 25px 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            box-shadow: 0 -3px 10px var(--shadow-medium);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* --- Scroll to Top Button --- */
-        .scroll-to-top {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--primary-light);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.6rem;
-            cursor: pointer;
-            box-shadow: 0 3px 10px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 999;
-        }
-
-        .scroll-to-top.show {
+        /* Class to show the dropdown */
+        .show-menu {
             opacity: 1;
             visibility: visible;
         }
 
-        .scroll-to-top:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px var(--shadow-strong);
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            display: block;
+            color: #5f6368; /* text-gray-700 */
+            text-decoration: none;
+            font-size: 0.875rem; /* text-sm */
+            white-space: nowrap; /* Prevent text wrapping */
         }
 
-        /* --- Responsive Adjustments --- */
-        /* Tablet and larger phones (max-width: 768px) */
-        @media (max-width: 768px) {
-            header {
-                padding: 10px 15px;
-            }
-
-            .header-left {
-                gap: 8px;
-            }
-
-            header .site-logo {
-                height: 50px;
-            }
-
-            header h1 {
-                font-size: 1.4rem;
-            }
-
-            .nav-menu {
-                flex-direction: column;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: var(--header-bg);
-                box-shadow: none;
-                padding: 80px 0 20px 0;
-                border-radius: 0;
-                opacity: 0;
-                transform: translateY(-100%);
-                transition: opacity 0.4s ease, transform 0.4s ease;
-                display: flex;
-                overflow-y: auto;
-            }
-
-            .nav-menu.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-                width: 100%;
-                align-items: center;
-            }
-
-            .nav-menu ul li {
-                margin: 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            .nav-menu li a:not(.header-cta-button) {
-                padding: 12px 20px;
-                font-size: 1rem;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-            }
-
-            .nav-menu li:last-child a:not(.header-cta-button) {
-                 border-bottom: none;
-            }
-
-            .nav-item-has-dropdown > a {
-                 position: relative;
-            }
-            .nav-item-has-dropdown > a::after {
-                content: '\f107';
-                font-family: "RemixIcon";
-                position: absolute;
-                right: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                transition: transform var(--transition-speed) ease;
-            }
-
-            .nav-item-has-dropdown.open > a::after {
-                transform: translateY(-50%) rotate(180deg);
-            }
-
-            .dropdown-menu {
-                position: static;
-                width: 100%;
-                box-shadow: none;
-                border-radius: 0;
-                padding: 0;
-                background-color: rgba(0,0,0,0.02);
-                display: none;
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            .dropdown-menu.active-mobile {
-                display: block;
-            }
-
-            .dropdown-menu li a {
-                padding: 10px 30px;
-                font-size: 0.95rem;
-                border-bottom: 1px solid rgba(0,0,0,0.03);
-            }
-            .dropdown-menu li:last-child a {
-                border-bottom: none;
-            }
-
-            .header-cta-button {
-                margin: 20px auto;
-                padding: 12px 25px;
-                font-size: 0.95rem;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-
-            .slider {
-                height: 60vh; /* Adjusted for tablet */
-                margin-top: 10px;
-            }
-
-            .slides img {
-                object-fit: contain; /* Show full image on tablet */
-                margin-right: 10px;
-            }
-
-            /* Keyframes for tablet slider animation */
-            @keyframes slide {
-                0% { transform: translateX(0); }
-                22.5% { transform: translateX(0); }
-                25% { transform: translateX(calc(-100vw - 10px)); }
-
-                25.01% { transform: translateX(calc(-100vw - 10px)); }
-                47.5% { transform: translateX(calc(-100vw - 10px)); }
-                50% { transform: translateX(calc(-200vw - 20px)); }
-
-                50.01% { transform: translateX(calc(-200vw - 20px)); }
-                72.5% { transform: translateX(calc(-200vw - 20px)); }
-                75% { transform: translateX(calc(-300vw - 30px)); }
-
-                75.01% { transform: translateX(calc(-300vw - 30px)); }
-                97.5% { transform: translateX(calc(-300vw - 30px)); }
-                100% { transform: translateX(0); }
-            }
-
-            .slider-timer {
-                width: 150px;
-                height: 6px;
-                bottom: 10px;
-            }
-
-            /* Responsive adjustments for the banner */
-            .report-banner {
-                margin: 15px auto;
-            }
-            .report-banner a {
-                padding: 12px 20px;
-            }
-            .report-banner h3 {
-                font-size: 1.2rem;
-            }
-            .report-banner i {
-                font-size: 1.5rem;
-            }
-
-            .hero {
-                min-height: 45vh;
-                padding: 40px 15px;
-                margin: 20px auto;
-            }
-
-            .hero h2 {
-                font-size: 2.2rem;
-                margin-bottom: 12px;
-            }
-
-            .hero p {
-                font-size: 0.95rem;
-                max-width: 95%;
-                margin-bottom: 20px;
-            }
-
-            .hero .cta-button {
-                padding: 10px 24px;
-                font-size: 0.95rem;
-            }
-
-            .section {
-                padding: 50px 15px;
-            }
-
-            .section h3 {
-                font-size: 2.2rem;
-                margin-bottom: 30px;
-            }
-
-            .section h3::after {
-                width: 50%;
-                left: 25%;
-                bottom: -10px;
-            }
-
-            .impact-slider {
-                padding: 60px 15px;
-            }
-
-            .impact-slider h3 {
-                font-size: 2.2rem;
-                margin-bottom: 30px;
-            }
-
-            .impact-slider h3::after {
-                width: 50%;
-                left: 25%;
-                bottom: -10px;
-            }
-
-            .impact-slides-container {
-                min-height: 220px;
-                padding: 10px 0;
-            }
-
-            .impact-slide {
-                padding: 30px 20px;
-            }
-
-            .impact-slide h4 {
-                font-size: 1.6rem;
-            }
-
-            .impact-slide p {
-                font-size: 0.95rem;
-            }
-
-            .impact-dots {
-                margin-top: 30px;
-                gap: 10px;
-            }
-
-            .impact-dots span {
-                width: 10px;
-                height: 10px;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .card h4 {
-                font-size: 1.25rem;
-                padding-left: 25px;
-            }
-
-            .card h4 i {
-                font-size: 1.4rem;
-            }
-
-            .card p {
-                font-size: 0.85rem;
-            }
-
-            footer {
-                font-size: 0.85rem;
-            }
-        }
-
-        /* Smaller phones (max-width: 480px) */
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.2rem;
-            }
-
-            header .site-logo {
-                height: 35px;
-            }
-
-            .nav-menu li a:not(.header-cta-button) {
-                font-size: 0.9rem;
-                padding: 10px 15px;
-            }
-
-            .dropdown-menu li a {
-                font-size: 0.85rem;
-                padding: 8px 20px;
-            }
-
-            .slider {
-                height: 45vh; /* Adjusted for mobile */
-                margin-top: 8px;
-            }
-
-            .slides img {
-                object-fit: contain; /* Show full image on mobile */
-                margin-right: 5px;
-            }
-            
-            /* Keyframes for smaller phone slider animation */
-            @keyframes slide {
-                0% { transform: translateX(0); }
-                22.5% { transform: translateX(0); }
-                25% { transform: translateX(calc(-100vw - 5px)); }
-
-                25.01% { transform: translateX(calc(-100vw - 5px)); }
-                47.5% { transform: translateX(calc(-100vw - 5px)); }
-                50% { transform: translateX(calc(-200vw - 10px)); }
-
-                50.01% { transform: translateX(calc(-200vw - 10px)); }
-                72.5% { transform: translateX(calc(-200vw - 10px)); }
-                75% { transform: translateX(calc(-300vw - 15px)); }
-
-                75.01% { transform: translateX(calc(-300vw - 15px)); }
-                97.5% { transform: translateX(calc(-300vw - 15px)); }
-                100% { transform: translateX(0); }
-            }
-
-            .slider-timer {
-                width: 120px;
-                height: 5px;
-                bottom: 8px;
-            }
-
-            /* Responsive adjustments for the banner */
-            .report-banner {
-                margin: 10px auto;
-            }
-            .report-banner a {
-                padding: 10px 15px;
-            }
-            .report-banner h3 {
-                font-size: 1rem;
-            }
-            .report-banner i {
-                font-size: 1.3rem;
-            }
-            .report-banner .banner-content {
-                flex-direction: column; /* Stack on very small screens if needed */
-                gap: 5px;
-            }
-
-            .hero h2 {
-                font-size: 1.8rem;
-            }
-
-            .hero .cta-button {
-                padding: 8px 20px;
-                font-size: 0.85rem;
-            }
-
-            .section h3 {
-                font-size: 1.8rem;
-            }
-
-            .impact-slides-container {
-                min-height: 200px;
-            }
-
-            .impact-slide {
-                padding: 25px 15px;
-            }
-
-            .impact-slide h4 {
-                font-size: 1.4rem;
-            }
-            
-            .impact-slide p {
-                font-size: 0.9rem;
-            }
-
-            footer {
-                font-size: 0.85rem;
-            }
+        .dropdown-item:hover {
+            background-color: #f3f4f6; /* hover:bg-gray-100 */
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <div class="header-left">
-            <a href="#">
-                <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
-            </a>
-            <h1>Samadhan Kendra</h1>
+    <header class="bg-white shadow-sm py-3 px-6 flex items-center justify-between w-full border-b border-gray-200">
+        <!-- Left Section: Logo and Navigation Links -->
+        <div class="flex items-center space-x-8">
+            <!-- Logo -->
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyl6ncyG6xbuzkCG6jF6tN40kWEd2lsGlVx8-ozaJtiRoDd0H-0H_kT8OF0TsmxdGMdPo5gpZfbJzCpsTyX0HrrZc1Y40s5OxHJNcXGy2iUG1_6wKD5j-FIYN631Sj9p1Vwu-5PnUti7SCjlDj9vgzrJo029rgGOaxhnLwhdiDAgv1U4FlePTJn5XaAsXb/s320/samadhan-kendra-logo.png" alt="Samadhan Kendra Logo" class="h-6"> <!-- Adjusted height to h-6 for a slightly smaller size -->
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex items-center space-x-6 text-gray-700 text-sm">
+                <a href="#" class="hover:text-blue-600">Home</a>
+
+                <!-- About us Dropdown -->
+                <div class="relative dropdown" id="aboutUsDropdown">
+                    <a href="#" class="hover:text-blue-600 flex items-center">
+                        About us
+                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Our Journey</a>
+                        <a href="#" class="dropdown-item">Vision</a>
+                        <a href="#" class="dropdown-item">Mission</a>
+                        <a href="#" class="dropdown-item">Management And Administrative structure</a>
+                    </div>
+                </div>
+
+                <!-- Programs Dropdown -->
+                <div class="relative dropdown" id="programsDropdown">
+                    <a href="#" class="hover:text-blue-600 flex items-center">
+                        Programs
+                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">SU-SIKSHALAYA</a>
+                        <a href="#" class="dropdown-item">Apna Vidyalaya</a>
+                        <a href="#" class="dropdown-item">Sports</a>
+                        <a href="#" class="dropdown-item">WSG</a>
+                        <a href="#" class="dropdown-item">Environment</a>
+                    </div>
+                </div>
+
+                <a href="#" class="hover:text-blue-600">Founder</a>
+                <a href="#" class="hover:text-blue-600">Download</a>
+                <a href="#" class="dropdown-item">Gallery</a>
+            </nav>
         </div>
 
-        <!-- Mobile Menu Toggle -->
-        <div class="menu-toggle" id="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
+        <!-- Right Section: Search, Utility Links, Three Dots, Start Button -->
+        <div class="flex items-center space-x-4">
+            <!-- Search Icon -->
+            <button class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search text-gray-600"></i>
+            </button>
+
+            <!-- Desktop Utility Links -->
+            <nav class="hidden md:flex items-center space-x-4 text-gray-700 text-sm lg:block">
+                <a href="#" class="hover:text-blue-600">Download</a>
+                <a href="#" class="hover:text-blue-600">Contact</a>
+                <a href="#" class="hover:text-blue-600">Console</a>
+            </nav>
+
+            <!-- Three Dots Menu (Desktop) -->
+            <button class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden lg:block">
+                <i class="fas fa-ellipsis-v three-dots-icon"></i>
+            </button>
+
+            <!-- Start Button (Desktop) -->
+            <!-- Added onclick event to redirect to the specified URL -->
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out hidden lg:block" onclick="window.location.href='https://script.google.com/macros/s/AKfycbx26mZ0C76dmB5daMR_Ha2-reKVE2fXv8thI_dYi4QX95_lc0_V4LcXr3gS9u35B65Dsg/exec'">
+                Start
+            </button>
+
+            <!-- Hamburger Icon for Mobile -->
+            <button id="mobileMenuButton" class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden">
+                <i class="fas fa-bars text-gray-600"></i>
+            </button>
         </div>
-
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li class="nav-item-has-dropdown">
-                    <a href="#about-us-section">About us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                    <ul class="dropdown-menu">
-                           <li><a href="ourJourney.html">Our Journey</a></li>
-                        <li><a href="ourvision.html">Vision</a></li>
-                        <li><a href="ourmission.html">Mission</a></li>
-                        <li><a href="managment.html">Management And Administrative structure</a></li>
-                    </ul>
-                </li>
-                <li><a href="programmes.html">Programs</a></li>
-                <li><a href="founder.html">Founder</a></li>
-                <li><a href="download.html">Download</a></li>
-                 <li><a href="gallary.html">Gallary</a></li>
-                <li><a href="contact.html">Contact us</a></li>
-
-               <li class="nav-item-has-dropdown">
-                    <a href="#about-us-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                    <ul class="dropdown-menu">
-                           <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
-                        <li><a href="raghopur.html">RAGHOPUR</a></li>
-                        <li><a href="bidupur.html">BIDUPUR</a></li>
-                        <li><a href="admin.html">ADMIN</a></li>
-                        
-                        
-                        
-                    </ul>
-            </ul>
-        </nav>
     </header>
 
-     <!-- Image Slider Section -->
-    <div class="slider">
-        <div class="slides">
-            <img src="https://i.postimg.cc/gjd2YSCn/image.png" alt="Slide 1: Helping Hands">
-            <img src="https://i.postimg.cc/wxchDST4/image.png" alt="Slide 2: Happy children in a community">
-            <img src="https://i.postimg.cc/bwqVQxhk/image.png" alt="Slide 3: Rural education scene">
-            <img src="https://i.postimg.cc/W3q52SGL/image.png" alt="Slide 4: Healthcare in a village">
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
         </div>
-        <div class="slider-timer"></div>
+        <nav class="flex flex-col items-start p-6 space-y-4 text-gray-700 text-lg">
+            <a href="#" class="hover:text-blue-600 w-full py-2">Home</a>
+
+            <!-- About us Dropdown (Mobile) -->
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-2 text-left hover:text-blue-600" id="mobileAboutUsToggle">
+                    About us
+                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                </button>
+                <div class="pl-4 mt-2 space-y-2 hidden" id="mobileAboutUsMenu">
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Our Journey</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Vision</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Mission</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Management And Administrative structure</a>
+                </div>
+            </div>
+
+            <!-- Programs Dropdown (Mobile) -->
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-2 text-left hover:text-blue-600" id="mobileProgramsToggle">
+                    Programs
+                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                </button>
+                <div class="pl-4 mt-2 space-y-2 hidden" id="mobileProgramsMenu">
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">SU-SIKSHALAYA</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Apna Vidyalaya</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Sports</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">WSG</a>
+                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Environment</a>
+                </div>
+            </div>
+
+            <a href="#" class="hover:text-blue-600 w-full py-2">Founder</a>
+            <a href="#" class="hover:text-blue-600 w-full py-2">Download</a>
+            <a href="#" class="hover:text-blue-600 w-full py-2">Gallery</a>
+
+            <!-- Mobile Utility Links -->
+            <a href="#" class="hover:text-blue-600 w-full py-2">Download</a>
+            <a href="#" class="hover:text-blue-600 w-full py-2">Contact</a>
+            <a href="#" class="hover:text-blue-600 w-full py-2">Console</a>
+
+            <!-- Mobile Start Button -->
+            <!-- Added onclick event to redirect to the specified URL -->
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out w-full text-center mt-4" onclick="window.location.href='https://script.google.com/macros/s/AKfycbx26mZ0C76dmB5daMR_Ha2-reKVE2fXv8thI_dYi4QX95_lc0_V4LcXr3gS9u35B65Dsg/exec'">
+                Start
+            </button>
+        </nav>
     </div>
 
-    <!-- Report Banner Section -->
-    <section class="report-banner">
-        <a href="https://mysamadhan.in/reportedu" target="_blank" rel="noopener noreferrer">
-            <div class="banner-content">
-                <h3>Access the Daily Report of Apna Vidyalaya</h3>
-                <i class="ri-arrow-right-line"></i>
-            </div>
-        </a>
-    </section>
-
-    <!-- Hero Section (Call to Action) -->
-    <section class="hero">
-        <h2>Empowering Communities, Enabling Change</h2>
-        <p>Samadhan Kendra is a non-profit organization dedicated to fostering **holistic development** and **empowerment** in rural and underprivileged communities across India, specifically focusing on **Bihar**.</p>
-        <a href="ourmission.html" class="cta-button">Learn About Our Mission</a>
-    </section>
-
-    <!-- Impact Slider (Text Slider) -->
-    <section class="impact-slider">
-        <h3>Our Impact Since 2004</h3>
-        <div class="impact-slides-container">
-            <div class="impact-slide active">
-                <h4>Empowering Women & Educating Children in Vaishali</h4>
-                <p>Since our inception in **2004**, Samadhan Kendra has been a driving force for development in Bihar. We've proudly empowered nearly **5,000 women's Self-Help Groups (SHGs)** across **700 villages** in Vaishali, facilitating access to over **₹100 Crore** in crucial bank credit. Additionally, we actively run **70 free Non-Formal Education (NFE) Centers**, providing foundational learning to **1,750 children** in Raghopur.</p>
-            </div>
-            <div class="impact-slide">
-                <h4>Holistic Development: Livelihoods, Health & Environment</h4>
-                <p>Our commitment extends beyond education and women's empowerment. Samadhan Kendra's comprehensive approach covers vital areas suchs as **sustainable livelihoods**, ensuring economic stability for families. We conduct regular **health camps** and promote well-being, actively engage in **sports initiatives** for youth development, champion **tree plantation** drives, and provide crucial **flood relief** efforts in affected regions.</p>
-            </div>
-            <div class="impact-slide">
-                <h4>A Legacy of Change: Building a Stronger Bihar Together</h4>
-                <p>With a legacy spanning two decades, Samadhan Kendra continues to build a stronger, more resilient Bihar. Our work is a testament to the power of community-led development. From fostering financial independence for women to nurturing the next generation through education, and responding to environmental challenges, we are dedicated to creating lasting positive change for countless lives.</p>
-            </div>
-        </div>
-        <div class="impact-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div>
-    </section>
-
-    <!-- Initiatives Section (Services) -->
-    <section id="initiatives" class="section">
-        <h3>Our Core Initiatives</h3>
-        <div class="cards">
-            <div class="card">
-                <h4><i class="ri-book-open-line"></i> Education Programs</h4>
-                <p>Providing access to quality education and foundational learning for children in remote and underprivileged villages, ensuring a brighter future.</p>
-            </div>
-            <div class="card">
-                <h4><i class="ri-heart-line"></i> Healthcare & Wellness Camps</h4>
-                <p>Organizing regular health check-ups and medical aid, and awareness programs to improve health outcomes for vulnerable communities.</p>
-            </div>
-            <div class="card">
-                <h4><i class="ri-women-line"></i> Women Empowerment & Livelihoods</h4>
-                <p>Supporting self-help groups, vocational training, and entrepreneurship initiatives to foster financial independence and social upliftment for women.</p>
-            </div>
-            <div class="card">
-                <h4><i class="ri-leaf-line"></i> Environmental Sustainability</h4>
-                <p>Promoting large-scale tree plantation drives, advocating for water conservation, and encouraging the adoption of clean energy solutions.</p>
-            </div>
-            <div class="card">
-                <h4><i class="ri-bike-line"></i> Sports for Development</h4>
-                <p>Utilizing sports as a tool for youth development, promoting teamwork, discipline, and healthy lifestyles in rural areas.</p>
-            </div>
-            <div class="card">
-                <h4><i class="ri-building-line"></i> Disaster Relief & Rehabilitation</h4>
-                <p>Providing immediate humanitarian aid and long-term rehabilitation support to communities affected by natural calamities, particularly floods.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 Samadhan Kendra. All rights reserved. | Built with purpose.</p>
-    </footer>
-
-    <a href="#" class="scroll-to-top" id="scrollToTopBtn">
-        <i class="ri-arrow-up-line"></i>
-    </a>
+    <!-- Main content area (empty as per request) -->
+    <main class="p-6">
+        <!-- Your content goes here -->
+    </main>
 
     <script>
-        const mobileMenuToggle = document.getElementById('mobile-menu');
-        const navMenu = document.querySelector('.nav-menu');
-        const dropdownParent = document.querySelector('.nav-item-has-dropdown');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Desktop dropdown logic (hover)
+            const dropdownTimeouts = {};
 
-        // Function to close the mobile menu
-        function closeMobileMenu() {
-            mobileMenuToggle.classList.remove('open');
-            navMenu.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-            // Also close dropdown if open
-            if (dropdownParent) {
-                dropdownParent.classList.remove('open');
-            }
-            if (dropdownMenu) {
-                dropdownMenu.classList.remove('active-mobile');
-            }
-        }
-
-        mobileMenuToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            mobileMenuToggle.classList.toggle('open');
-            navMenu.classList.toggle('active');
-            if (navMenu.classList.contains('active')) {
-                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
-            } else {
-                document.body.style.overflow = 'auto';
-                // Close dropdown when main menu closes
-                if (dropdownParent) {
-                    dropdownParent.classList.remove('open');
-                }
-                if (dropdownMenu) {
-                    dropdownMenu.classList.remove('active-mobile');
-                }
-            }
-        });
-
-        // Toggle dropdown on mobile click (for About Us)
-        if (dropdownParent) {
-            dropdownParent.addEventListener('click', function (e) {
-                // Only toggle if in mobile view AND the main menu is active
-                if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
-                    // Prevent default behavior only if the click is on the parent link itself, not a submenu item
-                    if (e.target.closest('a') === this.querySelector('a')) {
-                        e.preventDefault();
-                    }
-                    dropdownParent.classList.toggle('open');
-                    dropdownMenu.classList.toggle('active-mobile');
-                }
-            });
-        }
-
-        // Close mobile menu when a navigation link is clicked
-        navMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // If it's a direct link within a dropdown menu, close the whole menu
-                if (link.closest('.dropdown-menu')) {
-                    closeMobileMenu();
-                } 
-                // If it's a main nav link and not the dropdown toggle itself on mobile
-                else if (window.innerWidth <= 768 && !link.closest('.nav-item-has-dropdown')) {
-                     closeMobileMenu();
-                } 
-                // For desktop links or other cases, let default behavior or smooth scroll handle
-            });
-        });
-
-        // Impact Slider Logic
-        const impactSlides = document.querySelectorAll('.impact-slide');
-        const impactDots = document.querySelectorAll('.impact-dots .dot');
-        let impactIndex = 0;
-        let impactInterval;
-
-        function showImpactSlide(i) {
-            impactSlides.forEach((slide, idx) => {
-                slide.classList.toggle('active', idx === i);
-            });
-            impactDots.forEach((dot, idx) => {
-                dot.classList.toggle('active', idx === i);
-            });
-        }
-
-        function startImpactSlider() {
-            impactInterval = setInterval(() => {
-                impactIndex = (impactIndex + 1) % impactSlides.length;
-                showImpactSlide(impactIndex);
-            }, 6000); // Change slide every 6 seconds
-        }
-
-        // Initialize impact slider on load
-        showImpactSlide(impactIndex);
-        startImpactSlider();
-
-        impactDots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                clearInterval(impactInterval); // Stop auto-slide on manual interaction
-                impactIndex = i; // Corrected index assignment
-                showImpactSlide(impactIndex);
-                startImpactSlider(); // Restart auto-slide after a brief pause or immediately
-            });
-        });
-
-        // Scroll-to-top button logic
-        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-
-        window.onscroll = function () {
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-                scrollToTopBtn.classList.add("show");
-            } else {
-                scrollToTopBtn.classList.remove("show");
-            }
-        };
-
-        scrollToTopBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-
-        // Smooth scroll for navigation links (excluding the "LOG - IN" button to allow its custom handler)
-        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-            if (!anchor.classList.contains('header-cta-button')) {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    // Get the target section ID from the href attribute
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-
-                    if (targetSection) {
-                        targetSection.scrollIntoView({
-                            behavior: 'smooth'
+            function setupDropdown(dropdownId, menuClass) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    const menu = dropdown.querySelector(`.${menuClass}`);
+                    if (menu) {
+                        dropdown.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                            menu.classList.add('show-menu');
+                        });
+                        dropdown.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                            }, 150);
+                        });
+                        menu.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                        });
+                        menu.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                            }, 150);
                         });
                     }
+                }
+            }
+
+            setupDropdown('aboutUsDropdown', 'dropdown-menu');
+            setupDropdown('programsDropdown', 'dropdown-menu');
+
+            // Mobile menu logic (click)
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+
+            if (mobileMenuButton && mobileMenu && closeMobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                });
+
+                closeMobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
                 });
             }
-        });
 
-       
+            // Mobile dropdowns (click)
+            function setupMobileDropdownToggle(toggleId, menuId) {
+                const toggleButton = document.getElementById(toggleId);
+                const menu = document.getElementById(menuId);
+
+                if (toggleButton && menu) {
+                    toggleButton.addEventListener('click', () => {
+                        menu.classList.toggle('hidden');
+                        const icon = toggleButton.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('fa-chevron-down');
+                            icon.classList.toggle('fa-chevron-up');
+                        }
+                    });
+                }
+            }
+
+            setupMobileDropdownToggle('mobileAboutUsToggle', 'mobileAboutUsMenu');
+            setupMobileDropdownToggle('mobileProgramsToggle', 'mobileProgramsMenu');
+        });
     </script>
 </body>
-
 </html>
