@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Header</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -60,16 +58,12 @@
 </head>
 <body>
     <header class="bg-white shadow-sm py-3 px-6 flex items-center justify-between w-full border-b border-gray-200">
-        <!-- Left Section: Logo and Navigation Links -->
         <div class="flex items-center space-x-8">
-            <!-- Logo -->
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyl6ncyG6xbuzkCG6jF6tN40kWEd2lsGlVx8-ozaJtiRoDd0H-0H_kT8OF0TsmxdGMdPo5gpZfbJzCpsTyX0HrrZc1Y40s5OxHJNcXGy2iUG1_6wKD5j-FIYN631Sj9p1Vwu-5PnUti7SCjlK_V4LcXr3gS9u35B65Dsg/exec" alt="Samadhan Kendra Logo" class="h-6">
 
-            <!-- Desktop Navigation Links -->
             <nav class="hidden lg:flex items-center space-x-6 text-gray-700 text-sm">
                 <a href="#" class="hover:text-blue-600">Home</a>
 
-                <!-- About us Dropdown -->
                 <div class="relative dropdown" id="aboutUsDropdown">
                     <a href="#" class="hover:text-blue-600 flex items-center" aria-haspopup="true" aria-expanded="false">
                         About us
@@ -83,7 +77,6 @@
                     </div>
                 </div>
 
-                <!-- Programs Dropdown -->
                 <div class="relative dropdown" id="programsDropdown">
                     <a href="#" class="hover:text-blue-600 flex items-center" aria-haspopup="true" aria-expanded="false">
                         Programs
@@ -99,44 +92,35 @@
                 </div>
 
                 <a href="#" class="hover:text-blue-600">Founder</a>
-                <!-- Corrected Gallery link class -->
                 <a href="#" class="hover:text-blue-600">Gallery</a>
             </nav>
         </div>
 
-        <!-- Right Section: Search, Utility Links, Three Dots, Start Button -->
         <div class="flex items-center space-x-4">
-            <!-- Search Icon -->
             <button class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer" aria-label="Search">
                 <i class="fas fa-search text-gray-600"></i>
             </button>
 
-            <!-- Desktop Utility Links -->
             <nav class="hidden md:flex items-center space-x-4 text-gray-700 text-sm lg:block">
                 <a href="#" class="hover:text-blue-600">Download</a>
                 <a href="#" class="hover:text-blue-600">Contact</a>
-                <!-- Updated Console link for desktop to open in same tab -->
-                <a href="https://mysamadhan.in/search" class="hover:text-blue-600">Console</a>
+                <a href="https://mysamadhan.in/iadmin" class="hover:text-blue-600">Console</a>
             </nav>
 
-            <!-- Three Dots Menu (Desktop) -->
             <button class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden lg:block cursor-pointer" aria-label="More options">
                 <i class="fas fa-ellipsis-v three-dots-icon"></i>
             </button>
 
-            <!-- Start Button (Desktop) -->
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out hidden lg:block cursor-pointer" onclick="window.location.href='https://script.google.com/macros/s/AKfycbwRVdIJgFWqdC4S29wl7QndNQHPSSzWbJ8auXPNF9UyqyUhLn3chATH8VoleS3W4OztiA/exec'">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out hidden lg:block cursor-pointer" onclick="window.location.href='https://mysamadhan.in/search'">
                 Start
             </button>
 
-            <!-- Hamburger Icon for Mobile -->
             <button id="mobileMenuButton" class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
                 <i class="fas fa-bars text-gray-600"></i>
             </button>
         </div>
     </header>
 
-    <!-- Mobile Menu Overlay -->
     <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
         <div class="flex justify-end p-6">
             <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer" aria-label="Close mobile menu">
@@ -146,7 +130,6 @@
         <nav class="flex flex-col items-start p-6 space-y-4 text-gray-700 text-lg">
             <a href="#" class="hover:text-blue-600 w-full py-2">Home</a>
 
-            <!-- About us Dropdown (Mobile) -->
             <div class="w-full">
                 <button class="flex items-center justify-between w-full py-2 text-left hover:text-blue-600 cursor-pointer" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
                     About us
@@ -160,7 +143,6 @@
                 </div>
             </div>
 
-            <!-- Programs Dropdown (Mobile) -->
             <div class="w-full">
                 <button class="flex items-center justify-between w-full py-2 text-left hover:text-blue-600 cursor-pointer" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
                     Programs
@@ -178,23 +160,18 @@
             <a href="#" class="hover:text-blue-600 w-full py-2">Founder</a>
             <a href="#" class="hover:text-blue-600 w-full py-2">Gallery</a>
 
-            <!-- Mobile Utility Links -->
             <a href="#" class="hover:text-blue-600 w-full py-2">Download</a>
             <a href="#" class="hover:text-blue-600 w-full py-2">Contact</a>
-            <!-- Updated Console link for mobile to open in same tab -->
-            <a href="https://mysamadhan.in/search" class="hover:text-blue-600 w-full py-2">Console</a>
+            <a href="https://mysamadhan.in/iadmin" class="hover:text-blue-600 w-full py-2">Console</a>
 
-            <!-- Mobile Start Button -->
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out w-full text-center mt-4 cursor-pointer" onclick="window.location.href='https://script.google.com/macros/s/AKfycbwRVdIJgFWqdC4S29wl7QndNQHPSSzWbJ8auXPNF9UyqyUhLn3chATH8VoleS3W4OztiA/exec'">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out w-full text-center mt-4 cursor-pointer" onclick="window.location.href='https://mysamadhan.in/search'">
                 Start
             </button>
         </nav>
     </div>
 
-    <!-- Main content area (empty as per request) -->
     <main class="p-6">
-        <!-- Your content goes here -->
-    </main>
+        </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
