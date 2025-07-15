@@ -4,83 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Header</title>
+    <!-- Tailwind CSS CDN for utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Apply Inter font family to the entire body */
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
-            background-color: #f8f9fa; /* Light grey background */
+            background-color: #f8f9fa; /* Light grey background for the page */
         }
-        /* Custom styling for the three-dot menu icon */
+
+        /* Custom styling for the three-dot menu icon to match other icons */
         .three-dots-icon {
             font-size: 1.25rem; /* Equivalent to text-xl */
-            color: #5f6368;
+            color: #5f6368; /* A standard gray color for icons */
         }
 
         /* Dropdown specific styles for desktop (hover) */
         .dropdown-menu {
             position: absolute;
             background-color: white;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1000;
-            min-width: 160px;
-            border-radius: 0.375rem; /* rounded-md */
-            overflow: hidden;
-            padding: 0.5rem 0;
+            /* Stronger shadow for better visual depth */
+            box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.15);
+            z-index: 1000; /* Ensure dropdown is on top of other content */
+            min-width: 180px; /* Slightly wider dropdowns */
+            border-radius: 0.5rem; /* More rounded corners */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            padding: 0.5rem 0; /* Vertical padding */
             opacity: 0; /* Initially hidden */
             visibility: hidden; /* Initially hidden */
-            transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+            /* Smooth transition for appearance */
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px); /* Slight downward translation for entrance effect */
             top: 100%; /* Position below the parent link */
             left: 0;
+            border: 1px solid #e2e8f0; /* Subtle border */
         }
 
         /* Class to show the dropdown */
         .show-menu {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0); /* Reset translation to show */
         }
 
+        /* Styling for individual dropdown items */
         .dropdown-item {
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.25rem; /* More padding for better click/tap area */
             display: block;
-            color: #5f6368; /* text-gray-700 */
+            color: #4a5568; /* Darker gray for text */
             text-decoration: none;
-            font-size: 0.875rem; /* text-sm */
+            font-size: 0.9rem; /* Slightly larger font size */
             white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.2s ease, color 0.2s ease; /* Smooth hover transition */
         }
 
         .dropdown-item:hover {
-            background-color: #f3f4f6; /* hover:bg-gray-100 */
+            background-color: #e0f2fe; /* Light blue background on hover */
+            color: #1d4ed8; /* Darker blue text on hover */
         }
+
+        /* Custom style for the mobile menu transition */
+        #mobileMenu, #mobileSearchOverlay {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* No custom styles needed for search bars as they are now fully Tailwind-styled */
     </style>
 </head>
 <body>
-    <header class="bg-white shadow-sm py-3 px-6 flex items-center justify-between w-full border-b border-gray-200">
+    <!-- Header section with enhanced styling -->
+    <!-- The header uses flexbox and w-full for fluid width. Padding is also relative to screen size. -->
+    <header class="bg-white shadow-lg py-4 px-6 flex items-center justify-between w-full border-b border-gray-200 rounded-b-lg">
+        <!-- Left Section: Logo and Main Navigation -->
         <div class="flex items-center space-x-8">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyl6ncyG6xbuzkCG6jF6tN40kWEd2lsGlVx8-ozaJtiRoDd0H-0H_kT8OF0TsmxdGMdPo5gpZfbJzCpsTyX0HrrZc1Y40s5OxHJNcXGy2iUG1_6wKD5j-FIYN631Sj9p1Vwu-5PnUti7SCjlK_V4LcXr3gS9u35B65Dsg/exec" alt="Samadhan Kendra Logo" class="h-6">
+            <!-- Logo with increased margin for separation -->
+            <img src="https://i.postimg.cc/nrW2HNXp/samadhan-kendra-logo.png" alt="Samadhan Kendra Logo" class="h-8 mr-4">
 
-            <nav class="hidden lg:flex items-center space-x-6 text-gray-700 text-sm">
-                <a href="#" class="hover:text-blue-600">Home</a>
+            <!-- Desktop Navigation - hidden on small screens, visible on large screens -->
+            <nav class="hidden lg:flex items-center space-x-8 text-gray-700 text-base font-medium">
+                <a href="index.html" class="hover:text-blue-700 transition-colors duration-200">Home</a>
 
+                <!-- About us Dropdown -->
                 <div class="relative dropdown" id="aboutUsDropdown">
-                    <a href="#" class="hover:text-blue-600 flex items-center" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
                         About us
-                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">Our Journey</a>
+                        <a href="ourjorney.html" class="dropdown-item">Our Journey</a>
                         <a href="#" class="dropdown-item">Vision</a>
                         <a href="#" class="dropdown-item">Mission</a>
                         <a href="#" class="dropdown-item">Management And Administrative structure</a>
                     </div>
                 </div>
 
+                <!-- Programs Dropdown -->
                 <div class="relative dropdown" id="programsDropdown">
-                    <a href="#" class="hover:text-blue-600 flex items-center" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
                         Programs
-                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
                     </a>
                     <div class="dropdown-menu">
                         <a href="#" class="dropdown-item">SU-SIKSHALAYA</a>
@@ -91,89 +118,219 @@
                     </div>
                 </div>
 
-                <a href="#" class="hover:text-blue-600">Founder</a>
-                <a href="#" class="hover:text-blue-600">Gallery</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Founder</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Gallery</a>
             </nav>
         </div>
 
-        <div class="flex items-center space-x-4">
-            <button class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer" aria-label="Search">
-                <i class="fas fa-search text-gray-600"></i>
-            </button>
+        <!-- Desktop Search Bar - positioned to take available space in the middle -->
+        <div id="desktopSearchBar" class="hidden lg:flex items-center flex-grow mx-4 max-w-xl
+                                         bg-white rounded-full shadow-md hover:shadow-lg
+                                         transition-shadow duration-300 p-2">
+            <i class="fas fa-search text-gray-500 ml-2 mr-2 text-base"></i>
+            <input type="text" id="desktopSearchInput"
+                   class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-base"
+                   placeholder="Search User Name">
+        </div>
 
-            <nav class="hidden md:flex items-center space-x-4 text-gray-700 text-sm lg:block">
-                <a href="#" class="hover:text-blue-600">Download</a>
-                <a href="#" class="hover:text-blue-600">Contact</a>
-                <a href="https://mysamadhan.in/iadmin" class="hover:text-blue-600">Console</a>
+        <!-- Right Section: Secondary Navigation and Utility Buttons -->
+        <div class="flex items-center space-x-4">
+            <!-- Secondary Navigation - hidden on small screens, visible on medium and large screens -->
+            <nav class="hidden md:flex items-center space-x-6 text-gray-700 text-base font-medium lg:block">
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Download</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Contact</a>
+                <a href="https://mysamadhan.in/iadmin" class="hover:text-blue-700 transition-colors duration-200">Console</a>
             </nav>
 
-            <button class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden lg:block cursor-pointer" aria-label="More options">
-                <i class="fas fa-ellipsis-v three-dots-icon"></i>
+            <!-- More Options Button - hidden on small screens, visible on large screens -->
+            <button class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden lg:block cursor-pointer transition-colors duration-200" aria-label="More options">
+                <i class="fas fa-ellipsis-v three-dots-icon text-blue-600"></i>
             </button>
 
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out hidden lg:block cursor-pointer" onclick="window.location.href='https://mysamadhan.in/search'">
-                Start
+            <!-- Mobile Search Toggle Button - visible on small/medium screens, hidden on large screens -->
+            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
+                <i class="fas fa-search text-blue-600"></i>
             </button>
 
-            <button id="mobileMenuButton" class="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
+            <!-- Mobile Menu Toggle Button - visible on small/medium screens, hidden on large screens -->
+            <button id="mobileMenuButton" class="p-2.5 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
                 <i class="fas fa-bars text-gray-600"></i>
             </button>
         </div>
     </header>
 
-    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+    <!-- Mobile Search Overlay -->
+    <div id="mobileSearchOverlay" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
         <div class="flex justify-end p-6">
-            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer" aria-label="Close mobile menu">
+            <!-- Close Mobile Search Button -->
+            <button id="closeMobileSearchButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile search">
                 <i class="fas fa-times text-2xl"></i>
             </button>
         </div>
-        <nav class="flex flex-col items-start p-6 space-y-4 text-gray-700 text-lg">
-            <a href="#" class="hover:text-blue-600 w-full py-2">Home</a>
-
-            <div class="w-full">
-                <button class="flex items-center justify-between w-full py-2 text-left hover:text-blue-600 cursor-pointer" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
-                    About us
-                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                </button>
-                <div class="pl-4 mt-2 space-y-2 hidden" id="mobileAboutUsMenu">
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Our Journey</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Vision</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Mission</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Management And Administrative structure</a>
-                </div>
+        <div class="p-6 flex flex-col items-center justify-center h-full -mt-16"> <!-- Adjusted height and margin for centering -->
+            <h2 class="text-3xl font-bold text-blue-600 mb-6">Search</h2>
+            <!-- Mobile Search Input styled like Google search bar -->
+            <div class="relative flex items-center w-full max-w-md
+                        bg-white rounded-full shadow-md hover:shadow-lg
+                        transition-shadow duration-300 p-3">
+                <i class="fas fa-search text-gray-500 ml-2 mr-3 text-lg"></i>
+                <input type="text" id="mobileSearchInput"
+                       class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-lg"
+                       placeholder="Enter User Name (exact)">
             </div>
+        </div>
+    </div>
 
-            <div class="w-full">
-                <button class="flex items-center justify-between w-full py-2 text-left hover:text-blue-600 cursor-pointer" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
-                    Programs
-                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                </button>
-                <div class="pl-4 mt-2 space-y-2 hidden" id="mobileProgramsMenu">
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">SU-SIKSHALAYA</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Apna Vidyalaya</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Sports</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">WSG</a>
-                    <a href="#" class="block py-1 text-sm hover:text-blue-600">Environment</a>
-                </div>
-            </div>
-
-            <a href="#" class="hover:text-blue-600 w-full py-2">Founder</a>
-            <a href="#" class="hover:text-blue-600 w-full py-2">Gallery</a>
-
-            <a href="#" class="hover:text-blue-600 w-full py-2">Download</a>
-            <a href="#" class="hover:text-blue-600 w-full py-2">Contact</a>
-            <a href="https://mysamadhan.in/iadmin" class="hover:text-blue-600 w-full py-2">Console</a>
-
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out w-full text-center mt-4 cursor-pointer" onclick="window.location.href='https://mysamadhan.in/search'">
-                Start
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+        <div class="flex justify-end p-6">
+            <!-- Close Mobile Menu Button - changed color to match header icons -->
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile menu">
+                <i class="fas fa-times text-2xl"></i>
             </button>
+        </div>
+        <!-- Mobile Navigation Links - text color changed to text-gray-800 -->
+        <nav class="flex flex-col items-start p-6 space-y-3 text-gray-800 text-lg font-medium">
+            <!-- Hover background changed to light gray, hover text to blue -->
+            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Home</a>
+
+            <!-- Mobile About us Dropdown Toggle -->
+            <div class="w-full">
+                <!-- Hover background changed to light gray, hover text to blue -->
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
+                    About us
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <!-- Nested dropdown background changed to lighter gray -->
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileAboutUsMenu">
+                    <!-- Nested dropdown item hover background changed to light gray, hover text to blue -->
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Our Journey</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Vision</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Mission</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Management And Administrative structure</a>
+                </div>
+            </div>
+
+            <!-- Mobile Programs Dropdown Toggle -->
+            <div class="w-full">
+                <!-- Hover background changed to light gray, hover text to blue -->
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
+                    Programs
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <!-- Nested dropdown background changed to lighter gray -->
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileProgramsMenu">
+                    <!-- Nested dropdown item hover background changed to light gray, hover text to blue -->
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">SU-SIKSHALAYA</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Apna Vidyalaya</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Sports</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">WSG</a>
+                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Environment</a>
+                </div>
+            </div>
+
+            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Founder</a>
+            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Gallery</a>
+
+            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Download</a>
+            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Contact</a>
+            <a href="https://mysamadhan.in/iadmin" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Console</a>
+
+            <!-- Removed Mobile Start Button -->
         </nav>
     </div>
 
+    <!-- Main content area (currently empty) -->
     <main class="p-6">
-        </main>
+        <!-- Content will go here -->
+    </main>
 
     <script>
+        // The URL of your published Google Sheet CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
+
+        let sheetData = []; // To store the parsed CSV data
+
+        // Function to fetch and parse the CSV data
+        async function fetchCSVData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                sheetData = parseCSV(csvText);
+                console.log('CSV Data Loaded:', sheetData); // Log the loaded data
+            } catch (error) {
+                console.error('Error fetching or parsing CSV:', error);
+            }
+        }
+
+        // Simple CSV parser function
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                if (values.length === headers.length) {
+                    let row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    data.push(row);
+                } else {
+                    console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
+                }
+            }
+            return data;
+        }
+
+        // Function to handle the search
+        function performSearch(searchInput) {
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm === '') {
+                return;
+            }
+
+            console.log('Searching for:', searchTerm);
+            console.log('Current sheetData:', sheetData);
+
+            const userNameColumn = 'User Name';
+            const webLinkColumn = 'WEB LINK';
+
+            let foundLink = null;
+
+            for (const row of sheetData) {
+                if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
+                    if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
+                        foundLink = row[webLinkColumn];
+                        break;
+                    }
+                }
+            }
+
+            if (foundLink) {
+                if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
+                    foundLink = 'https://' + foundLink;
+                }
+                console.log('Attempting to open link in new tab:', foundLink);
+
+                try {
+                    window.open(foundLink, '_blank');
+                } catch (e) {
+                    console.error('Error opening window (possibly pop-up blocked):', e);
+                }
+
+            } else {
+                console.log('No link found for:', searchTerm);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Desktop dropdown logic (hover)
             const dropdownTimeouts = {};
@@ -183,6 +340,7 @@
                 if (dropdown) {
                     const toggleLink = dropdown.querySelector('a[aria-haspopup="true"]');
                     const menu = dropdown.querySelector(`.${menuClass}`);
+
                     if (menu && toggleLink) {
                         dropdown.addEventListener('mouseenter', () => {
                             if (dropdownTimeouts[dropdownId]) {
@@ -191,17 +349,20 @@
                             menu.classList.add('show-menu');
                             toggleLink.setAttribute('aria-expanded', 'true');
                         });
+
                         dropdown.addEventListener('mouseleave', () => {
                             dropdownTimeouts[dropdownId] = setTimeout(() => {
                                 menu.classList.remove('show-menu');
                                 toggleLink.setAttribute('aria-expanded', 'false');
                             }, 150);
                         });
+
                         menu.addEventListener('mouseenter', () => {
                             if (dropdownTimeouts[dropdownId]) {
                                 clearTimeout(dropdownTimeouts[dropdownId]);
                             }
                         });
+
                         menu.addEventListener('mouseleave', () => {
                             dropdownTimeouts[dropdownId] = setTimeout(() => {
                                 menu.classList.remove('show-menu');
@@ -254,6 +415,54 @@
 
             setupMobileDropdownToggle('mobileAboutUsToggle', 'mobileAboutUsMenu');
             setupMobileDropdownToggle('mobileProgramsToggle', 'mobileProgramsMenu');
+
+            // --- Search Functionality Integration ---
+
+            // Desktop Search Elements
+            const desktopSearchInput = document.getElementById('desktopSearchInput');
+
+            // Mobile Search Elements
+            const mobileSearchToggleButton = document.getElementById('mobileSearchToggleButton');
+            const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+            const closeMobileSearchButton = document.getElementById('closeMobileSearchButton');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+
+            // Event Listeners for Desktop Search Input (Enter key)
+            if (desktopSearchInput) {
+                desktopSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(desktopSearchInput);
+                    }
+                });
+            }
+
+            // Event Listeners for Mobile Search Overlay (Open/Close)
+            if (mobileSearchToggleButton && mobileSearchOverlay && closeMobileSearchButton) {
+                mobileSearchToggleButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-full');
+                    mobileSearchOverlay.classList.add('translate-x-0');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'true');
+                    mobileSearchInput.focus();
+                });
+
+                closeMobileSearchButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-0');
+                    mobileSearchOverlay.classList.add('translate-x-full');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Event Listeners for Mobile Search Input (Enter key)
+            if (mobileSearchInput) {
+                mobileSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(mobileSearchInput);
+                    }
+                });
+            }
+
+            // Initial fetch when the page loads to populate sheetData
+            fetchCSVData();
         });
     </script>
 </body>
