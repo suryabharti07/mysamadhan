@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -587,186 +586,532 @@
 </body>
 </html>
 
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Samadhan Kendra - Our Journey</title>
-  <!-- Load Inter font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-  <!-- Load Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Custom styles for the timeline line and item animations */
-    body {
-      font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
-    }
-
-    /* Base styles for timeline items before they become visible */
-    .timeline-item {
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 1s ease-out; /* Smoother transition */
-    }
-
-    /* Styles for visible timeline items */
-    .timeline-item.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Specific positioning for the year circle on the timeline */
-    .timeline-item .year-circle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%); /* Center the circle */
-      z-index: 2; /* Ensure it's above the line */
-    }
-
-    /* Responsive adjustments for content positioning on larger screens */
-    @media (min-width: 768px) { /* md breakpoint */
-      .timeline-item:nth-child(odd) .content {
-        margin-right: calc(50% + 40px); /* Adjust to align left of the line */
-        text-align: right;
-      }
-
-      .timeline-item:nth-child(even) .content {
-        margin-left: calc(50% + 40px); /* Adjust to align right of the line */
-        text-align: left;
-      }
-
-      /* Adjust year circle position for odd/even items on desktop to align with content */
-      .timeline-item:nth-child(odd) .year-circle {
-        left: 50%; /* Keep centered on the line */
-      }
-      .timeline-item:nth-child(even) .year-circle {
-        left: 50%; /* Keep centered on the line */
-      }
-    }
-  </style>
-</head>
-<body class="bg-blue-50 text-gray-800 antialiased">
-  <!-- Hero Section -->
-  <header class="hero text-center py-16 px-4 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-b-xl shadow-lg">
-    <h1 class="text-5xl md:text-6xl font-extrabold mb-2">Samadhan Kendra (SK)</h1>
-    <p class="text-lg md:text-xl opacity-90 font-light">Empowering Communities for Over Two Decades</p>
-  </header>
-
-  <!-- Timeline Section -->
-  <section class="timeline relative mx-auto my-16 p-4 max-w-5xl">
-    <!-- Vertical Timeline Line -->
-    <div class="timeline-line absolute top-0 left-1/2 w-1.5 h-full bg-blue-600 transform -translate-x-1/2 rounded-full"></div>
-
-    <!-- Timeline Items -->
-    <div class="timeline-item flex justify-center md:justify-start my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Inception</h2>
-        <p class="text-gray-700 leading-relaxed">Samadhan Kendra was established as a registered Society under the Society Registration Act 1860, based on the philosophy of holistic development—by the people, for the people. We began with the mission to uplift marginalized communities.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2004">2004</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-end my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Grassroots Strengthening</h2>
-        <p class="text-gray-700 leading-relaxed">We expanded our grassroots operations, focusing on participatory rural appraisal methods to understand and respond to community needs effectively. Local volunteers and leaders were mobilized to ensure community-driven planning.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2008">2008</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-start my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Program Diversification</h2>
-        <p class="text-gray-700 leading-relaxed">Introduced new verticals such as women's empowerment, livelihood training, and health awareness initiatives, with special attention on education for children in underserved regions.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2012">2012</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-end my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Impact-Oriented Development</h2>
-        <p class="text-gray-700 leading-relaxed">Launched measurable impact programs with focus on outcomes. Collaborated with local governments and NGOs to scale initiatives in sanitation, child welfare, and vocational training.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2015">2015</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-start my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Resilience Through Crisis</h2>
-        <p class="text-gray-700 leading-relaxed">During the COVID-19 pandemic, we mobilized rapid response efforts for food security, healthcare access, and digital learning. Our digital infrastructure began supporting community education and awareness drives.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2020">2020</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-end my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Apna Vidyalaya</h2>
-        <p class="text-gray-700 leading-relaxed">In 2022, we launched "Apna Vidyalaya" (Our School), an initiative focused on providing quality education and learning resources to children in remote rural areas, ensuring access to foundational literacy and numeracy.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2022">2022</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-start my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Education Focus</h2>
-        <p class="text-gray-700 leading-relaxed">Building on previous efforts, 2023 saw a deepened focus on comprehensive educational programs, including digital literacy, vocational training for youth, and adult education initiatives to empower entire communities.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2023">2023</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-end my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">20 Years of Service & Sports Initiative</h2>
-        <p class="text-gray-700 leading-relaxed">We celebrated two decades of empowering people, with deepened focus on climate resilience, digital inclusion, policy advocacy, and a new initiative to promote sports and physical well-being in rural areas to foster community spirit and talent.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2024">2024</span>
-    </div>
-
-    <div class="timeline-item flex justify-center md:justify-start my-20">
-      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
-        <h2 class="text-2xl font-semibold text-blue-700 mb-3">The Legacy Continues</h2>
-        <p class="text-gray-700 leading-relaxed">Now in our 21st year, we reaffirm our pledge to build self-reliant, equitable communities. Samadhan Kendra continues to be a beacon for democratic, inclusive development, grounded in dignity and sustainability.</p>
-      </div>
-      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2025">2025</span>
-    </div>
-  </section>
-
-  <!-- Footer Section -->
-  <footer class="bg-blue-800 text-white text-center py-5 rounded-t-xl shadow-inner">
-    <p class="text-sm">&copy; 2025 Samadhan Kendra. All rights reserved.</p>
-  </footer>
-
-  <script>
-    // JavaScript for scroll-based animation of timeline items
-    const timelineItems = document.querySelectorAll('.timeline-item');
-
-    const revealOnScroll = () => {
-      // Calculate the trigger point for revealing items (85% from the top of the viewport)
-      const triggerBottom = window.innerHeight * 0.85;
-
-      timelineItems.forEach(item => {
-        // Get the top position of the current timeline item relative to the viewport
-        const boxTop = item.getBoundingClientRect().top;
-
-        // If the item's top is within the trigger point, add the 'visible' class
-        if (boxTop < triggerBottom) {
-          item.classList.add('visible');
-        } else {
-          // Optionally, remove the 'visible' class if it scrolls out of view upwards
-          // This creates a re-reveal effect if scrolling back up
-          item.classList.remove('visible');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMADHAN KENDRA FOR ALL</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter for general text, and a modern serif for headings (optional, but good for design) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8faff; /* Lighter, subtle blue-gray background */
+            color: #333;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
-      });
-    };
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif; /* A more elegant font for headings */
+            color: #1a202c; /* Darker text for headings */
+        }
 
-    // Add event listeners for scroll and load to trigger the reveal function
-    window.addEventListener('scroll', revealOnScroll);
-    window.addEventListener('load', revealOnScroll);
+        /* Custom gradients and shadows for a modern feel */
+        .hero-bg-gradient {
+            background: linear-gradient(180deg, #e0f7fa 0%, #ffffff 100%); /* Light blue to white */
+        }
+        .card-bg-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%); /* White to very light blue */
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(90deg, #0078d4 0%, #005a9e 100%); /* Microsoft blue gradient */
+            transition: all 0.3s ease;
+        }
+        .btn-primary-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 120, 212, 0.3);
+        }
+        .btn-secondary-outline {
+            border: 2px solid #0078d4;
+            color: #0078d4;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary-outline:hover {
+            background-color: #0078d4;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 120, 212, 0.2);
+        }
+        .soft-shadow {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        .subtle-shadow {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
 
-    // Initial check on load to reveal items already in view
-    revealOnScroll();
-  </script>
+        /* Specific styling for the app icons grid */
+        .app-icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Adjusted minmax for better mobile spacing */
+            gap: 1rem; /* Reduced gap for tighter packing on small screens */
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            .app-icons-grid {
+                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0.75rem 0.5rem; /* Adjusted padding */
+            border-radius: 0.75rem;
+            background-color: white;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Added hover effect */
+        }
+
+        .app-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-icon img {
+            width: 48px; /* Adjusted icon size for better responsiveness */
+            height: 48px;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 480px) { /* Extra small screens */
+            .app-icon img {
+                width: 40px;
+                height: 40px;
+            }
+            .app-icon span {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Slider specific styling */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth ease-out effect */
+        }
+
+        .slide {
+            flex: 0 0 100%; /* Ensure each slide takes full width */
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-color: #ffffff;
+        }
+
+        .slide-content-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1100px;
+            gap: 2rem;
+        }
+
+        .slide-text {
+            flex: 1;
+            text-align: left;
+            max-width: 55%;
+        }
+
+        .slide-text h3 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #0078d4;
+        }
+
+        .slide-text p {
+            font-size: 1.125rem;
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+        }
+
+        .slide-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 45%;
+        }
+
+        .slide-image img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.75rem;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: #0078d4;
+            transform: scale(1.4);
+        }
+
+        /* Responsive adjustments for slider */
+        @media (max-width: 992px) {
+            .slide-content-wrapper {
+                flex-direction: column;
+                text-align: center;
+            }
+            .slide-text {
+                max-width: 100%;
+                padding-right: 0;
+            }
+            .slide-text h3 {
+                font-size: 2rem;
+            }
+            .slide-text p {
+                font-size: 1rem;
+            }
+            .slide-image {
+                max-width: 80%;
+                margin-top: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1.5rem;
+            }
+            .slide-text h3 {
+                font-size: 1.75rem;
+            }
+            .slide-text p {
+                font-size: 0.95rem;
+            }
+            .slide-image img {
+                max-height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide {
+                padding: 1rem;
+            }
+            .slide-text h3 {
+                font-size: 1.5rem;
+            }
+            .slide-text p {
+                font-size: 0.875rem;
+            }
+            .slide-image img {
+                max-height: 180px;
+            }
+            .slider-dots {
+                bottom: 1rem;
+                gap: 0.5rem;
+            }
+            .dot {
+                width: 8px;
+                height: 8px;
+            }
+        }
+        
+    </style>
+</head>
+<body class="text-gray-800">
+
+   <header class="hero-bg-gradient min-h-screen flex flex-col justify-center items-center text-center py-16 px-4 relative overflow-hidden">
+    <img src="https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/hero-background-for-enterprise-370238?resMode=sharp2&op_usm=1.5,0.65,15,0&wid=1600&hei=680&qlt=100&fit=constrain" alt="Abstract background waves" class="absolute inset-0 w-full h-full object-cover opacity-30">
+    <div class="relative z-10 max-w-4xl mx-auto">
+        <p class="text-blue-700 text-sm md:text-base font-semibold uppercase tracking-widest mb-4">
+            <span class="text-green-600"></span> 
+        </p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+            Welcome to <br class="hidden md:inline"> <span class="text-green-600">Samadhan Kendra</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-700 mb-10 max-w-2xl mx-auto"></p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="#" class="btn-primary-gradient text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300">Learn more</a>
+            <a href="#" class="btn-secondary-outline font-semibold py-3 px-8 rounded-full hover:shadow-lg transition duration-300">Contact Us</a>
+        </div>
+    </div>
+</header>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-20 bg-white shadow-md py-4 px-4 md:px-8">
+        <div class="container mx-auto flex flex-wrap justify-center md:justify-between items-center gap-4">
+            <div class="flex-grow text-center md:text-left">
+                <a href="#" class="text-xl font-bold text-gray-900">Samadhan Kendra</a>
+            </div>
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <a href="#" class="text-gray-700 hover:text-blue-700 font-medium transition duration-200">For Home</a>
+                <a href="#" class="text-gray-700 hover:text-blue-700 font-medium transition duration-200">For Business</a>
+                <a href="#" class="text-gray-700 hover:text-blue-700 font-medium transition duration-200">For Enterprise</a>
+                <a href="#" class="text-gray-700 hover:text-blue-700 font-medium transition duration-200">For Education</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Image Slider Section -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto max-w-6xl rounded-xl soft-shadow overflow-hidden slider-container">
+                <div class="slider">
+                    <!-- Slide 1: Collaboration -->
+                    <div class="slide">
+                        <div class="slide-content-wrapper">
+                            <div class="slide-text">
+                                <h3>Empower Collaboration</h3>
+                                <p>Samadhan Kendra is deeply committed to the empowerment of women through strong community collaboration and inclusive development.</p>
+                                <a href="#" class="btn-primary-gradient text-white font-semibold py-2.5 px-6 rounded-full inline-block">Explore Teams</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://i.postimg.cc/6QYd5XX6/IMG-20250625-WA0043.jpg" alt="Students collaborating">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 2: Personalized Learning -->
+                    <div class="slide">
+                        <div class="slide-content-wrapper">
+                            <div class="slide-text">
+                                <h3>Personalized Learning Paths</h3>
+                                <p>At Samadhan Kendra, we believe that every learner is unique. Our Personalized Learning Paths are designed to meet individuals where they are—academically, socially, and emotionally.</p>
+                                <a href="#" class="btn-primary-gradient text-white font-semibold py-2.5 px-6 rounded-full inline-block">Discover Learning Tools</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://i.postimg.cc/25hS2d0s/Whats-App-Image-2025-07-19-at-10-18-19-89ea0b07.jpg" alt="Student learning on tablet">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 3: Security & Safety -->
+                    <div class="slide">
+                        <div class="slide-content-wrapper">
+                            <div class="slide-text">
+                                <h3>Secure & Safe Environment</h3>
+                                <p>At Samadhan Kendra, creating a secure and safe environment is at the heart of everything we do. Whether in classrooms, training centers, or community outreach spaces, we ensure that every individual—especially women and children—feels protected, respected, and valued. </p>
+                                <a href="#" class="btn-primary-gradient text-white font-semibold py-2.5 px-6 rounded-full inline-block">Learn About Security</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://i.postimg.cc/J4079CTc/Whats-App-Image-2025-07-19-at-10-18-46-d0569fb2.jpg" alt="Shield icon">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 4: Future Skills -->
+                    <div class="slide">
+                        <div class="slide-content-wrapper">
+                            <div class="slide-text">
+                                <h3>Build Future-Ready Skills</h3>
+                                <p>At Samadhan Kendra, we believe that sports are more than just games—they are powerful tools for building future-ready skills. Our sports racing events are designed to help participants, especially youth, develop qualities like focus, discipline, teamwork, leadership, and resilience.</p>
+                                <a href="#" class="btn-primary-gradient text-white font-semibold py-2.5 px-6 rounded-full inline-block">Develop Skills</a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://i.postimg.cc/WbFSW-hPG/Whats-App-Image-2025-07-13-at-07-27-37-d4ad719e.jpg" alt="Robot and human hand">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-dots"></div>
+            </div>
+        </section>
+
+        <!-- Featured News Section -->
+        <section class="py-16 md:py-24 bg-white px-4">
+            <div class="container mx-auto max-w-6xl text-center">
+                <p class="text-blue-700 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">FEATURED NEWS</p>
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-12">Discover what's happening with Mysamadhan Blog</h2>
+                <div class="flex justify-center items-stretch flex-wrap gap-8">
+                    <div class="news-card bg-white rounded-xl soft-shadow overflow-hidden flex flex-col md:flex-row max-w-3xl w-full text-left transition duration-300 hover:scale-[1.02]">
+                        <div class="md:w-1/2 p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="text-sm font-semibold text-blue-600 uppercase mb-2">Copilot</div>
+                                <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight">Racing Competition at Samadhan Kendra
+
+</h3>
+                                <p class="text-gray-700 text-base md:text-lg mb-4">Samadhan Kendra organized a fun racing competition for everyone. Many people took part and enjoyed the exciting races. It was a joyful event filled with energy, cheers, and happy moments for all.</p>
+                            </div>
+                            <a href="#" class="btn-primary-gradient text-white font-semibold py-2.5 px-6 rounded-full inline-block self-start">Read the blog</a>
+                        </div>
+                        <div class="md:w-1/2 flex items-center justify-center p-4 bg-blue-50">
+                            <img src="https://i.postimg.cc/HkZyqC1Q/Whats-App-Image-2025-07-13-at-07-27-39-e97646d5.jpg" alt="Samadhan Kendra" class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+                    <!-- Add more news cards here if needed -->
+                </div>
+            </div>
+        </section>
+
+        
+
+        <!-- Your Custom Copilot Section -->
+        <section class="py-16 md:py-24 bg-gray-50 px-4">
+            <div class="container mx-auto max-w-6xl">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 text-center mb-12">Live Report of Our Work</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+                    <div class="order-2 md:order-1">
+                        <div class="card-bg-gradient p-6 md:p-8 rounded-2xl subtle-shadow mb-8 transition duration-300 hover:scale-[1.02]">
+                            <h4 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4">Personalized for you</h4>
+                            <p class="text-base text-gray-700">This administrative report provides a detailed overview of the operations, achievements, and ongoing efforts of Samadhan Kendra over the reporting period.</p>
+                        </div>
+                        <div class="card-bg-gradient p-6 md:p-8 rounded-2xl subtle-shadow transition duration-300 hover:scale-[1.02]">
+                            <h4 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4">Secure and private</h4>
+                            <p class="text-base text-gray-700">This administrative report is a confidential document prepared by Samadhan Kendra to provide an internal review of the organization's operations, management practices, and program outcomes. It includes detailed information on staff coordination, project execution, resource utilization, and administrative planning. </p>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <img src="https://coderthemes.com/adminto/assets/images/demo/main.png" alt="Custom Copilot" class="w-full rounded-xl soft-shadow">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Together Better Section -->
+        <section class="py-16 md:py-24 bg-white px-4">
+            <div class="container mx-auto max-w-6xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+                    <div class="order-1 text-center md:text-left">
+                        <img src="https://i.postimg.cc/vbYCx4QN/Whats-App-Image-2025-07-19-at-16-40-05-8078f600.jpg" alt=" Community Champions for a Greener Tomorrow" class="w-full rounded-xl soft-shadow">
+                    </div>
+                    <div class="order-2 md:order-2 text-center md:text-left">
+                        <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4"> Community Champions for a Greener Tomorrow</h3>
+                        <p class="text-base md:text-lg text-gray-700">Driven by a shared vision for a cleaner environment, residents actively participate in an environmental protection drive. This collaborative effort demonstrates the community's dedication to improving their local ecosystem and building resilience against environmental degradation.
+
+</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pick up where you left off Section -->
+        <section class="py-16 md:py-24 bg-gray-50 px-4">
+            <div class="container mx-auto max-w-5xl text-center">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Contact US</h2>
+                <p class="text-base md:text-lg text-gray-700 mb-12 max-w-3xl mx-auto">Thank You for being here</p>
+                <div class="flex justify-center items-center px-2">
+                    <img src="https://placehold.co/1000x300/e0f2fe/000000?text= 91-9006317381" alt="Continuity Graphic" class="w-full max-w-full rounded-xl soft-shadow">
+                </div>
+            </div>
+        </section>
+
+       
+        <!-- Get Mobile App Section -->
+        <section class="py-16 md:py-24 bg-gray-50 px-4">
+            <div class="container mx-auto max-w-3xl text-center">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Get the Samadhan Kendra mobile app</h2>
+                <p class="text-base md:text-lg text-gray-700 mb-8 max-w-2xl mx-auto">Download the app for seamless AI assistance on the go. Scan the QR code below to get started!</p>
+                <div class="flex justify-center">
+                    <img src="https://placehold.co/180x180/000000/ffffff?text=QR+Code" alt="QR Code" class="w-40 h-40 md:w-48 md:h-48 rounded-lg soft-shadow">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+        <div class="container mx-auto text-center mt-8 border-t border-gray-700 pt-8">
+            <p class="text-xs md:text-sm">&copy; 2025 Samadhan Kendra. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.querySelector('.slider');
+            const slides = document.querySelectorAll('.slide');
+            const dotsContainer = document.querySelector('.slider-dots');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // Function to show a specific slide
+            function showSlide(index) {
+                if (index >= slides.length) {
+                    currentSlide = 0;
+                } else if (index < 0) {
+                    currentSlide = slides.length - 1;
+                } else {
+                    currentSlide = index;
+                }
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                updateDots();
+            }
+
+            // Function to move to the next slide
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+
+            // Create dots for each slide
+            function createDots() {
+                dotsContainer.innerHTML = ''; // Clear existing dots
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    if (index === currentSlide) {
+                        dot.classList.add('active');
+                    }
+                    dot.addEventListener('click', () => showSlide(index));
+                    dotsContainer.appendChild(dot);
+                });
+            }
+
+            // Update active dot
+            function updateDots() {
+                const dots = document.querySelectorAll('.dot');
+                dots.forEach((dot, index) => {
+                    if (index === currentSlide) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            // Start auto-play
+            function startSlider() {
+                stopSlider(); // Clear any existing interval before starting a new one
+                slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            }
+
+            // Stop auto-play
+            function stopSlider() {
+                clearInterval(slideInterval);
+            }
+
+            // Initialize slider
+            createDots();
+            showSlide(currentSlide);
+            startSlider();
+
+            // Event listeners for pausing on hover and resuming on mouse leave
+            const sliderContainer = document.querySelector('.slider-container');
+            sliderContainer.addEventListener('mouseenter', stopSlider);
+            sliderContainer.addEventListener('mouseleave', startSlider);
+        });
+    </script>
 </body>
 </html>
