@@ -1,686 +1,771 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Samadhan Kendra - Empowering Communities, Enabling Change</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Samadhan Kendra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            /* MODERN UI/UX COLOR PALETTE */
-            --primary: #34495E;
-            --primary-light: #5DADE2;
-            --primary-dark: #2C3E50;
-            --accent: #27AE60;
-            --accent-dark: #1E8449;
-            --bg: #FDFDFD;
-            --text: #34495E;
-            --text-light: #95A5A6;
-            --card-bg: #FFFFFF;
-            --footer-bg: var(--primary-dark);
-            --header-bg: #FFFFFF;
-
-            /* Shadow Variables */
-            --shadow-light: rgba(0, 0, 0, 0.05);
-            --shadow-medium: rgba(0, 0, 0, 0.10);
-            --shadow-strong: rgba(0, 0, 0, 0.18);
-
-            --border-radius-soft: 8px;
-            --transition-speed: 0.3s;
-        }
-
-        /* Base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
+        /* Apply Inter font family to the entire body */
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            scroll-behavior: smooth;
-            min-height: 100vh; /* Ensure body takes full height for scroll-to-top to work if no content */
-            position: relative; /* For scroll-to-top positioning */
-        }
-
-        /* --- Header --- */
-        header {
-            background: var(--header-bg);
-            color: var(--primary);
-            padding: 10px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 15px var(--shadow-medium);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        header .site-logo {
-            height: 60px;
-            width: auto;
-            vertical-align: middle;
-            filter: drop-shadow(0 2px 6px var(--shadow-medium));
-        }
-
-        header h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: inherit;
-        }
-
-        /* Desktop Navigation */
-        nav {
-            display: flex;
-            align-items: center;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
+            background-color: #f8f9fa; /* Light grey background for the page */
         }
 
-        nav ul li {
-            position: relative;
-            margin-left: 25px;
+        /* Custom styling for the three-dot menu icon to match other icons */
+        .three-dots-icon {
+            font-size: 1.25rem; /* Equivalent to text-xl */
+            color: #5f6368; /* A standard gray color for icons */
         }
 
-        nav ul li a:not(.header-cta-button) {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: color var(--transition-speed) ease, transform 0.2s ease;
-            position: relative;
-            padding: 5px 0;
-            display: block;
-        }
-
-        nav ul li a:not(.header-cta-button)::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            display: block;
-            bottom: 0;
-            left: 50%;
-            background: var(--accent);
-            transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
-        }
-
-        nav ul li a:not(.header-cta-button):hover::after {
-            width: 100%;
-            left: 0;
-        }
-
-        nav ul li a:not(.header-cta-button):hover {
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* Dropdown Menu Styles */
+        /* Dropdown specific styles for desktop (hover) */
         .dropdown-menu {
-            display: none;
             position: absolute;
-            top: 100%;
+            background-color: white;
+            /* Stronger shadow for better visual depth */
+            box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.15);
+            z-index: 1000; /* Ensure dropdown is on top of other content */
+            min-width: 180px; /* Slightly wider dropdowns */
+            border-radius: 0.5rem; /* More rounded corners */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            padding: 0.5rem 0; /* Vertical padding */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+            /* Smooth transition for appearance */
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px); /* Slight downward translation for entrance effect */
+            top: 100%; /* Position below the parent link */
             left: 0;
-            background-color: var(--card-bg);
-            box-shadow: 0 8px 20px var(--shadow-medium);
-            border-radius: var(--border-radius-soft);
-            min-width: 200px;
-            z-index: 1001;
-            padding: 8px 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(8px);
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed) ease;
+            border: 1px solid #e2e8f0; /* Subtle border */
         }
 
-        .nav-item-has-dropdown:hover > .dropdown-menu {
-            display: block;
+        /* Class to show the dropdown */
+        .show-menu {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: translateY(0); /* Reset translation to show */
         }
 
-        .dropdown-menu li {
-            margin: 0;
-        }
-
-        .dropdown-menu li a {
-            color: var(--primary);
-            padding: 8px 18px;
-            text-decoration: none;
+        /* Styling for individual dropdown items */
+        .dropdown-item {
+            padding: 0.75rem 1.25rem; /* More padding for better click/tap area */
             display: block;
-            white-space: nowrap;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
-
-        .dropdown-menu li a:hover {
-            background-color: var(--bg);
-            color: var(--accent);
-        }
-
-        /* Header CTA Button */
-        .header-cta-button {
-            padding: 8px 20px;
-            font-size: 0.9rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 3px 8px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
+            color: #4a5568; /* Darker gray for text */
             text-decoration: none;
-            display: inline-block;
-            margin-left: 25px;
+            font-size: 0.9rem; /* Slightly larger font size */
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.2s ease, color 0.2s ease; /* Smooth hover transition */
         }
 
-        .header-cta-button:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 5px 12px var(--shadow-strong);
+        .dropdown-item:hover {
+            background-color: #e0f2fe; /* Light blue background on hover */
+            color: #1d4ed8; /* Darker blue text on hover */
         }
 
-        /* Mobile Navigation Toggle */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-around;
-            width: 28px;
-            height: 22px;
-            cursor: pointer;
-            z-index: 1001;
-            padding: 2px;
-        }
-        
-        .menu-toggle span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary);
-            transition: all var(--transition-speed) ease;
-            border-radius: 2px;
+        /* Custom style for the mobile menu transition */
+        #mobileMenu, #mobileSearchOverlay {
+            transition: transform 0.3s ease-in-out;
         }
 
-        .nav-menu.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .menu-toggle.open span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .menu-toggle.open span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.open span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-        
-        /* --- General Section Styling (for "Our Journey") --- */
-        .page-section {
-            padding: 60px 30px; /* Consistent padding */
-            text-align: center;
-            max-width: 1100px; /* Max width for content */
-            margin: 0 auto; /* Center the section */
-            background-color: var(--card-bg); /* Use card background for a subtle lift */
-            border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator */
-        }
-
-        .page-section h2 {
-            font-size: 2.5rem; /* Large, prominent heading */
-            font-weight: 800;
-            color: var(--primary); /* Use primary color for main headings */
-            margin-bottom: 30px; /* Space below heading */
-            position: relative;
-            display: inline-block; /* For the underline effect */
-        }
-
-        .page-section h2::after {
-            content: '';
-            position: absolute;
-            width: 60%; /* Underline width */
-            height: 3px; /* Underline thickness */
-            background: var(--accent); /* Accent color for underline */
-            bottom: -12px; /* Position below text */
-            left: 20%; /* Center the underline */
-            border-radius: 2px;
-        }
-
-        .page-section .journey-content p {
-            max-width: 800px;
-            margin: 20px auto; /* Added top/bottom margin for paragraphs */
-            font-size: 1.1rem;
-            color: var(--text);
-            line-height: 1.8;
-            padding: 0 15px; /* Added horizontal padding */
-            text-align: justify; /* Justify text for a cleaner look */
-        }
-
-        /* --- Scroll to Top Button --- */
-        .scroll-to-top {
+        /* Password Modal Styling */
+        .password-modal-overlay {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--primary-light);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.6rem;
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        .password-modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            width: 90%;
+            max-width: 400px; /* Max width for larger screens */
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.2s ease-out;
+        }
+
+        .password-modal-content.show {
+            transform: scale(1);
+        }
+
+        .password-modal-content input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 0.375rem; /* Slightly rounded corners */
+            font-size: 1rem;
+        }
+
+        .password-modal-content button {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.375rem;
             cursor: pointer;
-            box-shadow: 0 3px 10px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 999;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
         }
 
-        .scroll-to-top.show {
-            opacity: 1;
-            visibility: visible;
+        .password-modal-content button.submit {
+            background-color: #2563eb; /* Blue */
+            color: white;
         }
 
-        .scroll-to-top:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 12px var(--shadow-strong);
+        .password-modal-content button.submit:hover {
+            background-color: #1d4ed8; /* Darker blue on hover */
         }
 
-        /* --- Responsive Adjustments --- */
-        /* Tablet and larger phones (up to 768px) */
-        @media (max-width: 768px) {
-            header {
-                padding: 10px 15px;
-            }
-
-            .header-left {
-                gap: 8px;
-            }
-
-            header .site-logo {
-                height: 50px;
-            }
-
-            header h1 {
-                font-size: 1.4rem;
-            }
-
-            .nav-menu {
-                flex-direction: column;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: var(--header-bg);
-                box-shadow: none;
-                padding: 80px 0 20px 0;
-                border-radius: 0;
-                opacity: 0;
-                transform: translateY(-100%);
-                transition: opacity 0.4s ease, transform 0.4s ease;
-                display: flex;
-                overflow-y: auto;
-            }
-
-            .nav-menu.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-                width: 100%;
-                align-items: center;
-            }
-
-            .nav-menu ul li {
-                margin: 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            .nav-menu li a:not(.header-cta-button) {
-                padding: 12px 20px;
-                font-size: 1rem;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-            }
-
-            .nav-menu li:last-child a:not(.header-cta-button) {
-                 border-bottom: none;
-            }
-
-            .nav-item-has-dropdown > a {
-                 position: relative;
-            }
-            .nav-item-has-dropdown > a::after {
-                content: '\f107';
-                font-family: "RemixIcon";
-                position: absolute;
-                right: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                transition: transform var(--transition-speed) ease;
-            }
-
-            .nav-item-has-dropdown.open > a::after {
-                transform: translateY(-50%) rotate(180deg);
-            }
-
-            .dropdown-menu {
-                position: static;
-                width: 100%;
-                box-shadow: none;
-                border-radius: 0;
-                padding: 0;
-                background-color: rgba(0,0,0,0.02);
-                display: none;
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            .dropdown-menu.active-mobile {
-                display: block;
-            }
-
-            .dropdown-menu li a {
-                padding: 10px 30px;
-                font-size: 0.95rem;
-                border-bottom: 1px solid rgba(0,0,0,0.03);
-            }
-            .dropdown-menu li:last-child a {
-                border-bottom: none;
-            }
-
-            .header-cta-button {
-                margin: 20px auto;
-                padding: 12px 25px;
-                font-size: 0.95rem;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .scroll-to-top {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-            }
-
-            .page-section {
-                padding: 40px 15px; /* Adjust padding for smaller screens */
-            }
-
-            .page-section h2 {
-                font-size: 1.8rem; /* Smaller font size for heading on mobile */
-                margin-bottom: 20px;
-            }
-
-            .page-section h2::after {
-                width: 50%;
-                left: 25%;
-                bottom: -8px;
-            }
-
-            .page-section .journey-content p {
-                font-size: 0.95rem; /* Smaller font size for content on mobile */
-                margin: 15px auto;
-            }
+        .password-modal-content button.cancel {
+            background-color: #e5e7eb; /* Light gray */
+            color: #374151; /* Darker gray text */
+            margin-left: 0.75rem;
         }
 
-        /* Smaller phones (up to 480px) */
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.2rem;
-            }
+        .password-modal-content button.cancel:hover {
+            background-color: #d1d5db; /* Darker light gray on hover */
+        }
 
-            header .site-logo {
-                height: 35px;
-            }
-
-            .nav-menu li a:not(.header-cta-button) {
-                font-size: 0.9rem;
-                padding: 10px 15px;
-            }
-
-            .dropdown-menu li a {
-                font-size: 0.85rem;
-                padding: 8px 20px;
-            }
-
-            .page-section h2 {
-                font-size: 1.5rem;
-            }
-
-            .page-section .journey-content p {
-                font-size: 0.9rem;
-                margin: 10px auto;
-            }
+        .password-error {
+            color: #ef4444; /* Red for error messages */
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <div class="header-left">
-            <a href="#">
-                <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
+    <header class="bg-white shadow-lg py-4 px-6 flex items-center justify-between w-full border-b border-gray-200 rounded-b-lg">
+        <div class="flex items-center space-x-8">
+            <!-- Logo linked to index.html -->
+            <a href="index.html" class="inline-block">
+                <img src="https://i.postimg.cc/nrW2HNXp/samadhan-kendra-logo.png" alt="Samadhan Kendra Logo" class="h-8 mr-4">
             </a>
-            <h1>Samadhan Kendra</h1>
+
+            <nav class="hidden lg:flex items-center space-x-8 text-gray-700 text-base font-medium">
+                <a href="index.html" class="hover:text-blue-700 transition-colors duration-200">Home</a>
+
+                <div class="relative dropdown" id="aboutUsDropdown">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
+                        About us
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="ourjourney.html" class="dropdown-item">Our Journey</a>
+                        <a href="vision.html" class="dropdown-item">Vision</a>
+                        <a href="mission.html" class="dropdown-item">Mission</a>
+                        <a href="management_structure.html" class="dropdown-item">Management And Administrative structure</a>
+                    </div>
+                </div>
+
+                <div class="relative dropdown" id="programsDropdown">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
+                        Programs
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="su_sikshalaya.html" class="dropdown-item">SU-SIKSHALAYA</a>
+                        <a href="apna_vidyalaya.html" class="dropdown-item">Apna Vidyalaya</a>
+                        <a href="sports.html" class="dropdown-item">Sports</a>
+                        <a href="wsg.html" class="dropdown-item">WSG</a>
+                        <a href="environment.html" class="dropdown-item">Environment</a>
+                    </div>
+                </div>
+
+                <a href="founder.html" class="hover:text-blue-700 transition-colors duration-200">Founder</a>
+                <a href="gallery.html" class="hover:text-blue-700 transition-colors duration-200">Gallery</a>
+            </nav>
         </div>
 
-        <!-- Mobile Menu Toggle -->
-        <div class="menu-toggle" id="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div id="desktopSearchBar" class="hidden lg:flex items-center flex-grow mx-4 max-w-xl
+                                         bg-white rounded-full shadow-md hover:shadow-lg
+                                         transition-shadow duration-300 p-2">
+            <i class="fas fa-search text-gray-500 ml-2 mr-2 text-base"></i>
+            <input type="text" id="desktopSearchInput"
+                   class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-base"
+                   placeholder="Search User Name">
         </div>
 
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li class="nav-item-has-dropdown">
-                    <a href="#about-us-section">About us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="ourJourney.html">Our Journey</a></li>
-                        <li><a href="ourvision.html">Vision</a></li>
-                        <li><a href="ourmission.html">Mission</a></li>
-                        <li><a href="managment.html">Management And Administrative structure</a></li>
-                    </ul>
-                </li>
-                <li><a href="programmes.html">Programs</a></li>
-                <li><a href="founder.html">Founder</a></li>
-                <li><a href="download.html">Download</a></li>
-                <li><a href="gallary.html">Gallary</a></li>
-                <li><a href="contact.html">Contact us</a></li>
-               <li class="nav-item-has-dropdown">
-                    <a href="#about-us-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                    <ul class="dropdown-menu">
-                             <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
-                        <li><a href="raghopur.html">RAGHOPUR</a></li>
-                        <li><a href="bidupur.html">BIDUPUR</a></li>
-                        <li><a href="admin.html">ADMIN</a></li>
-            </ul>
-        </nav>
+        <div class="flex items-center space-x-4">
+            <nav class="hidden md:flex items-center space-x-6 text-gray-700 text-base font-medium lg:block">
+                <a href="download.html" class="hover:text-blue-700 transition-colors duration-200">Download</a>
+                <a href="contact.html" class="hover:text-blue-700 transition-colors duration-200">Contact</a>
+                <a href="https://mysamadhan.in/iadmin" id="consoleLink" class="hover:text-blue-700 transition-colors duration-200">Console</a>
+            </nav>
+
+            <button class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden lg:block cursor-pointer transition-colors duration-200" aria-label="More options">
+                <i class="fas fa-ellipsis-v three-dots-icon text-blue-600"></i>
+            </button>
+
+            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
+                <i class="fas fa-search text-blue-600"></i>
+            </button>
+
+            <button id="mobileMenuButton" class="p-2.5 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
+                <i class="fas fa-bars text-gray-600"></i>
+            </button>
+        </div>
     </header>
 
-    <!-- Our Journey Section -->
-    <section class="page-section" id="our-journey-section">
-        <h2>Our Journey: Empowering Communities for Over Two Decades</h2>
-        <div class="journey-content">
-            <p>At Samadhan Kendra (SK), our founding philosophy is deeply rooted in the principle of holistic development—of the people, by the people, and for the people. Since our inception in 2004, we have passionately championed a democratic process of inclusive growth, focusing primarily on the poor and marginalized sections of society.</p>
-            <p>For twenty-one years now, SK, a registered Society under the Society Registration Act 1860, has remained unwavering in its commitment. We've dedicated ourselves to fostering sustainable development initiatives that directly translate into tangible improvements in the lives of the underprivileged. Our journey is a testament to the enduring power of collective action and a belief that true progress is achieved when every voice is heard and every individual has the opportunity to thrive.</p>
-            <p>Our story at Samadhan Kendra (SK) began in 2004, born from a profound belief in holistic development—driven by the people, for the people, and centered on the people. As a registered Society under the Society Registration Act 1860, we set out with a clear mission: to champion a truly democratic and inclusive development model. Our primary focus has always been on uplifting the poor and marginalized, ensuring their voices are heard and their needs are met.</p>
-            <p>Fast forward twenty-one years, and our commitment remains as strong as ever. We continue to strive for sustainable development, implementing programs that directly enhance the quality of life for the poor and underprivileged. Every step of our journey reflects our dedication to empowering communities and creating a more equitable society. </p>
-        
-            <p>The bedrock of Samadhan Kendra's (SK) existence, established in 2004, is a timeless philosophy: holistic development orchestrated by the people, for the people, and in service of the people. As a registered entity under the Society Registration Act 1860, we have consistently upheld a democratic approach to inclusive development, with a steadfast focus on empowering the most vulnerable—those from poor and marginalized backgrounds.</p>
-            <p>Now, into our twenty-first year, our resolve has only deepened. We continue to forge ahead, committed to instigating sustainable change that directly enriches the lives of the poor and underprivileged. Our journey isn't just about programs; it's about building a legacy of self-reliance, dignity, and lasting improvement within the communities we serve.</p>
-            
+    <div id="mobileSearchOverlay" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileSearchButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile search">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
         </div>
-    </section>
+        <div class="p-6 flex flex-col items-center justify-center h-full -mt-16"> <h2 class="text-3xl font-bold text-blue-600 mb-6">Search</h2>
+            <div class="relative flex items-center w-full max-w-md
+                                 bg-white rounded-full shadow-md hover:shadow-lg
+                                 transition-shadow duration-300 p-3">
+                <i class="fas fa-search text-gray-500 ml-2 mr-3 text-lg"></i>
+                <input type="text" id="mobileSearchInput"
+                       class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-lg"
+                       placeholder="Enter User Name (exact)">
+            </div>
+        </div>
+    </div>
 
-    <a href="#" class="scroll-to-top" id="scrollToTopBtn">
-        <i class="ri-arrow-up-line"></i>
-    </a>
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile menu">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col items-start p-6 space-y-3 text-gray-800 text-lg font-medium">
+            <a href="index.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Home</a>
+
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
+                    About us
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileAboutUsMenu">
+                    <a href="ourjourney.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Our Journey</a>
+                    <a href="vision.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Vision</a>
+                    <a href="mission.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Mission</a>
+                    <a href="management_structure.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Management And Administrative structure</a>
+                </div>
+            </div>
+
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
+                    Programs
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileProgramsMenu">
+                    <a href="su_sikshalaya.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">SU-SIKSHALAYA</a>
+                    <a href="apna_vidyalaya.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Apna Vidyalaya</a>
+                    <a href="sports.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Sports</a>
+                    <a href="wsg.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">WSG</a>
+                    <a href="environment.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Environment</a>
+                </div>
+            </div>
+
+            <a href="founder.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Founder</a>
+            <a href="gallery.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Gallery</a>
+
+            <a href="download.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Download</a>
+            <a href="contact.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Contact</a>
+            <a href="https://mysamadhan.in/iadmin" id="mobileConsoleLink" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Console</a>
+
+            </nav>
+    </div>
+
+    
+
+    <div id="passwordModal" class="password-modal-overlay hidden">
+        <div class="password-modal-content">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Enter Password</h3>
+            <input type="password" id="passwordInput" placeholder="Password" class="mb-4">
+            <p id="passwordError" class="password-error hidden"></p>
+            <div class="flex justify-center">
+                <button id="submitPasswordButton" class="submit">Submit</button>
+                <button id="cancelPasswordButton" class="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const mobileMenuToggle = document.getElementById('mobile-menu');
-        const navMenu = document.querySelector('.nav-menu');
-        const dropdownParent = document.querySelector('.nav-item-has-dropdown');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
+        // The URL of your published Google Sheet CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
+        const CORRECT_PASSWORD = 'admin123'; // Define the correct password here
 
-        // Function to close the mobile menu
-        function closeMobileMenu() {
-            mobileMenuToggle.classList.remove('open');
-            navMenu.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-            // Also close dropdown if open
-            if (dropdownParent) {
-                dropdownParent.classList.remove('open');
-            }
-            if (dropdownMenu) {
-                dropdownMenu.classList.remove('active-mobile');
+        let sheetData = []; // To store the parsed CSV data
+
+        // Function to fetch and parse the CSV data
+        async function fetchCSVData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                sheetData = parseCSV(csvText);
+                console.log('CSV Data Loaded:', sheetData); // Log the loaded data
+            } catch (error) {
+                console.error('Error fetching or parsing CSV:', error);
             }
         }
 
-        mobileMenuToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            mobileMenuToggle.classList.toggle('open');
-            navMenu.classList.toggle('active');
-            if (navMenu.classList.contains('active')) {
-                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
-            } else {
-                document.body.style.overflow = 'auto';
-                // Close dropdown when main menu closes
-                if (dropdownParent) {
-                    dropdownParent.classList.remove('open');
-                }
-                if (dropdownMenu) {
-                    dropdownMenu.classList.remove('active-mobile');
+        // Simple CSV parser function
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                if (values.length === headers.length) {
+                    let row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    data.push(row);
+                } else {
+                    console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
                 }
             }
-        });
+            return data;
+        }
 
-        // Toggle dropdown on mobile click (for About Us)
-        if (dropdownParent) {
-            dropdownParent.addEventListener('click', function (e) {
-                // Only toggle if in mobile view AND the main menu is active
-                if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
-                    // Prevent default behavior only if the click is on the parent link itself, not a submenu item
-                    if (e.target.closest('a') === this.querySelector('a')) {
-                        e.preventDefault();
+        // Function to handle the search
+        function performSearch(searchInput) {
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm === '') {
+                return;
+            }
+
+            console.log('Searching for:', searchTerm);
+            console.log('Current sheetData:', sheetData);
+
+            const userNameColumn = 'User Name';
+            const webLinkColumn = 'WEB LINK';
+
+            let foundLink = null;
+
+            for (const row of sheetData) {
+                if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
+                    if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
+                        foundLink = row[webLinkColumn];
+                        break;
                     }
-                    dropdownParent.classList.toggle('open');
-                    dropdownMenu.classList.toggle('active-mobile');
                 }
-            });
+            }
+
+            if (foundLink) {
+                if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
+                    foundLink = 'https://' + foundLink;
+                }
+                console.log('Attempting to open link in new tab:', foundLink);
+
+                try {
+                    window.open(foundLink, '_blank');
+                } catch (e) {
+                    console.error('Error opening window (possibly pop-up blocked):', e);
+                }
+
+            } else {
+                console.log('No link found for:', searchTerm);
+            }
         }
 
-        // Close mobile menu when a navigation link is clicked
-        navMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // If it's a direct link within a dropdown menu, close the whole menu
-                if (link.closest('.dropdown-menu')) {
-                    closeMobileMenu();
-                } 
-                // If it's a main nav link and not the dropdown toggle itself on mobile
-                else if (window.innerWidth <= 768 && !link.closest('.nav-item-has-dropdown')) {
-                     closeMobileMenu();
-                } 
-                // For desktop links or other cases, let default behavior or smooth scroll handle
-            });
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            // Desktop dropdown logic (hover)
+            const dropdownTimeouts = {};
 
-        // Scroll-to-top button logic
-        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            function setupDropdown(dropdownId, menuClass) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    const toggleLink = dropdown.querySelector('a[aria-haspopup="true"]');
+                    const menu = dropdown.querySelector(`.${menuClass}`);
 
-        window.onscroll = function () {
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-                scrollToTopBtn.classList.add("show");
-            } else {
-                scrollToTopBtn.classList.remove("show");
+                    if (menu && toggleLink) {
+                        dropdown.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                            menu.classList.add('show-menu');
+                            toggleLink.setAttribute('aria-expanded', 'true');
+                        });
+
+                        dropdown.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                                toggleLink.setAttribute('aria-expanded', 'false');
+                            }, 150);
+                        });
+
+                        menu.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                        });
+
+                        menu.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                                toggleLink.setAttribute('aria-expanded', 'false');
+                            }, 150);
+                        });
+                    }
+                }
             }
-        };
 
-        scrollToTopBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
+            setupDropdown('aboutUsDropdown', 'dropdown-menu');
+            setupDropdown('programsDropdown', 'dropdown-menu');
+
+            // Mobile menu logic (click)
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+
+            if (mobileMenuButton && mobileMenu && closeMobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                    mobileMenuButton.setAttribute('aria-expanded', 'true');
+                });
+
+                closeMobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Mobile dropdowns (click)
+            function setupMobileDropdownToggle(toggleId, menuId) {
+                const toggleButton = document.getElementById(toggleId);
+                const menu = document.getElementById(menuId);
+
+                if (toggleButton && menu) {
+                    toggleButton.addEventListener('click', () => {
+                        const isHidden = menu.classList.toggle('hidden');
+                        const icon = toggleButton.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('fa-chevron-down');
+                            icon.classList.toggle('fa-chevron-up');
+                        }
+                        toggleButton.setAttribute('aria-expanded', !isHidden);
+                    });
+                }
+            }
+
+            setupMobileDropdownToggle('mobileAboutUsToggle', 'mobileAboutUsMenu');
+            setupMobileDropdownToggle('mobileProgramsToggle', 'mobileProgramsMenu');
+
+            // --- Search Functionality Integration ---
+
+            // Desktop Search Elements
+            const desktopSearchInput = document.getElementById('desktopSearchInput');
+
+            // Mobile Search Elements
+            const mobileSearchToggleButton = document.getElementById('mobileSearchToggleButton');
+            const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+            const closeMobileSearchButton = document.getElementById('closeMobileSearchButton');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+
+            // Event Listeners for Desktop Search Input (Enter key)
+            if (desktopSearchInput) {
+                desktopSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(desktopSearchInput);
+                    }
+                });
+            }
+
+            // Event Listeners for Mobile Search Overlay (Open/Close)
+            if (mobileSearchToggleButton && mobileSearchOverlay && closeMobileSearchButton) {
+                mobileSearchToggleButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-full');
+                    mobileSearchOverlay.classList.add('translate-x-0');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'true');
+                    mobileSearchInput.focus();
+                });
+
+                closeMobileSearchButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-0');
+                    mobileSearchOverlay.classList.add('translate-x-full');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Event Listeners for Mobile Search Input (Enter key)
+            if (mobileSearchInput) {
+                mobileSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(mobileSearchInput);
+                    }
+                });
+            }
+
+            // --- Password Protected Console Link ---
+            const consoleLink = document.getElementById('consoleLink');
+            const mobileConsoleLink = document.getElementById('mobileConsoleLink');
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            const submitPasswordButton = document.getElementById('submitPasswordButton');
+            const cancelPasswordButton = document.getElementById('cancelPasswordButton');
+
+            function handleConsoleAccess(event) {
+                event.preventDefault(); // Prevent default link navigation
+                passwordModal.classList.remove('hidden');
+                passwordError.classList.add('hidden'); // Hide any previous errors
+                passwordInput.value = ''; // Clear input field
+                passwordInput.focus(); // Focus the input for immediate typing
+            }
+
+            function attemptPasswordLogin() {
+                const enteredPassword = passwordInput.value;
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    window.location.href = 'https://mysamadhan.in/iadmin'; // Redirect to the console
+                } else {
+                    passwordError.textContent = 'Incorrect password. Please try again.';
+                    passwordError.classList.remove('hidden');
+                    passwordInput.value = ''; // Clear input on incorrect password
+                    passwordInput.focus();
+                }
+            }
+
+            if (consoleLink) {
+                consoleLink.addEventListener('click', handleConsoleAccess);
+            }
+            if (mobileConsoleLink) {
+                mobileConsoleLink.addEventListener('click', handleConsoleAccess);
+            }
+
+            if (submitPasswordButton) {
+                submitPasswordButton.addEventListener('click', attemptPasswordLogin);
+            }
+
+            if (cancelPasswordButton) {
+                cancelPasswordButton.addEventListener('click', () => {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordError.classList.add('hidden');
+                });
+            }
+
+            // Allow submitting password with Enter key
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        attemptPasswordLogin();
+                    }
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !passwordModal.classList.contains('hidden')) {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordError.classList.add('hidden');
+                }
             });
-        });
 
-        // Handle the "LOG - IN" button in the header nav
-        document.querySelector('a.header-cta-button').addEventListener('click', function (e) {
-            e.preventDefault();
-            const messageBox = document.createElement('div');
-            messageBox.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 30px;
-                border-radius: 15px;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-                z-index: 1001;
-                text-align: center;
-                max-width: 90%;
-                font-family: 'Inter', sans-serif;
-                color: var(--primary-dark);
-            `;
-            messageBox.innerHTML = `
-                <h4 style="margin-bottom: 15px; font-size: 1.5rem; color: var(--accent);">Login Feature</h4>
-                <p style="margin-bottom: 25px; font-size: 1.1rem;">Log In functionality is under development.</p>
-                <button style="
-                    padding: 12px 25px;
-                    background-color: var(--primary-light);
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    transition: background-color 0.3s ease;
-                " onmouseover="this.style.backgroundColor='var(--primary-dark)'" onmouseout="this.style.backgroundColor='var(--primary-light)'">Close</button>
-            `;
-
-            document.body.appendChild(messageBox);
-
-            messageBox.querySelector('button').addEventListener('click', () => {
-                document.body.removeChild(messageBox);
-            });
+            // Initial fetch when the page loads to populate sheetData
+            fetchCSVData();
         });
     </script>
 </body>
+</html>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Samadhan Kendra - Our Journey</title>
+  <!-- Load Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for the timeline line and item animations */
+    body {
+      font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+    }
+
+    /* Base styles for timeline items before they become visible */
+    .timeline-item {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease-out; /* Smoother transition */
+    }
+
+    /* Styles for visible timeline items */
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Specific positioning for the year circle on the timeline */
+    .timeline-item .year-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Center the circle */
+      z-index: 2; /* Ensure it's above the line */
+    }
+
+    /* Responsive adjustments for content positioning on larger screens */
+    @media (min-width: 768px) { /* md breakpoint */
+      .timeline-item:nth-child(odd) .content {
+        margin-right: calc(50% + 40px); /* Adjust to align left of the line */
+        text-align: right;
+      }
+
+      .timeline-item:nth-child(even) .content {
+        margin-left: calc(50% + 40px); /* Adjust to align right of the line */
+        text-align: left;
+      }
+
+      /* Adjust year circle position for odd/even items on desktop to align with content */
+      .timeline-item:nth-child(odd) .year-circle {
+        left: 50%; /* Keep centered on the line */
+      }
+      .timeline-item:nth-child(even) .year-circle {
+        left: 50%; /* Keep centered on the line */
+      }
+    }
+  </style>
+</head>
+<body class="bg-blue-50 text-gray-800 antialiased">
+  <!-- Hero Section -->
+  <header class="hero text-center py-16 px-4 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-b-xl shadow-lg">
+    <h1 class="text-5xl md:text-6xl font-extrabold mb-2">Samadhan Kendra (SK)</h1>
+    <p class="text-lg md:text-xl opacity-90 font-light">Empowering Communities for Over Two Decades</p>
+  </header>
+
+  <!-- Timeline Section -->
+  <section class="timeline relative mx-auto my-16 p-4 max-w-5xl">
+    <!-- Vertical Timeline Line -->
+    <div class="timeline-line absolute top-0 left-1/2 w-1.5 h-full bg-blue-600 transform -translate-x-1/2 rounded-full"></div>
+
+    <!-- Timeline Items -->
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Inception</h2>
+        <p class="text-gray-700 leading-relaxed">Samadhan Kendra was established as a registered Society under the Society Registration Act 1860, based on the philosophy of holistic development—by the people, for the people. We began with the mission to uplift marginalized communities.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2004">2004</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Grassroots Strengthening</h2>
+        <p class="text-gray-700 leading-relaxed">We expanded our grassroots operations, focusing on participatory rural appraisal methods to understand and respond to community needs effectively. Local volunteers and leaders were mobilized to ensure community-driven planning.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2008">2008</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Program Diversification</h2>
+        <p class="text-gray-700 leading-relaxed">Introduced new verticals such as women's empowerment, livelihood training, and health awareness initiatives, with special attention on education for children in underserved regions.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2012">2012</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Impact-Oriented Development</h2>
+        <p class="text-gray-700 leading-relaxed">Launched measurable impact programs with focus on outcomes. Collaborated with local governments and NGOs to scale initiatives in sanitation, child welfare, and vocational training.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2015">2015</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Resilience Through Crisis</h2>
+        <p class="text-gray-700 leading-relaxed">During the COVID-19 pandemic, we mobilized rapid response efforts for food security, healthcare access, and digital learning. Our digital infrastructure began supporting community education and awareness drives.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2020">2020</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Apna Vidyalaya</h2>
+        <p class="text-gray-700 leading-relaxed">In 2022, we launched "Apna Vidyalaya" (Our School), an initiative focused on providing quality education and learning resources to children in remote rural areas, ensuring access to foundational literacy and numeracy.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2022">2022</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Education Focus</h2>
+        <p class="text-gray-700 leading-relaxed">Building on previous efforts, 2023 saw a deepened focus on comprehensive educational programs, including digital literacy, vocational training for youth, and adult education initiatives to empower entire communities.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2023">2023</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">20 Years of Service & Sports Initiative</h2>
+        <p class="text-gray-700 leading-relaxed">We celebrated two decades of empowering people, with deepened focus on climate resilience, digital inclusion, policy advocacy, and a new initiative to promote sports and physical well-being in rural areas to foster community spirit and talent.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2024">2024</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">The Legacy Continues</h2>
+        <p class="text-gray-700 leading-relaxed">Now in our 21st year, we reaffirm our pledge to build self-reliant, equitable communities. Samadhan Kendra continues to be a beacon for democratic, inclusive development, grounded in dignity and sustainability.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2025">2025</span>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="bg-blue-800 text-white text-center py-5 rounded-t-xl shadow-inner">
+    <p class="text-sm">&copy; 2025 Samadhan Kendra. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // JavaScript for scroll-based animation of timeline items
+    const timelineItems = document.querySelectorAll('.timeline-item');
+
+    const revealOnScroll = () => {
+      // Calculate the trigger point for revealing items (85% from the top of the viewport)
+      const triggerBottom = window.innerHeight * 0.85;
+
+      timelineItems.forEach(item => {
+        // Get the top position of the current timeline item relative to the viewport
+        const boxTop = item.getBoundingClientRect().top;
+
+        // If the item's top is within the trigger point, add the 'visible' class
+        if (boxTop < triggerBottom) {
+          item.classList.add('visible');
+        } else {
+          // Optionally, remove the 'visible' class if it scrolls out of view upwards
+          // This creates a re-reveal effect if scrolling back up
+          item.classList.remove('visible');
+        }
+      });
+    };
+
+    // Add event listeners for scroll and load to trigger the reveal function
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // Initial check on load to reveal items already in view
+    revealOnScroll();
+  </script>
+</body>
 </html>
