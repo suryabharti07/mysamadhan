@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -583,5 +584,189 @@
             fetchCSVData();
         });
     </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Samadhan Kendra - Our Journey</title>
+  <!-- Load Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for the timeline line and item animations */
+    body {
+      font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+    }
+
+    /* Base styles for timeline items before they become visible */
+    .timeline-item {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease-out; /* Smoother transition */
+    }
+
+    /* Styles for visible timeline items */
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Specific positioning for the year circle on the timeline */
+    .timeline-item .year-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Center the circle */
+      z-index: 2; /* Ensure it's above the line */
+    }
+
+    /* Responsive adjustments for content positioning on larger screens */
+    @media (min-width: 768px) { /* md breakpoint */
+      .timeline-item:nth-child(odd) .content {
+        margin-right: calc(50% + 40px); /* Adjust to align left of the line */
+        text-align: right;
+      }
+
+      .timeline-item:nth-child(even) .content {
+        margin-left: calc(50% + 40px); /* Adjust to align right of the line */
+        text-align: left;
+      }
+
+      /* Adjust year circle position for odd/even items on desktop to align with content */
+      .timeline-item:nth-child(odd) .year-circle {
+        left: 50%; /* Keep centered on the line */
+      }
+      .timeline-item:nth-child(even) .year-circle {
+        left: 50%; /* Keep centered on the line */
+      }
+    }
+  </style>
+</head>
+<body class="bg-blue-50 text-gray-800 antialiased">
+  <!-- Hero Section -->
+  <header class="hero text-center py-16 px-4 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-b-xl shadow-lg">
+    <h1 class="text-5xl md:text-6xl font-extrabold mb-2">Samadhan Kendra (SK)</h1>
+    <p class="text-lg md:text-xl opacity-90 font-light">Empowering Communities for Over Two Decades</p>
+  </header>
+
+  <!-- Timeline Section -->
+  <section class="timeline relative mx-auto my-16 p-4 max-w-5xl">
+    <!-- Vertical Timeline Line -->
+    <div class="timeline-line absolute top-0 left-1/2 w-1.5 h-full bg-blue-600 transform -translate-x-1/2 rounded-full"></div>
+
+    <!-- Timeline Items -->
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Inception</h2>
+        <p class="text-gray-700 leading-relaxed">Samadhan Kendra was established as a registered Society under the Society Registration Act 1860, based on the philosophy of holistic development—by the people, for the people. We began with the mission to uplift marginalized communities.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2004">2004</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Grassroots Strengthening</h2>
+        <p class="text-gray-700 leading-relaxed">We expanded our grassroots operations, focusing on participatory rural appraisal methods to understand and respond to community needs effectively. Local volunteers and leaders were mobilized to ensure community-driven planning.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2008">2008</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Program Diversification</h2>
+        <p class="text-gray-700 leading-relaxed">Introduced new verticals such as women's empowerment, livelihood training, and health awareness initiatives, with special attention on education for children in underserved regions.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2012">2012</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Impact-Oriented Development</h2>
+        <p class="text-gray-700 leading-relaxed">Launched measurable impact programs with focus on outcomes. Collaborated with local governments and NGOs to scale initiatives in sanitation, child welfare, and vocational training.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2015">2015</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Resilience Through Crisis</h2>
+        <p class="text-gray-700 leading-relaxed">During the COVID-19 pandemic, we mobilized rapid response efforts for food security, healthcare access, and digital learning. Our digital infrastructure began supporting community education and awareness drives.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2020">2020</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Apna Vidyalaya</h2>
+        <p class="text-gray-700 leading-relaxed">In 2022, we launched "Apna Vidyalaya" (Our School), an initiative focused on providing quality education and learning resources to children in remote rural areas, ensuring access to foundational literacy and numeracy.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2022">2022</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Education Focus</h2>
+        <p class="text-gray-700 leading-relaxed">Building on previous efforts, 2023 saw a deepened focus on comprehensive educational programs, including digital literacy, vocational training for youth, and adult education initiatives to empower entire communities.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2023">2023</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-end my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">20 Years of Service & Sports Initiative</h2>
+        <p class="text-gray-700 leading-relaxed">We celebrated two decades of empowering people, with deepened focus on climate resilience, digital inclusion, policy advocacy, and a new initiative to promote sports and physical well-being in rural areas to foster community spirit and talent.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2024">2024</span>
+    </div>
+
+    <div class="timeline-item flex justify-center md:justify-start my-20">
+      <div class="content bg-white p-8 rounded-xl shadow-xl w-11/12 md:w-5/12">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">The Legacy Continues</h2>
+        <p class="text-gray-700 leading-relaxed">Now in our 21st year, we reaffirm our pledge to build self-reliant, equitable communities. Samadhan Kendra continues to be a beacon for democratic, inclusive development, grounded in dignity and sustainability.</p>
+      </div>
+      <span class="year-circle bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg" data-year="2025">2025</span>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="bg-blue-800 text-white text-center py-5 rounded-t-xl shadow-inner">
+    <p class="text-sm">&copy; 2025 Samadhan Kendra. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // JavaScript for scroll-based animation of timeline items
+    const timelineItems = document.querySelectorAll('.timeline-item');
+
+    const revealOnScroll = () => {
+      // Calculate the trigger point for revealing items (85% from the top of the viewport)
+      const triggerBottom = window.innerHeight * 0.85;
+
+      timelineItems.forEach(item => {
+        // Get the top position of the current timeline item relative to the viewport
+        const boxTop = item.getBoundingClientRect().top;
+
+        // If the item's top is within the trigger point, add the 'visible' class
+        if (boxTop < triggerBottom) {
+          item.classList.add('visible');
+        } else {
+          // Optionally, remove the 'visible' class if it scrolls out of view upwards
+          // This creates a re-reveal effect if scrolling back up
+          item.classList.remove('visible');
+        }
+      });
+    };
+
+    // Add event listeners for scroll and load to trigger the reveal function
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // Initial check on load to reveal items already in view
+    revealOnScroll();
+  </script>
 </body>
 </html>
