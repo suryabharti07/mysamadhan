@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Samadhan Kendra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Apply Inter font family to the entire body */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa; /* Light grey background for the page */
+        }
+
+        /* Custom styling for the three-dot menu icon to match other icons */
+        .three-dots-icon {
+            font-size: 1.25rem; /* Equivalent to text-xl */
+            color: #5f6368; /* A standard gray color for icons */
+        }
+
+        /* Dropdown specific styles for desktop (hover) */
+        .dropdown-menu {
+            position: absolute;
+            background-color: white;
+            /* Stronger shadow for better visual depth */
+            box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.15);
+            z-index: 1000; /* Ensure dropdown is on top of other content */
+            min-width: 180px; /* Slightly wider dropdowns */
+            border-radius: 0.5rem; /* More rounded corners */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            padding: 0.5rem 0; /* Vertical padding */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+            /* Smooth transition for appearance */
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px); /* Slight downward translation for entrance effect */
+            top: 100%; /* Position below the parent link */
+            left: 0;
+            border: 1px solid #e2e8f0; /* Subtle border */
+        }
+
+        /* Class to show the dropdown */
+        .show-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0); /* Reset translation to show */
+        }
+
+        /* Styling for individual dropdown items */
+        .dropdown-item {
+            padding: 0.75rem 1.25rem; /* More padding for better click/tap area */
+            display: block;
+            color: #4a5568; /* Darker gray for text */
+            text-decoration: none;
+            font-size: 0.9rem; /* Slightly larger font size */
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.2s ease, color 0.2s ease; /* Smooth hover transition */
+        }
+
+        .dropdown-item:hover {
+            background-color: #e0f2fe; /* Light blue background on hover */
+            color: #1d4ed8; /* Darker blue text on hover */
+        }
+
+        /* Custom style for the mobile menu transition */
+        #mobileMenu, #mobileSearchOverlay {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Password Modal Styling */
+        .password-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        .password-modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            width: 90%;
+            max-width: 400px; /* Max width for larger screens */
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.2s ease-out;
+        }
+
+        .password-modal-content.show {
+            transform: scale(1);
+        }
+
+        .password-modal-content input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 0.375rem; /* Slightly rounded corners */
+            font-size: 1rem;
+        }
+
+        .password-modal-content button {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .password-modal-content button.submit {
+            background-color: #2563eb; /* Blue */
+            color: white;
+        }
+
+        .password-modal-content button.submit:hover {
+            background-color: #1d4ed8; /* Darker blue on hover */
+        }
+
+        .password-modal-content button.cancel {
+            background-color: #e5e7eb; /* Light gray */
+            color: #374151; /* Darker gray text */
+            margin-left: 0.75rem;
+        }
+
+        .password-modal-content button.cancel:hover {
+            background-color: #d1d5db; /* Darker light gray on hover */
+        }
+
+        .password-error {
+            color: #ef4444; /* Red for error messages */
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-lg py-4 px-6 flex items-center justify-between w-full border-b border-gray-200 rounded-b-lg">
+        <div class="flex items-center space-x-8">
+            <!-- Logo linked to index.html -->
+            <a href="index.html" class="inline-block">
+                <img src="https://i.postimg.cc/nrW2HNXp/samadhan-kendra-logo.png" alt="Samadhan Kendra Logo" class="h-8 mr-4">
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-8 text-gray-700 text-base font-medium">
+                <a href="index.html" class="hover:text-blue-700 transition-colors duration-200">Home</a>
+
+                <div class="relative dropdown" id="aboutUsDropdown">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
+                        About us
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="ourjourney.html" class="dropdown-item">Our Journey</a>
+                        <a href="vision.html" class="dropdown-item">Vision</a>
+                        <a href="mission.html" class="dropdown-item">Mission</a>
+                        <a href="management_structure.html" class="dropdown-item">Management And Administrative structure</a>
+                    </div>
+                </div>
+
+                <div class="relative dropdown" id="programsDropdown">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
+                        Programs
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="su_sikshalaya.html" class="dropdown-item">SU-SIKSHALAYA</a>
+                        <a href="apna_vidyalaya.html" class="dropdown-item">Apna Vidyalaya</a>
+                        <a href="sports.html" class="dropdown-item">Sports</a>
+                        <a href="wsg.html" class="dropdown-item">WSG</a>
+                        <a href="environment.html" class="dropdown-item">Environment</a>
+                    </div>
+                </div>
+
+                <a href="founder.html" class="hover:text-blue-700 transition-colors duration-200">Founder</a>
+                <a href="gallery.html" class="hover:text-blue-700 transition-colors duration-200">Gallery</a>
+            </nav>
+        </div>
+
+        <div id="desktopSearchBar" class="hidden lg:flex items-center flex-grow mx-4 max-w-xl
+                                         bg-white rounded-full shadow-md hover:shadow-lg
+                                         transition-shadow duration-300 p-2">
+            <i class="fas fa-search text-gray-500 ml-2 mr-2 text-base"></i>
+            <input type="text" id="desktopSearchInput"
+                   class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-base"
+                   placeholder="Search User Name">
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <nav class="hidden md:flex items-center space-x-6 text-gray-700 text-base font-medium lg:block">
+                <a href="download.html" class="hover:text-blue-700 transition-colors duration-200">Download</a>
+                <a href="contact.html" class="hover:text-blue-700 transition-colors duration-200">Contact</a>
+                <a href="https://mysamadhan.in/iadmin" id="consoleLink" class="hover:text-blue-700 transition-colors duration-200">Console</a>
+            </nav>
+
+            <button class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden lg:block cursor-pointer transition-colors duration-200" aria-label="More options">
+                <i class="fas fa-ellipsis-v three-dots-icon text-blue-600"></i>
+            </button>
+
+            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
+                <i class="fas fa-search text-blue-600"></i>
+            </button>
+
+            <button id="mobileMenuButton" class="p-2.5 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
+                <i class="fas fa-bars text-gray-600"></i>
+            </button>
+        </div>
+    </header>
+
+    <div id="mobileSearchOverlay" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileSearchButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile search">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div class="p-6 flex flex-col items-center justify-center h-full -mt-16"> <h2 class="text-3xl font-bold text-blue-600 mb-6">Search</h2>
+            <div class="relative flex items-center w-full max-w-md
+                                 bg-white rounded-full shadow-md hover:shadow-lg
+                                 transition-shadow duration-300 p-3">
+                <i class="fas fa-search text-gray-500 ml-2 mr-3 text-lg"></i>
+                <input type="text" id="mobileSearchInput"
+                       class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-lg"
+                       placeholder="Enter User Name (exact)">
+            </div>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile menu">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col items-start p-6 space-y-3 text-gray-800 text-lg font-medium">
+            <a href="index.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Home</a>
+
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
+                    About us
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileAboutUsMenu">
+                    <a href="ourjourney.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Our Journey</a>
+                    <a href="vision.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Vision</a>
+                    <a href="mission.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Mission</a>
+                    <a href="management_structure.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Management And Administrative structure</a>
+                </div>
+            </div>
+
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
+                    Programs
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileProgramsMenu">
+                    <a href="su_sikshalaya.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">SU-SIKSHALAYA</a>
+                    <a href="apna_vidyalaya.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Apna Vidyalaya</a>
+                    <a href="sports.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Sports</a>
+                    <a href="wsg.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">WSG</a>
+                    <a href="environment.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Environment</a>
+                </div>
+            </div>
+
+            <a href="founder.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Founder</a>
+            <a href="gallery.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Gallery</a>
+
+            <a href="download.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Download</a>
+            <a href="contact.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Contact</a>
+            <a href="https://mysamadhan.in/iadmin" id="mobileConsoleLink" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Console</a>
+
+            </nav>
+    </div>
+
+    
+
+    <div id="passwordModal" class="password-modal-overlay hidden">
+        <div class="password-modal-content">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Enter Password</h3>
+            <input type="password" id="passwordInput" placeholder="Password" class="mb-4">
+            <p id="passwordError" class="password-error hidden"></p>
+            <div class="flex justify-center">
+                <button id="submitPasswordButton" class="submit">Submit</button>
+                <button id="cancelPasswordButton" class="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // The URL of your published Google Sheet CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
+        const CORRECT_PASSWORD = 'admin123'; // Define the correct password here
+
+        let sheetData = []; // To store the parsed CSV data
+
+        // Function to fetch and parse the CSV data
+        async function fetchCSVData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                sheetData = parseCSV(csvText);
+                console.log('CSV Data Loaded:', sheetData); // Log the loaded data
+            } catch (error) {
+                console.error('Error fetching or parsing CSV:', error);
+            }
+        }
+
+        // Simple CSV parser function
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                if (values.length === headers.length) {
+                    let row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    data.push(row);
+                } else {
+                    console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
+                }
+            }
+            return data;
+        }
+
+        // Function to handle the search
+        function performSearch(searchInput) {
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm === '') {
+                return;
+            }
+
+            console.log('Searching for:', searchTerm);
+            console.log('Current sheetData:', sheetData);
+
+            const userNameColumn = 'User Name';
+            const webLinkColumn = 'WEB LINK';
+
+            let foundLink = null;
+
+            for (const row of sheetData) {
+                if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
+                    if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
+                        foundLink = row[webLinkColumn];
+                        break;
+                    }
+                }
+            }
+
+            if (foundLink) {
+                if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
+                    foundLink = 'https://' + foundLink;
+                }
+                console.log('Attempting to open link in new tab:', foundLink);
+
+                try {
+                    window.open(foundLink, '_blank');
+                } catch (e) {
+                    console.error('Error opening window (possibly pop-up blocked):', e);
+                }
+
+            } else {
+                console.log('No link found for:', searchTerm);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Desktop dropdown logic (hover)
+            const dropdownTimeouts = {};
+
+            function setupDropdown(dropdownId, menuClass) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    const toggleLink = dropdown.querySelector('a[aria-haspopup="true"]');
+                    const menu = dropdown.querySelector(`.${menuClass}`);
+
+                    if (menu && toggleLink) {
+                        dropdown.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                            menu.classList.add('show-menu');
+                            toggleLink.setAttribute('aria-expanded', 'true');
+                        });
+
+                        dropdown.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                                toggleLink.setAttribute('aria-expanded', 'false');
+                            }, 150);
+                        });
+
+                        menu.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                        });
+
+                        menu.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                                toggleLink.setAttribute('aria-expanded', 'false');
+                            }, 150);
+                        });
+                    }
+                }
+            }
+
+            setupDropdown('aboutUsDropdown', 'dropdown-menu');
+            setupDropdown('programsDropdown', 'dropdown-menu');
+
+            // Mobile menu logic (click)
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+
+            if (mobileMenuButton && mobileMenu && closeMobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                    mobileMenuButton.setAttribute('aria-expanded', 'true');
+                });
+
+                closeMobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Mobile dropdowns (click)
+            function setupMobileDropdownToggle(toggleId, menuId) {
+                const toggleButton = document.getElementById(toggleId);
+                const menu = document.getElementById(menuId);
+
+                if (toggleButton && menu) {
+                    toggleButton.addEventListener('click', () => {
+                        const isHidden = menu.classList.toggle('hidden');
+                        const icon = toggleButton.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('fa-chevron-down');
+                            icon.classList.toggle('fa-chevron-up');
+                        }
+                        toggleButton.setAttribute('aria-expanded', !isHidden);
+                    });
+                }
+            }
+
+            setupMobileDropdownToggle('mobileAboutUsToggle', 'mobileAboutUsMenu');
+            setupMobileDropdownToggle('mobileProgramsToggle', 'mobileProgramsMenu');
+
+            // --- Search Functionality Integration ---
+
+            // Desktop Search Elements
+            const desktopSearchInput = document.getElementById('desktopSearchInput');
+
+            // Mobile Search Elements
+            const mobileSearchToggleButton = document.getElementById('mobileSearchToggleButton');
+            const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+            const closeMobileSearchButton = document.getElementById('closeMobileSearchButton');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+
+            // Event Listeners for Desktop Search Input (Enter key)
+            if (desktopSearchInput) {
+                desktopSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(desktopSearchInput);
+                    }
+                });
+            }
+
+            // Event Listeners for Mobile Search Overlay (Open/Close)
+            if (mobileSearchToggleButton && mobileSearchOverlay && closeMobileSearchButton) {
+                mobileSearchToggleButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-full');
+                    mobileSearchOverlay.classList.add('translate-x-0');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'true');
+                    mobileSearchInput.focus();
+                });
+
+                closeMobileSearchButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-0');
+                    mobileSearchOverlay.classList.add('translate-x-full');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Event Listeners for Mobile Search Input (Enter key)
+            if (mobileSearchInput) {
+                mobileSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(mobileSearchInput);
+                    }
+                });
+            }
+
+            // --- Password Protected Console Link ---
+            const consoleLink = document.getElementById('consoleLink');
+            const mobileConsoleLink = document.getElementById('mobileConsoleLink');
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            const submitPasswordButton = document.getElementById('submitPasswordButton');
+            const cancelPasswordButton = document.getElementById('cancelPasswordButton');
+
+            function handleConsoleAccess(event) {
+                event.preventDefault(); // Prevent default link navigation
+                passwordModal.classList.remove('hidden');
+                passwordError.classList.add('hidden'); // Hide any previous errors
+                passwordInput.value = ''; // Clear input field
+                passwordInput.focus(); // Focus the input for immediate typing
+            }
+
+            function attemptPasswordLogin() {
+                const enteredPassword = passwordInput.value;
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    window.location.href = 'https://mysamadhan.in/iadmin'; // Redirect to the console
+                } else {
+                    passwordError.textContent = 'Incorrect password. Please try again.';
+                    passwordError.classList.remove('hidden');
+                    passwordInput.value = ''; // Clear input on incorrect password
+                    passwordInput.focus();
+                }
+            }
+
+            if (consoleLink) {
+                consoleLink.addEventListener('click', handleConsoleAccess);
+            }
+            if (mobileConsoleLink) {
+                mobileConsoleLink.addEventListener('click', handleConsoleAccess);
+            }
+
+            if (submitPasswordButton) {
+                submitPasswordButton.addEventListener('click', attemptPasswordLogin);
+            }
+
+            if (cancelPasswordButton) {
+                cancelPasswordButton.addEventListener('click', () => {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordError.classList.add('hidden');
+                });
+            }
+
+            // Allow submitting password with Enter key
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        attemptPasswordLogin();
+                    }
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !passwordModal.classList.contains('hidden')) {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordError.classList.add('hidden');
+                }
+            });
+
+            // Initial fetch when the page loads to populate sheetData
+            fetchCSVData();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="pageTitle">Samadhan Kendra - Greening Our Future</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for Inter font and smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8f9fa; /* Light background */
+        }
+        /* Animation for elements fading in/sliding up */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg p-4 sticky top-0 z-50 rounded-b-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-green-700" data-key="campaignName">Greening Our Future</a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navHome">Home</a>
+                <a href="#about-campaign" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navAbout">About</a>
+                <a href="#our-mission" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navMission">Mission</a>
+                <a href="#impact-so-far" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navImpact">Impact</a>
+                <a href="#awareness" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navAwareness">Awareness</a>
+                <a href="#looking-ahead" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navFuture">Future</a>
+                <a href="#contact" class="text-gray-600 hover:text-green-700 transition duration-300 ease-in-out" data-key="navContact">Contact</a>
+                <!-- Language Selector -->
+                <div class="ml-4">
+                    <button id="lang-en" class="px-3 py-1 rounded-full text-sm font-semibold border border-green-500 text-green-500 hover:bg-green-50 transition duration-200">EN</button>
+                    <button id="lang-hi" class="px-3 py-1 rounded-full text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-100 transition duration-200 ml-2">HI</button>
+                </div>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden opacity-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out mt-4 space-y-2 bg-white rounded-lg shadow-md p-4">
+            <a href="#" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navHome">Home</a>
+            <a href="#about-campaign" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navAbout">About</a>
+            <a href="#our-mission" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navMission">Mission</a>
+            <a href="#impact-so-far" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navImpact">Impact</a>
+            <a href="#awareness" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navAwareness">Awareness</a>
+            <a href="#looking-ahead" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navFuture">Future</a>
+            <a href="#contact" class="block text-gray-600 hover:text-green-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navContact">Contact</a>
+            <!-- Language Selector for Mobile -->
+            <div class="mt-4 border-t pt-4">
+                <button id="mobile-lang-en" class="w-full px-3 py-2 rounded-md text-sm font-semibold border border-green-500 text-green-500 hover:bg-green-50 transition duration-200">EN</button>
+                <button id="mobile-lang-hi" class="w-full px-3 py-2 rounded-md text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-100 transition duration-200 mt-2">HI</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-20 px-4 text-center rounded-b-3xl shadow-xl">
+        <div class="container mx-auto">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4 leading-tight fade-in-up" data-key="heroHeading">Greening Our Future – Samadhan Kendra’s Environmental Initiative</h1>
+            <p class="text-xl md:text-2xl mb-8 fade-in-up" style="transition-delay: 0.2s;" data-key="heroSubheading">
+                Preserving Nature, One Tree at a Time.
+            </p>
+            <a href="#about-campaign" class="inline-block bg-white text-green-700 hover:bg-green-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition duration-300 ease-in-out transform hover:scale-105 fade-in-up" style="transition-delay: 0.4s;" data-key="heroButton">
+                Learn More About Our Green Mission
+            </a>
+        </div>
+    </header>
+
+    <!-- About Campaign Section -->
+    <section id="about-campaign" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-green-700 mb-12 fade-in-up" data-key="aboutCampaignHeading">The Beginning: A Small Step for a Big Cause</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Image 1 -->
+                <div class="flex justify-center fade-in-up" style="transition-delay: 0.6s;">
+                    <img src="https://i.postimg.cc/vbYCx4QN/Whats-App-Image-2025-07-19-at-16-40-05-8078f600.jpg"
+                         alt="Tree plantation drive"
+                         class="w-full h-auto max-w-lg rounded-lg shadow-lg object-cover"
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/8BC34A/FFFFFF?text=Image+Not+Found';">
+                </div>
+
+                <!-- Text Content -->
+                <div class="space-y-6">
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.8s;" data-key="aboutCampaignPara1">
+                        At <strong class="text-green-700">Samadhan Kendra</strong>, we believe that development and sustainability must go hand in hand. As part of our unwavering commitment to social responsibility and community welfare, we launched a dedicated Environmental Protection Campaign in 2023, with a special focus on tree plantation (paudhe ropan) and plant distribution (paudhe baatna). This initiative has since evolved into a powerful movement that brings together people from all walks of life under the common goal of preserving our planet for future generations.
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.0s;" data-key="aboutCampaignPara2">
+                        The campaign began in early 2023 with a simple yet powerful idea: “If every hand plants a tree, the Earth will breathe easier.” With this thought in mind, Samadhan Kendra started organizing tree plantation drives across villages, towns, schools, and community centers.
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.2s;" data-key="aboutCampaignPara3">
+                        We also took the initiative to distribute saplings (paudhe baatna) to households, farmers, schools, and women’s groups (WSHGs), encouraging them to take personal responsibility for nurturing and protecting the saplings in their surroundings.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Mission Section -->
+    <section id="our-mission" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-green-700 mb-12 fade-in-up" data-key="ourMissionHeading">Our Mission: A Greener, Healthier Tomorrow</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="ourMissionIntro">
+                    Our environmental initiative is rooted in three core objectives:
+                </p>
+                <ul class="list-disc list-inside text-lg space-y-2 text-gray-700">
+                    <li class="fade-in-up" style="transition-delay: 0.4s;" data-key="ourMissionPoint1">Environmental Conservation: Combat climate change by increasing green cover and restoring ecological balance.</li>
+                    <li class="fade-in-up" style="transition-delay: 0.6s;" data-key="ourMissionPoint2">Community Participation: Involve local people in environmental efforts, fostering a sense of ownership and awareness.</li>
+                    <li class="fade-in-up" style="transition-delay: 0.8s;" data-key="ourMissionPoint3">Sustainable Living: Promote eco-conscious habits, reduce pollution, and create cleaner, healthier living spaces.</li>
+                </ul>
+                <p class="text-lg leading-relaxed mt-8 fade-in-up" style="transition-delay: 1.0s;" data-key="ourMissionConclusion">
+                    We believe that protecting the environment is not just the job of experts, but a collective responsibility—and we are proud to see communities rising to the occasion.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact So Far Section -->
+    <section id="impact-so-far" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-green-700 mb-12 fade-in-up" data-key="impactSoFarHeading">Impact So Far: 10,000+ Trees and Growing</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="space-y-6">
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="impactSoFarIntro">
+                        Since the campaign's launch, over 10,000 trees have been planted and distributed through various drives and events. Each sapling represents a promise to the Earth—a commitment to cleaner air, cooler temperatures, reduced soil erosion, and better biodiversity.
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.4s;" data-key="impactSoFarHighlights">
+                        Some key highlights include:
+                    </p>
+                    <ul class="list-disc list-inside text-lg space-y-2 text-gray-700">
+                        <li class="fade-in-up" style="transition-delay: 0.6s;" data-key="impactSoFarPoint1">School-based plantations, where children not only plant trees but also learn the importance of ecological balance.</li>
+                        <li class="fade-in-up" style="transition-delay: 0.8s;" data-key="impactSoFarPoint2">Community-driven plantation days, where villagers come together to green their surroundings.</li>
+                        <li class="fade-in-up" style="transition-delay: 1.0s;" data-key="impactSoFarPoint3">Home-based tree care, where families are given plants to grow in their courtyards, farms, and open lands.</li>
+                        <li class="fade-in-up" style="transition-delay: 1.2s;" data-key="impactSoFarPoint4">Collaboration with Self Help Groups (WSHGs) to ensure long-term nurturing and protection of planted saplings.</li>
+                    </ul>
+                </div>
+                <!-- Image/Illustration Placeholder -->
+                <div class="flex justify-center fade-in-up" style="transition-delay: 1.4s;">
+                    <img src="https://placehold.co/600x400/689F38/FFFFFF?text=Trees+Planted"
+                         alt="Trees planted illustration"
+                         class="w-full h-auto max-w-lg rounded-lg shadow-lg object-cover"
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0E7FF/3B82F6?text=Image+Not+Found';">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creating Environmental Awareness Section -->
+    <section id="awareness" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-green-700 mb-12 fade-in-up" data-key="awarenessHeading">Creating Environmental Awareness</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="awarenessPara1">
+                    Tree planting is only the first step. We are equally focused on building awareness and responsibility around environmental issues. Through workshops, school visits, street plays, and public campaigns, Samadhan Kendra is educating people—especially the younger generation—about the dangers of deforestation, pollution, and climate change.
+                </p>
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.4s;" data-key="awarenessPara2">
+                    We also promote practices such as:
+                </p>
+                <ul class="list-disc list-inside text-lg space-y-2 text-gray-700 mb-8">
+                    <li class="fade-in-up" style="transition-delay: 0.6s;" data-key="awarenessPoint1">Using organic waste for composting</li>
+                    <li class="fade-in-up" style="transition-delay: 0.8s;" data-key="awarenessPoint2">Avoiding plastic</li>
+                    <li class="fade-in-up" style="transition-delay: 1.0s;" data-key="awarenessPoint3">Saving water</li>
+                    <li class="fade-in-up" style="transition-delay: 1.2s;" data-key="awarenessPoint4">Protecting local flora and fauna</li>
+                </ul>
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.4s;" data-key="awarenessConclusion">
+                    Because a tree is not just a plant—it’s a living example of what it means to live in harmony with nature.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- A Collective Effort for a Common Goal Section -->
+    <section id="collective-effort" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-green-700 mb-12 fade-in-up" data-key="collectiveEffortHeading">A Collective Effort for a Common Goal</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Image 2 -->
+                <div class="flex justify-center fade-in-up" style="transition-delay: 0.2s;">
+                    <img src="https://i.postimg.cc/J4079CTc/Whats-App-Image-2025-07-19-at-10-18-46-d0569fb2.jpg"
+                         alt="Community working together"
+                         class="w-full h-auto max-w-lg rounded-lg shadow-lg object-cover"
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/4CAF50/FFFFFF?text=Image+Not+Found';">
+                </div>
+                <!-- Text Content -->
+                <div class="space-y-6">
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.4s;" data-key="collectiveEffortPara1">
+                        What makes this initiative truly special is the overwhelming community participation. From school children to senior citizens, from farmers to homemakers—everyone has played a part in making this campaign a success. Government bodies, local panchayats, and educational institutions have also extended support, helping us reach more people and more places.
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.6s;" data-key="collectiveEffortPara2">
+                        Every tree we plant is a symbol of hope. Every hand that digs the soil is a step toward a cleaner, greener, and healthier world.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Looking Ahead: Scaling the Green Movement Section -->
+    <section id="looking-ahead" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-green-700 mb-12 fade-in-up" data-key="lookingAheadHeading">Looking Ahead: Scaling the Green Movement</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="lookingAheadIntro">
+                    While the journey has been incredible so far, we are just getting started. Samadhan Kendra aims to:
+                </p>
+                <ul class="list-disc list-inside text-lg space-y-2 text-gray-700 mb-8">
+                    <li class="fade-in-up" style="transition-delay: 0.4s;" data-key="lookingAheadPoint1">Plant 50,000+ trees by 2026</li>
+                    <li class="fade-in-up" style="transition-delay: 0.6s;" data-key="lookingAheadPoint2">Develop community parks and green zones</li>
+                    <li class="fade-in-up" style="transition-delay: 0.8s;" data-key="lookingAheadPoint3">Initiate eco-clubs in schools and colleges</li>
+                    <li class="fade-in-up" style="transition-delay: 1.0s;" data-key="lookingAheadPoint4">Introduce sustainable agriculture practices among farmers</li>
+                </ul>
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.2s;" data-key="lookingAheadConclusion">
+                    Our goal is to ensure that environmental protection becomes a part of daily life, not just an occasional campaign.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-green-700 mb-12 fade-in-up" data-key="conclusionHeading">Conclusion</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="conclusionPara1">
+                    At Samadhan Kendra, we believe that protecting the environment is the greatest service we can offer to future generations. Through our ongoing efforts in tree plantation and awareness, we are doing our part in healing the Earth—one sapling, one village, one family at a time.
+                </p>
+                <p class="text-2xl font-bold italic text-green-600 my-8 fade-in-up" style="transition-delay: 0.4s;" data-key="conclusionQuote">
+                    “The best time to plant a tree was 20 years ago. The second best time is now.”
+                </p>
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.6s;" data-key="conclusionPara2">
+                    Let us act today, so our children can breathe better tomorrow.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-green-700 mb-12 fade-in-up" data-key="contactHeading">Get in Touch / Get Involved</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Contact Information -->
+                <div class="space-y-6 fade-in-up" style="transition-delay: 0.2s;">
+                    <p class="text-lg flex items-center" data-key="contactLocation">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Hajipur, Bihar, 844101, Samadhan Kendra
+                    </p>
+                    <p class="text-lg flex items-center" data-key="contactPhone">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        +91 9006317381
+                    </p>
+                    <p class="text-lg flex items-center" data-key="contactEmail1">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        samadhankendra3@gmail.com
+                    </p>
+                    <p class="text-lg flex items-center" data-key="contactEmail2">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        subhashkumar.samadhan@gmail.com
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.6s;" data-key="contactText">
+                        Interested in supporting our Environmental Initiative or learning more? Reach out to us!
+                    </p>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="bg-gray-100 p-8 rounded-lg shadow-md fade-in-up" style="transition-delay: 0.4s;">
+                    <h3 class="text-2xl font-semibold text-green-700 mb-6" data-key="formHeading">Send Us a Message</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-700 text-sm font-bold mb-2" data-key="formNameLabel">Name</label>
+                            <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" data-key="formNamePlaceholder" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 text-sm font-bold mb-2" data-key="formEmailLabel">Email</label>
+                            <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" data-key="formEmailPlaceholder" placeholder="your@example.com">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-gray-700 text-sm font-bold mb-2" data-key="formSubjectLabel">Subject</label>
+                            <input type="text" id="subject" name="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" data-key="formSubjectPlaceholder" placeholder="Enquiry, Support, etc.">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 text-sm font-bold mb-2" data-key="formMessageLabel">Message</label>
+                            <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" data-key="formMessagePlaceholder" placeholder="Your message..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-green-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-800 transition duration-300 ease-in-out shadow-lg transform hover:scale-105" data-key="formSubmitButton">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 px-4 mt-16 rounded-t-lg">
+        <div class="container mx-auto text-center">
+            <p data-key="footerCopyright">&copy; 2025 Samadhan Kendra. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300" data-key="footerPrivacy">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300" data-key="footerTerms">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language Translations
+        const translations = {
+            en: {
+                pageTitle: "Samadhan Kendra - Greening Our Future",
+                campaignName: "Greening Our Future",
+                navHome: "Home",
+                navAbout: "About",
+                navMission: "Mission",
+                navImpact: "Impact",
+                navAwareness: "Awareness",
+                navFuture: "Future",
+                navContact: "Contact",
+                heroHeading: "Greening Our Future – Samadhan Kendra’s Environmental Initiative",
+                heroSubheading: "Preserving Nature, One Tree at a Time.",
+                heroButton: "Learn More About Our Green Mission",
+                aboutCampaignHeading: "The Beginning: A Small Step for a Big Cause",
+                aboutCampaignPara1: `At <strong class="text-green-700">Samadhan Kendra</strong>, we believe that development and sustainability must go hand in hand. As part of our unwavering commitment to social responsibility and community welfare, we launched a dedicated Environmental Protection Campaign in 2023, with a special focus on tree plantation (paudhe ropan) and plant distribution (paudhe baatna). This initiative has since evolved into a powerful movement that brings together people from all walks of life under the common goal of preserving our planet for future generations.`,
+                aboutCampaignPara2: `The campaign began in early 2023 with a simple yet powerful idea: “If every hand plants a tree, the Earth will breathe easier.” With this thought in mind, Samadhan Kendra started organizing tree plantation drives across villages, towns, schools, and community centers.`,
+                aboutCampaignPara3: `We also took the initiative to distribute saplings (paudhe baatna) to households, farmers, schools, and women’s groups (WSHGs), encouraging them to take personal responsibility for nurturing and protecting the saplings in their surroundings.`,
+                ourMissionHeading: "Our Mission: A Greener, Healthier Tomorrow",
+                ourMissionIntro: "Our environmental initiative is rooted in three core objectives:",
+                ourMissionPoint1: "Environmental Conservation: Combat climate change by increasing green cover and restoring ecological balance.",
+                ourMissionPoint2: "Community Participation: Involve local people in environmental efforts, fostering a sense of ownership and awareness.",
+                ourMissionPoint3: "Sustainable Living: Promote eco-conscious habits, reduce pollution, and create cleaner, healthier living spaces.",
+                ourMissionConclusion: "We believe that protecting the environment is not just the job of experts, but a collective responsibility—and we are proud to see communities rising to the occasion.",
+                impactSoFarHeading: "Impact So Far: 10,000+ Trees and Growing",
+                impactSoFarIntro: "Since the campaign's launch, over 10,000 trees have been planted and distributed through various drives and events. Each sapling represents a promise to the Earth—a commitment to cleaner air, cooler temperatures, reduced soil erosion, and better biodiversity.",
+                impactSoFarHighlights: "Some key highlights include:",
+                impactSoFarPoint1: "School-based plantations, where children not only plant trees but also learn the importance of ecological balance.",
+                impactSoFarPoint2: "Community-driven plantation days, where villagers come together to green their surroundings.",
+                impactSoFarPoint3: "Home-based tree care, where families are given plants to grow in their courtyards, farms, and open lands.",
+                impactSoFarPoint4: "Collaboration with Self Help Groups (WSHGs) to ensure long-term nurturing and protection of planted saplings.",
+                awarenessHeading: "Creating Environmental Awareness",
+                awarenessPara1: "Tree planting is only the first step. We are equally focused on building awareness and responsibility around environmental issues. Through workshops, school visits, street plays, and public campaigns, Samadhan Kendra is educating people—especially the younger generation—about the dangers of deforestation, pollution, and climate change.",
+                awarenessPara2: "We also promote practices such as:",
+                awarenessPoint1: "Using organic waste for composting",
+                awarenessPoint2: "Avoiding plastic",
+                awarenessPoint3: "Saving water",
+                awarenessPoint4: "Protecting local flora and fauna",
+                awarenessConclusion: "Because a tree is not just a plant—it’s a living example of what it means to live in harmony with nature.",
+                collectiveEffortHeading: "A Collective Effort for a Common Goal",
+                collectiveEffortPara1: "What makes this initiative truly special is the overwhelming community participation. From school children to senior citizens, from farmers to homemakers—everyone has played a part in making this campaign a success. Government bodies, local panchayats, and educational institutions have also extended support, helping us reach more people and more places.",
+                collectiveEffortPara2: "Every tree we plant is a symbol of hope. Every hand that digs the soil is a step toward a cleaner, greener, and healthier world.",
+                lookingAheadHeading: "Looking Ahead: Scaling the Green Movement",
+                lookingAheadIntro: "While the journey has been incredible so far, we are just getting started. Samadhan Kendra aims to:",
+                lookingAheadPoint1: "Plant 50,000+ trees by 2026",
+                lookingAheadPoint2: "Develop community parks and green zones",
+                lookingAheadPoint3: "Initiate eco-clubs in schools and colleges",
+                lookingAheadPoint4: "Introduce sustainable agriculture practices among farmers",
+                lookingAheadConclusion: "Our goal is to ensure that environmental protection becomes a part of daily life, not just an occasional campaign.",
+                conclusionHeading: "Conclusion",
+                conclusionPara1: "At Samadhan Kendra, we believe that protecting the environment is the greatest service we can offer to future generations. Through our ongoing efforts in tree plantation and awareness, we are doing our part in healing the Earth—one sapling, one village, one family at a time.",
+                conclusionQuote: "“The best time to plant a tree was 20 years ago. The second best time is now.”",
+                conclusionPara2: "Let us act today, so our children can breathe better tomorrow.",
+                contactHeading: "Get in Touch / Get Involved",
+                contactLocation: "Hajipur, Bihar, 844101, Samadhan Kendra",
+                contactPhone: "+91 9006317381",
+                contactEmail1: "samadhankendra3@gmail.com",
+                contactEmail2: "subhashkumar.samadhan@gmail.com",
+                contactText: "Interested in supporting our Environmental Initiative or learning more? Reach out to us!",
+                formHeading: "Send Us a Message",
+                formNameLabel: "Name",
+                formNamePlaceholder: "Your Name",
+                formEmailLabel: "Email",
+                formEmailPlaceholder: "your@example.com",
+                formSubjectLabel: "Subject",
+                formSubjectPlaceholder: "Enquiry, Support, etc.",
+                formMessageLabel: "Message",
+                formMessagePlaceholder: "Your message...",
+                formSubmitButton: "Send Message",
+                footerCopyright: "&copy; 2025 Samadhan Kendra. All rights reserved.",
+                footerPrivacy: "Privacy Policy",
+                footerTerms: "Terms of Service"
+            },
+            hi: {
+                pageTitle: "समाधान केंद्र - हमारे भविष्य को हरा-भरा बनाना",
+                campaignName: "हमारे भविष्य को हरा-भरा बनाना",
+                navHome: "होम",
+                navAbout: "परिचय",
+                navMission: "मिशन",
+                navImpact: "प्रभाव",
+                navAwareness: "जागरूकता",
+                navFuture: "भविष्य",
+                navContact: "संपर्क",
+                heroHeading: "हमारे भविष्य को हरा-भरा बनाना – समाधान केंद्र की पर्यावरण पहल",
+                heroSubheading: "प्रकृति का संरक्षण, एक बार में एक पेड़।",
+                heroButton: "हमारे हरित मिशन के बारे में और जानें",
+                aboutCampaignHeading: "शुरुआत: एक बड़े उद्देश्य के लिए एक छोटा कदम",
+                aboutCampaignPara1: `समाधान केंद्र में, हम मानते हैं कि विकास और स्थिरता साथ-साथ चलने चाहिए। सामाजिक जिम्मेदारी और सामुदायिक कल्याण के प्रति हमारी अटूट प्रतिबद्धता के हिस्से के रूप में, हमने 2023 में एक समर्पित पर्यावरण संरक्षण अभियान शुरू किया, जिसमें वृक्षारोपण (पौधे रोपण) और पौधों के वितरण (पौधे बांटना) पर विशेष ध्यान दिया गया। यह पहल तब से एक शक्तिशाली आंदोलन में विकसित हो गई है जो भविष्य की पीढ़ियों के लिए हमारे ग्रह को संरक्षित करने के सामान्य लक्ष्य के तहत जीवन के सभी क्षेत्रों के लोगों को एक साथ लाती है।`,
+                aboutCampaignPara2: `यह अभियान 2023 की शुरुआत में एक सरल लेकिन शक्तिशाली विचार के साथ शुरू हुआ: "यदि हर हाथ एक पेड़ लगाए, तो पृथ्वी आसानी से सांस लेगी।" इसी विचार के साथ, समाधान केंद्र ने गांवों, कस्बों, स्कूलों और सामुदायिक केंद्रों में वृक्षारोपण अभियान आयोजित करना शुरू किया।`,
+                aboutCampaignPara3: `हमने घरों, किसानों, स्कूलों और महिला समूहों (डब्ल्यूएसएचजी) को पौधे (पौधे बांटना) वितरित करने की पहल भी की, उन्हें अपने परिवेश में पौधों को पोषित करने और उनकी रक्षा करने की व्यक्तिगत जिम्मेदारी लेने के लिए प्रोत्साहित किया।`,
+                ourMissionHeading: "हमारा मिशन: एक हरा-भरा, स्वस्थ कल",
+                ourMissionIntro: "हमारी पर्यावरण पहल तीन मुख्य उद्देश्यों में निहित है:",
+                ourMissionPoint1: "पर्यावरण संरक्षण: हरित आवरण बढ़ाकर और पारिस्थितिक संतुलन बहाल करके जलवायु परिवर्तन का मुकाबला करें।",
+                ourMissionPoint2: "सामुदायिक भागीदारी: स्थानीय लोगों को पर्यावरणीय प्रयासों में शामिल करें, स्वामित्व और जागरूकता की भावना को बढ़ावा दें।",
+                ourMissionPoint3: "स्थायी जीवन: पर्यावरण के प्रति जागरूक आदतों को बढ़ावा दें, प्रदूषण कम करें और स्वच्छ, स्वस्थ रहने की जगह बनाएं।",
+                ourMissionConclusion: "हमारा मानना है कि पर्यावरण की रक्षा केवल विशेषज्ञों का काम नहीं है, बल्कि एक सामूहिक जिम्मेदारी है - और हमें समुदायों को इस अवसर पर उठते हुए देखकर गर्व है।",
+                impactSoFarHeading: "अब तक का प्रभाव: 10,000+ पेड़ और बढ़ रहे हैं",
+                impactSoFarIntro: "अभियान के शुभारंभ के बाद से, विभिन्न अभियानों और आयोजनों के माध्यम से 10,000 से अधिक पेड़ लगाए और वितरित किए गए हैं। प्रत्येक पौधा पृथ्वी के लिए एक वादा दर्शाता है - स्वच्छ हवा, ठंडे तापमान, कम मिट्टी के कटाव और बेहतर जैव विविधता के प्रति प्रतिबद्धता।",
+                impactSoFarHighlights: "कुछ मुख्य बातें शामिल हैं:",
+                impactSoFarPoint1: "स्कूल-आधारित वृक्षारोपण, जहाँ बच्चे न केवल पेड़ लगाते हैं बल्कि पारिस्थितिक संतुलन के महत्व को भी सीखते हैं।",
+                impactSoFarPoint2: "समुदाय-संचालित वृक्षारोपण दिवस, जहाँ ग्रामीण अपने परिवेश को हरा-भरा बनाने के लिए एक साथ आते हैं।",
+                impactSoFarPoint3: "घर-आधारित वृक्ष देखभाल, जहाँ परिवारों को अपने आंगनों, खेतों और खुली भूमि में पौधे उगाने के लिए दिए जाते हैं।",
+                impactSoFarPoint4: "लगाए गए पौधों के दीर्घकालिक पोषण और सुरक्षा को सुनिश्चित करने के लिए स्वयं सहायता समूहों (डब्ल्यूएसएचजी) के साथ सहयोग।",
+                awarenessHeading: "पर्यावरण जागरूकता पैदा करना",
+                awarenessPara1: "वृक्षारोपण केवल पहला कदम है। हम पर्यावरणीय मुद्दों के बारे में जागरूकता और जिम्मेदारी बनाने पर भी समान रूप से ध्यान केंद्रित कर रहे हैं। कार्यशालाओं, स्कूलV्ों, नुक्कड़ नाटकों और सार्वजनिक अभियानों के माध्यम से, समाधान केंद्र लोगों को - विशेष रूप से युवा पीढ़ी को - वनों की कटाई, प्रदूषण और जलवायु परिवर्तन के खतरों के बारे में शिक्षित कर रहा है।",
+                awarenessPara2: "हम निम्नलिखित प्रथाओं को भी बढ़ावा देते हैं:",
+                awarenessPoint1: "खाद के लिए जैविक कचरे का उपयोग करना",
+                awarenessPoint2: "प्लास्टिक से बचना",
+                awarenessPoint3: "पानी बचाना",
+                awarenessPoint4: "स्थानीय वनस्पतियों और जीवों की रक्षा करना",
+                awarenessConclusion: "क्योंकि एक पेड़ सिर्फ एक पौधा नहीं है - यह इस बात का एक जीवित उदाहरण है कि प्रकृति के साथ सद्भाव में रहना क्या होता है।",
+                collectiveEffortHeading: "एक सामान्य लक्ष्य के लिए एक सामूहिक प्रयास",
+                collectiveEffortPara1: "इस पहल को वास्तव में खास क्या बनाता है, वह है जबरदस्त सामुदायिक भागीदारी। स्कूल के बच्चों से लेकर वरिष्ठ नागरिकों तक, किसानों से लेकर गृहिणियों तक - सभी ने इस अभियान को सफल बनाने में भूमिका निभाई है। सरकारी निकायों, स्थानीय पंचायतों और शैक्षणिक संस्थानों ने भी समर्थन दिया है, जिससे हमें अधिक लोगों और अधिक स्थानों तक पहुंचने में मदद मिली है।",
+                collectiveEffortPara2: "हम जो भी पेड़ लगाते हैं, वह आशा का प्रतीक है। हर हाथ जो मिट्टी खोदता है, वह एक स्वच्छ, हरा-भरा और स्वस्थ दुनिया की ओर एक कदम है।",
+                lookingAheadHeading: "आगे देखना: हरित आंदोलन को बढ़ाना",
+                lookingAheadIntro: "हालांकि अब तक की यात्रा अविश्वसनीय रही है, हम अभी शुरुआत कर रहे हैं। समाधान केंद्र का लक्ष्य है:",
+                lookingAheadPoint1: "2026 तक 50,000+ पेड़ लगाना",
+                lookingAheadPoint2: "सामुदायिक पार्क और हरित क्षेत्र विकसित करना",
+                lookingAheadPoint3: "स्कूलों और कॉलेजों में इको-क्लब शुरू करना",
+                lookingAheadPoint4: "किसानों के बीच स्थायी कृषि पद्धतियों को शुरू करना",
+                lookingAheadConclusion: "हमारा लक्ष्य यह सुनिश्चित करना है कि पर्यावरण संरक्षण केवल एक सामयिक अभियान नहीं, बल्कि दैनिक जीवन का हिस्सा बन जाए।",
+                conclusionHeading: "निष्कर्ष",
+                conclusionPara1: "समाधान केंद्र में, हम मानते हैं कि पर्यावरण की रक्षा भविष्य की पीढ़ियों को प्रदान की जा सकने वाली सबसे बड़ी सेवा है। वृक्षारोपण और जागरूकता में हमारे चल रहे प्रयासों के माध्यम से, हम पृथ्वी को ठीक करने में अपना योगदान दे रहे हैं - एक बार में एक पौधा, एक गांव, एक परिवार।",
+                conclusionQuote: "“The best time to plant a tree was 20 years ago. The second best time is now.”",
+                conclusionPara2: "आइए आज ही कार्य करें, ताकि हमारे बच्चे कल बेहतर सांस ले सकें।",
+                contactHeading: "संपर्क करें / शामिल हों",
+                contactLocation: "हाजीपुर, बिहार, 844101, समाधान केंद्र",
+                contactPhone: "+91 9006317381",
+                contactEmail1: "samadhankendra3@gmail.com",
+                contactEmail2: "subhashkumar.samadhan@gmail.com",
+                contactText: "हमारी पर्यावरण पहल का समर्थन करने या अधिक जानने में रुचि है? हमसे संपर्क करें!",
+                formHeading: "हमें एक संदेश भेजें",
+                formNameLabel: "नाम",
+                formNamePlaceholder: "आपका नाम",
+                formEmailLabel: "ईमेल",
+                formEmailPlaceholder: "आपका@उदाहरण.कॉम",
+                formSubjectLabel: "विषय",
+                formSubjectPlaceholder: "पूछताछ, समर्थन, आदि।",
+                formMessageLabel: "संदेश",
+                formMessagePlaceholder: "आपका संदेश...",
+                formSubmitButton: "संदेश भेजें",
+                footerCopyright: "&copy; 2025 समाधान केंद्र। सर्वाधिकार सुरक्षित।",
+                footerPrivacy: "गोपनीयता नीति",
+                footerTerms: "सेवा की शर्तें"
+            }
+        };
+
+        let currentLanguage = 'en'; // Default language
+
+        // Function to update text content based on selected language
+        function updateContent(lang) {
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key]; // Use innerHTML to preserve strong tags
+                    }
+                }
+            });
+            // Update page title separately as it's not a direct element in body
+            document.title = translations[lang].pageTitle;
+
+            // Update active language button styles
+            document.getElementById('lang-en').classList.remove('border-green-500', 'text-green-500', 'bg-green-50');
+            document.getElementById('lang-en').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            document.getElementById('lang-hi').classList.remove('border-green-500', 'text-green-500', 'bg-green-50');
+            document.getElementById('lang-hi').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+
+            document.getElementById('mobile-lang-en').classList.remove('border-green-500', 'text-green-500', 'bg-green-50');
+            document.getElementById('mobile-lang-en').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            document.getElementById('mobile-lang-hi').classList.remove('border-green-500', 'text-green-500', 'bg-green-50');
+            document.getElementById('mobile-lang-hi').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+
+
+            if (lang === 'en') {
+                document.getElementById('lang-en').classList.add('border-green-500', 'text-green-500', 'bg-green-50');
+                document.getElementById('lang-en').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+                document.getElementById('mobile-lang-en').classList.add('border-green-500', 'text-green-500', 'bg-green-50');
+                document.getElementById('mobile-lang-en').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            } else {
+                document.getElementById('lang-hi').classList.add('border-green-500', 'text-green-500', 'bg-green-50');
+                document.getElementById('lang-hi').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+                document.getElementById('mobile-lang-hi').classList.add('border-green-500', 'text-green-500', 'bg-green-50');
+                document.getElementById('mobile-lang-hi').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            }
+            currentLanguage = lang;
+        }
+
+        // Event listeners for language buttons
+        document.getElementById('lang-en').addEventListener('click', () => updateContent('en'));
+        document.getElementById('lang-hi').addEventListener('click', () => updateContent('hi'));
+        document.getElementById('mobile-lang-en').addEventListener('click', () => updateContent('en'));
+        document.getElementById('mobile-lang-hi').addEventListener('click', () => updateContent('hi'));
+
+
+        // JavaScript for mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('max-h-0')) {
+                mobileMenu.classList.remove('max-h-0', 'opacity-0');
+                mobileMenu.classList.add('max-h-screen', 'opacity-100'); // Use max-h-screen to allow content to expand
+            } else {
+                mobileMenu.classList.remove('max-h-screen', 'opacity-100');
+                mobileMenu.classList.add('max-h-0', 'opacity-0');
+            }
+        });
+
+        // JavaScript for scroll-triggered animations
+        const faders = document.querySelectorAll('.fade-in-up');
+
+        const appearOptions = {
+            threshold: 0.2, /* Trigger when 20% of the element is visible */
+            rootMargin: "0px 0px -50px 0px" /* Adjust to start animation slightly before element enters viewport */
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add('animate');
+                    appearOnScroll.unobserve(entry.target); /* Stop observing once animated */
+                }
+            });
+        }, appearOptions);
+
+        faders.forEach(fader => {
+            appearOnScroll.observe(fader);
+        });
+
+        // Initial content load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateContent(currentLanguage);
+        });
+    </script>
+</body>
+</html>
