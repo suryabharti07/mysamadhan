@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Samadhan Kendra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Apply Inter font family to the entire body */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa; /* Light grey background for the page */
+        }
+
+        /* Custom styling for the three-dot menu icon to match other icons */
+        .three-dots-icon {
+            font-size: 1.25rem; /* Equivalent to text-xl */
+            color: #5f6368; /* A standard gray color for icons */
+        }
+
+        /* Dropdown specific styles for desktop (hover) */
+        .dropdown-menu {
+            position: absolute;
+            background-color: white;
+            /* Stronger shadow for better visual depth */
+            box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.15);
+            z-index: 1000; /* Ensure dropdown is on top of other content */
+            min-width: 180px; /* Slightly wider dropdowns */
+            border-radius: 0.5rem; /* More rounded corners */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            padding: 0.5rem 0; /* Vertical padding */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+            /* Smooth transition for appearance */
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px); /* Slight downward translation for entrance effect */
+            top: 100%; /* Position below the parent link */
+            left: 0;
+            border: 1px solid #e2e8f0; /* Subtle border */
+        }
+
+        /* Class to show the dropdown */
+        .show-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0); /* Reset translation to show */
+        }
+
+        /* Styling for individual dropdown items */
+        .dropdown-item {
+            padding: 0.75rem 1.25rem; /* More padding for better click/tap area */
+            display: block;
+            color: #4a5568; /* Darker gray for text */
+            text-decoration: none;
+            font-size: 0.9rem; /* Slightly larger font size */
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.2s ease, color 0.2s ease; /* Smooth hover transition */
+        }
+
+        .dropdown-item:hover {
+            background-color: #e0f2fe; /* Light blue background on hover */
+            color: #1d4ed8; /* Darker blue text on hover */
+        }
+
+        /* Custom style for the mobile menu transition */
+        #mobileMenu, #mobileSearchOverlay {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Password Modal Styling */
+        .password-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        .password-modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            width: 90%;
+            max-width: 400px; /* Max width for larger screens */
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.2s ease-out;
+        }
+
+        .password-modal-content.show {
+            transform: scale(1);
+        }
+
+        .password-modal-content input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 0.375rem; /* Slightly rounded corners */
+            font-size: 1rem;
+        }
+
+        .password-modal-content button {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .password-modal-content button.submit {
+            background-color: #2563eb; /* Blue */
+            color: white;
+        }
+
+        .password-modal-content button.submit:hover {
+            background-color: #1d4ed8; /* Darker blue on hover */
+        }
+
+        .password-modal-content button.cancel {
+            background-color: #e5e7eb; /* Light gray */
+            color: #374151; /* Darker gray text */
+            margin-left: 0.75rem;
+        }
+
+        .password-modal-content button.cancel:hover {
+            background-color: #d1d5db; /* Darker light gray on hover */
+        }
+
+        .password-error {
+            color: #ef4444; /* Red for error messages */
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-lg py-4 px-6 flex items-center justify-between w-full border-b border-gray-200 rounded-b-lg">
+        <div class="flex items-center space-x-8">
+            <!-- Logo linked to index.html -->
+            <a href="index.html" class="inline-block">
+                <img src="https://i.postimg.cc/nrW2HNXp/samadhan-kendra-logo.png" alt="Samadhan Kendra Logo" class="h-8 mr-4">
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-8 text-gray-700 text-base font-medium">
+                <a href="index.html" class="hover:text-blue-700 transition-colors duration-200">Home</a>
+
+                <div class="relative dropdown" id="aboutUsDropdown">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
+                        About us
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="ourjourney.html" class="dropdown-item">Our Journey</a>
+                        <a href="vision.html" class="dropdown-item">Vision</a>
+                        <a href="mission.html" class="dropdown-item">Mission</a>
+                        <a href="management_structure.html" class="dropdown-item">Management And Administrative structure</a>
+                    </div>
+                </div>
+
+                <div class="relative dropdown" id="programsDropdown">
+                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
+                        Programs
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="su_sikshalaya.html" class="dropdown-item">SU-SIKSHALAYA</a>
+                        <a href="apna_vidyalaya.html" class="dropdown-item">Apna Vidyalaya</a>
+                        <a href="sports.html" class="dropdown-item">Sports</a>
+                        <a href="wsg.html" class="dropdown-item">WSG</a>
+                        <a href="environment.html" class="dropdown-item">Environment</a>
+                    </div>
+                </div>
+
+                <a href="founder.html" class="hover:text-blue-700 transition-colors duration-200">Founder</a>
+                <a href="gallery.html" class="hover:text-blue-700 transition-colors duration-200">Gallery</a>
+            </nav>
+        </div>
+
+        <div id="desktopSearchBar" class="hidden lg:flex items-center flex-grow mx-4 max-w-xl
+                                         bg-white rounded-full shadow-md hover:shadow-lg
+                                         transition-shadow duration-300 p-2">
+            <i class="fas fa-search text-gray-500 ml-2 mr-2 text-base"></i>
+            <input type="text" id="desktopSearchInput"
+                   class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-base"
+                   placeholder="Search User Name">
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <nav class="hidden md:flex items-center space-x-6 text-gray-700 text-base font-medium lg:block">
+                <a href="download.html" class="hover:text-blue-700 transition-colors duration-200">Download</a>
+                <a href="contact.html" class="hover:text-blue-700 transition-colors duration-200">Contact</a>
+                <a href="https://mysamadhan.in/iadmin" id="consoleLink" class="hover:text-blue-700 transition-colors duration-200">Console</a>
+            </nav>
+
+            <button class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden lg:block cursor-pointer transition-colors duration-200" aria-label="More options">
+                <i class="fas fa-ellipsis-v three-dots-icon text-blue-600"></i>
+            </button>
+
+            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
+                <i class="fas fa-search text-blue-600"></i>
+            </button>
+
+            <button id="mobileMenuButton" class="p-2.5 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
+                <i class="fas fa-bars text-gray-600"></i>
+            </button>
+        </div>
+    </header>
+
+    <div id="mobileSearchOverlay" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileSearchButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile search">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div class="p-6 flex flex-col items-center justify-center h-full -mt-16"> <h2 class="text-3xl font-bold text-blue-600 mb-6">Search</h2>
+            <div class="relative flex items-center w-full max-w-md
+                                 bg-white rounded-full shadow-md hover:shadow-lg
+                                 transition-shadow duration-300 p-3">
+                <i class="fas fa-search text-gray-500 ml-2 mr-3 text-lg"></i>
+                <input type="text" id="mobileSearchInput"
+                       class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-lg"
+                       placeholder="Enter User Name (exact)">
+            </div>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+        <div class="flex justify-end p-6">
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile menu">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col items-start p-6 space-y-3 text-gray-800 text-lg font-medium">
+            <a href="index.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Home</a>
+
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
+                    About us
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileAboutUsMenu">
+                    <a href="ourjourney.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Our Journey</a>
+                    <a href="vision.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Vision</a>
+                    <a href="mission.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Mission</a>
+                    <a href="management_structure.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Management And Administrative structure</a>
+                </div>
+            </div>
+
+            <div class="w-full">
+                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
+                    Programs
+                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
+                </button>
+                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileProgramsMenu">
+                    <a href="su_sikshalaya.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">SU-SIKSHALAYA</a>
+                    <a href="apna_vidyalaya.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Apna Vidyalaya</a>
+                    <a href="sports.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Sports</a>
+                    <a href="wsg.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">WSG</a>
+                    <a href="environment.html" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Environment</a>
+                </div>
+            </div>
+
+            <a href="founder.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Founder</a>
+            <a href="gallery.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Gallery</a>
+
+            <a href="download.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Download</a>
+            <a href="contact.html" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Contact</a>
+            <a href="https://mysamadhan.in/iadmin" id="mobileConsoleLink" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Console</a>
+
+            </nav>
+    </div>
+
+    
+
+    <div id="passwordModal" class="password-modal-overlay hidden">
+        <div class="password-modal-content">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Enter Password</h3>
+            <input type="password" id="passwordInput" placeholder="Password" class="mb-4">
+            <p id="passwordError" class="password-error hidden"></p>
+            <div class="flex justify-center">
+                <button id="submitPasswordButton" class="submit">Submit</button>
+                <button id="cancelPasswordButton" class="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // The URL of your published Google Sheet CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
+        const CORRECT_PASSWORD = 'admin123'; // Define the correct password here
+
+        let sheetData = []; // To store the parsed CSV data
+
+        // Function to fetch and parse the CSV data
+        async function fetchCSVData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                sheetData = parseCSV(csvText);
+                console.log('CSV Data Loaded:', sheetData); // Log the loaded data
+            } catch (error) {
+                console.error('Error fetching or parsing CSV:', error);
+            }
+        }
+
+        // Simple CSV parser function
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                if (values.length === headers.length) {
+                    let row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    data.push(row);
+                } else {
+                    console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
+                }
+            }
+            return data;
+        }
+
+        // Function to handle the search
+        function performSearch(searchInput) {
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm === '') {
+                return;
+            }
+
+            console.log('Searching for:', searchTerm);
+            console.log('Current sheetData:', sheetData);
+
+            const userNameColumn = 'User Name';
+            const webLinkColumn = 'WEB LINK';
+
+            let foundLink = null;
+
+            for (const row of sheetData) {
+                if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
+                    if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
+                        foundLink = row[webLinkColumn];
+                        break;
+                    }
+                }
+            }
+
+            if (foundLink) {
+                if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
+                    foundLink = 'https://' + foundLink;
+                }
+                console.log('Attempting to open link in new tab:', foundLink);
+
+                try {
+                    window.open(foundLink, '_blank');
+                } catch (e) {
+                    console.error('Error opening window (possibly pop-up blocked):', e);
+                }
+
+            } else {
+                console.log('No link found for:', searchTerm);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Desktop dropdown logic (hover)
+            const dropdownTimeouts = {};
+
+            function setupDropdown(dropdownId, menuClass) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    const toggleLink = dropdown.querySelector('a[aria-haspopup="true"]');
+                    const menu = dropdown.querySelector(`.${menuClass}`);
+
+                    if (menu && toggleLink) {
+                        dropdown.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                            menu.classList.add('show-menu');
+                            toggleLink.setAttribute('aria-expanded', 'true');
+                        });
+
+                        dropdown.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                                toggleLink.setAttribute('aria-expanded', 'false');
+                            }, 150);
+                        });
+
+                        menu.addEventListener('mouseenter', () => {
+                            if (dropdownTimeouts[dropdownId]) {
+                                clearTimeout(dropdownTimeouts[dropdownId]);
+                            }
+                        });
+
+                        menu.addEventListener('mouseleave', () => {
+                            dropdownTimeouts[dropdownId] = setTimeout(() => {
+                                menu.classList.remove('show-menu');
+                                toggleLink.setAttribute('aria-expanded', 'false');
+                            }, 150);
+                        });
+                    }
+                }
+            }
+
+            setupDropdown('aboutUsDropdown', 'dropdown-menu');
+            setupDropdown('programsDropdown', 'dropdown-menu');
+
+            // Mobile menu logic (click)
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+
+            if (mobileMenuButton && mobileMenu && closeMobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                    mobileMenuButton.setAttribute('aria-expanded', 'true');
+                });
+
+                closeMobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Mobile dropdowns (click)
+            function setupMobileDropdownToggle(toggleId, menuId) {
+                const toggleButton = document.getElementById(toggleId);
+                const menu = document.getElementById(menuId);
+
+                if (toggleButton && menu) {
+                    toggleButton.addEventListener('click', () => {
+                        const isHidden = menu.classList.toggle('hidden');
+                        const icon = toggleButton.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('fa-chevron-down');
+                            icon.classList.toggle('fa-chevron-up');
+                        }
+                        toggleButton.setAttribute('aria-expanded', !isHidden);
+                    });
+                }
+            }
+
+            setupMobileDropdownToggle('mobileAboutUsToggle', 'mobileAboutUsMenu');
+            setupMobileDropdownToggle('mobileProgramsToggle', 'mobileProgramsMenu');
+
+            // --- Search Functionality Integration ---
+
+            // Desktop Search Elements
+            const desktopSearchInput = document.getElementById('desktopSearchInput');
+
+            // Mobile Search Elements
+            const mobileSearchToggleButton = document.getElementById('mobileSearchToggleButton');
+            const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+            const closeMobileSearchButton = document.getElementById('closeMobileSearchButton');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+
+            // Event Listeners for Desktop Search Input (Enter key)
+            if (desktopSearchInput) {
+                desktopSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(desktopSearchInput);
+                    }
+                });
+            }
+
+            // Event Listeners for Mobile Search Overlay (Open/Close)
+            if (mobileSearchToggleButton && mobileSearchOverlay && closeMobileSearchButton) {
+                mobileSearchToggleButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-full');
+                    mobileSearchOverlay.classList.add('translate-x-0');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'true');
+                    mobileSearchInput.focus();
+                });
+
+                closeMobileSearchButton.addEventListener('click', () => {
+                    mobileSearchOverlay.classList.remove('translate-x-0');
+                    mobileSearchOverlay.classList.add('translate-x-full');
+                    mobileSearchToggleButton.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            // Event Listeners for Mobile Search Input (Enter key)
+            if (mobileSearchInput) {
+                mobileSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch(mobileSearchInput);
+                    }
+                });
+            }
+
+            // --- Password Protected Console Link ---
+            const consoleLink = document.getElementById('consoleLink');
+            const mobileConsoleLink = document.getElementById('mobileConsoleLink');
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            const submitPasswordButton = document.getElementById('submitPasswordButton');
+            const cancelPasswordButton = document.getElementById('cancelPasswordButton');
+
+            function handleConsoleAccess(event) {
+                event.preventDefault(); // Prevent default link navigation
+                passwordModal.classList.remove('hidden');
+                passwordError.classList.add('hidden'); // Hide any previous errors
+                passwordInput.value = ''; // Clear input field
+                passwordInput.focus(); // Focus the input for immediate typing
+            }
+
+            function attemptPasswordLogin() {
+                const enteredPassword = passwordInput.value;
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    window.location.href = 'https://mysamadhan.in/iadmin'; // Redirect to the console
+                } else {
+                    passwordError.textContent = 'Incorrect password. Please try again.';
+                    passwordError.classList.remove('hidden');
+                    passwordInput.value = ''; // Clear input on incorrect password
+                    passwordInput.focus();
+                }
+            }
+
+            if (consoleLink) {
+                consoleLink.addEventListener('click', handleConsoleAccess);
+            }
+            if (mobileConsoleLink) {
+                mobileConsoleLink.addEventListener('click', handleConsoleAccess);
+            }
+
+            if (submitPasswordButton) {
+                submitPasswordButton.addEventListener('click', attemptPasswordLogin);
+            }
+
+            if (cancelPasswordButton) {
+                cancelPasswordButton.addEventListener('click', () => {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordError.classList.add('hidden');
+                });
+            }
+
+            // Allow submitting password with Enter key
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        attemptPasswordLogin();
+                    }
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !passwordModal.classList.contains('hidden')) {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                    passwordError.classList.add('hidden');
+                }
+            });
+
+            // Initial fetch when the page loads to populate sheetData
+            fetchCSVData();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Mission - Samadhan Kendra</title>
+  <!-- Google Fonts: Poppins for headings, Inter for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN for utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for the space background and animations */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%); /* Dark space gradient */
+      color: #e0e0e0; /* Light text for dark background */
+      overflow-x: hidden; /* Prevent horizontal scroll from animations */
+    }
+
+    /* Apply Poppins to specific heading elements */
+    .font-poppins {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Starry background effect */
+    .star-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Keyframes for subtle planet float animation */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Keyframes for hint pulse animation */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(129, 230, 217, 0.7), 0 0 10px rgba(129, 230, 217, 0.5); }
+      50% { box-shadow: 0 0 15px rgba(129, 230, 217, 1), 0 0 25px rgba(129, 230, 217, 0.8); }
+    }
+
+    /* Keyframes for falling stars */
+    @keyframes fall {
+      0% { transform: translateY(-100vh) translateX(0) scale(0.5); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100vh) translateX(50px) scale(1); opacity: 0; }
+    }
+
+    /* Keyframes for spacecraft movement */
+    @keyframes moveSpacecraft {
+      0% { transform: translateX(-100vw); }
+      100% { transform: translateX(200vw); } /* Moves across and off screen */
+    }
+
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    .animate-pulse-glow {
+      animation: pulse-glow 2s infinite;
+    }
+
+    /* Generate static stars dynamically */
+    .star-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(2px 2px at 20% 30%, #eee, rgba(0,0,0,0)),
+                  radial-gradient(2px 2px at 60% 70%, #eee, rgba(0,0,0,0)),
+                  radial-gradient(2px 2px at 12% 85%, #eee, rgba(0,0,0,0)),
+                  radial-gradient(1px 1px at 80% 10%, #fff, rgba(0,0,0,0)),
+                  radial-gradient(1px 1px at 95% 50%, #fff, rgba(0,0,0,0)),
+                  radial-gradient(1.5px 1.5px at 30% 90%, #ddd, rgba(0,0,0,0));
+      background-size: 200px 200px; /* Adjust density of stars */
+      opacity: 0.7;
+    }
+
+    /* Falling stars container */
+    .falling-stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden; /* Ensure stars don't go beyond the body */
+    }
+
+    .falling-star {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      opacity: 0;
+      animation: fall 10s linear infinite; /* Base animation */
+    }
+
+    /* Different sizes and animation delays for falling stars */
+    .falling-star:nth-child(1) { width: 2px; height: 2px; left: 10%; animation-delay: 0s; }
+    .falling-star:nth-child(2) { width: 3px; height: 3px; left: 25%; animation-delay: 2s; }
+    .falling-star:nth-child(3) { width: 2.5px; height: 2.5px; left: 40%; animation-delay: 4s; }
+    .falling-star:nth-child(4) { width: 4px; height: 4px; left: 55%; animation-delay: 6s; }
+    .falling-star:nth-child(5) { width: 3.5px; height: 3.5px; left: 70%; animation-delay: 8s; }
+    .falling-star:nth-child(6) { width: 2px; height: 2px; left: 85%; animation-delay: 1s; }
+    .falling-star:nth-child(7) { width: 3px; height: 3px; left: 5%; animation-delay: 3s; }
+    .falling-star:nth-child(8) { width: 2.5px; height: 2.5px; left: 90%; animation-delay: 5s; }
+    .falling-star:nth-child(9) { width: 4px; height: 4px; left: 15%; animation-delay: 7s; }
+    .falling-star:nth-child(10) { width: 3.5px; height: 3.5px; left: 80%; animation-delay: 9s; }
+
+    /* Spacecraft styling */
+    .spacecraft {
+      position: absolute;
+      top: 15%; /* Adjust vertical position */
+      left: -200px; /* Start off-screen to the left */
+      z-index: 20; /* Ensure it's above other elements but below modal */
+      animation: moveSpacecraft 20s linear infinite; /* Animation duration and type */
+      animation-delay: 5s; /* Delay before it first appears */
+      width: 150px; /* Size of the spacecraft */
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 5px #81e6d9;
+      pointer-events: none; /* Make it non-interactive */
+    }
+
+    /* SVG styling for the spacecraft */
+    .spacecraft svg {
+      width: 100%;
+      height: 100%;
+      fill: #a0aec0; /* Base color for the spacecraft */
+      filter: drop-shadow(0 0 5px rgba(129, 230, 217, 0.5)); /* Subtle glow */
+    }
+
+    /* Specific styles for modal to fit space theme */
+    #popup-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%);
+      border: 2px solid #81e6d9; /* Cyan border for a futuristic look */
+      box-shadow: 0 0 20px rgba(129, 230, 217, 0.5); /* Glowing shadow */
+    }
+    #popup-content h2 {
+      color: #81e6d9; /* Cyan heading */
+    }
+    #popup-content p {
+      color: #c0c0c0; /* Lighter gray for body text */
+    }
+    #popup-content .close {
+      color: #81e6d9; /* Cyan close button */
+    }
+  </style>
+</head>
+<body class="selection:bg-teal-400 selection:text-gray-900">
+  <div class="star-bg"></div> <!-- Background for static stars -->
+  <div class="falling-stars">
+    <!-- Dynamically created falling stars -->
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+    <div class="falling-star"></div>
+  </div>
+
+  <!-- Samadhan Kendra Spacecraft -->
+  <div class="spacecraft">
+    <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
+      <path d="M10 25 L30 10 L70 10 L90 25 L70 40 L30 40 Z" fill="#a0aec0"></path>
+      <path d="M30 10 L35 0 L45 0 L40 10 Z" fill="#c0c0c0"></path>
+      <path d="M65 0 L70 10 L60 10 L55 0 Z" fill="#c0c0c0"></path>
+      <circle cx="50" cy="25" r="10" fill="#81e6d9"></circle>
+      <text x="50" y="27" font-family="Arial" font-size="8" fill="#1a1a2e" text-anchor="middle" alignment-baseline="middle">SK</text>
+    </svg>
+    <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs text-black font-bold"></span>
+  </div>
+
+
+  <div class="max-w-screen-xl mx-auto px-4 py-12 text-center relative z-10">
+    <h1 class="text-5xl md:text-6xl font-bold mb-5 text-teal-300 font-poppins drop-shadow-lg">Our Mission</h1>
+    <div class="text-base md:text-lg text-teal-200 mb-16 bg-blue-900/50 border border-teal-500 px-5 py-3 rounded-lg inline-block animate-pulse-glow shadow-lg">
+      🚀 Explore our mission planets to understand our commitment!
+    </div>
+
+    <!-- Mission planets container -->
+    <div class="relative flex flex-col items-center space-y-24 md:space-y-0 md:block min-h-[1200px]">
+      <!-- Mission Item 1: Empowering Through Accessible Finance -->
+      <div class="mission-planet absolute top-16 md:left-1/4 w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-blue-700 to-indigo-900 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer animate-float" onclick="showModal('finance')">
+        <div class="text-center p-4">
+          <h3 class="text-lg md:text-xl font-semibold font-poppins">Accessible Finance</h3>
+          <p class="text-sm md:text-base opacity-90">Empowering economic growth.</p>
+        </div>
+      </div>
+
+      <!-- Mission Item 2: Educate Society -->
+      <div class="mission-planet absolute top-72 md:right-1/4 w-40 h-40 md:w-52 md:h-52 bg-gradient-to-br from-purple-700 to-pink-900 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-xl hover:shadow-fuchsia-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer animate-float animation-delay-1" onclick="showModal('educationMission')">
+        <div class="text-center p-4">
+          <h3 class="text-lg md:text-xl font-semibold font-poppins">Educate Society</h3>
+          <p class="text-sm md:text-base opacity-90">Knowledge for a brighter future.</p>
+        </div>
+      </div>
+
+      <!-- Mission Item 3: Sports and Health -->
+      <div class="mission-planet absolute top-[520px] md:left-1/2 md:-translate-x-1/2 w-52 h-52 md:w-60 md:h-60 bg-gradient-to-br from-green-700 to-emerald-900 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-xl hover:shadow-lime-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer animate-float animation-delay-2" onclick="showModal('sportsHealth')">
+        <div class="text-center p-4">
+          <h3 class="text-lg md:text-xl font-semibold font-poppins">Sports & Health</h3>
+          <p class="text-sm md:text-base opacity-90">Fostering well-being.</p>
+        </div>
+      </div>
+
+      <!-- Mission Item 4: Environmental Stewardship -->
+      <div class="mission-planet absolute top-[760px] md:left-1/4 w-44 h-44 md:w-52 md:h-52 bg-gradient-to-br from-orange-700 to-red-900 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-xl hover:shadow-amber-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer animate-float animation-delay-3" onclick="showModal('environmentMission')">
+        <div class="text-center p-4">
+          <h3 class="text-lg md:text-xl font-semibold font-poppins">Eco Stewardship</h3>
+          <p class="text-sm md:text-base opacity-90">Protecting our planet.</p>
+        </div>
+      </div>
+
+      <!-- Mission Item 5: Community Development -->
+      <div class="mission-planet absolute top-[1000px] md:right-1/4 w-56 h-56 md:w-64 md:h-64 bg-gradient-to-br from-teal-700 to-cyan-900 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer animate-float animation-delay-4" onclick="showModal('communityDevelopment')">
+        <div class="text-center p-4">
+          <h3 class="text-lg md:text-xl font-semibold font-poppins">Community Growth</h3>
+          <p class="text-sm md:text-base opacity-90">Building stronger bonds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Popup Structure -->
+  <div id="popup" class="fixed inset-0 bg-black bg-opacity-70 hidden justify-center items-center z-50">
+    <div id="popup-content" class="p-10 w-[90vw] h-[90vh] overflow-y-auto rounded-xl shadow-2xl text-left relative">
+      <span class="absolute top-4 right-6 text-4xl cursor-pointer" onclick="closeModal()">&times;</span>
+      <!-- Content will be injected here by JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Data mapping for modal content
+    const contentMap = {
+      finance: `
+        <h2 class="text-4xl font-bold mb-4 font-poppins">Empowering Through Accessible Finance</h2>
+        <p class="text-lg leading-relaxed mb-4">Our mission is to bridge the financial gap for underserved communities by providing comprehensive financial literacy training. We aim to equip individuals with the knowledge and skills necessary to manage their finances effectively, understand savings mechanisms, and make informed investment decisions. Through strategic partnerships with local microfinance institutions and banks, we facilitate access to crucial financial resources, including micro-credit and small business loans. This empowers budding entrepreneurs and existing small business owners to expand their ventures, create employment opportunities, and contribute to local economic development. Our ultimate goal is to establish sustainable pathways to financial stability and long-term economic growth for every household we serve, fostering a cycle of prosperity within the community.</p>
+        <p class="text-lg leading-relaxed mb-4">We emphasize responsible borrowing practices and the benefits of integrating with formal financial services, moving communities away from informal and often exploitative lending channels. Our workshops cover a range of topics including budgeting, debt management, understanding interest rates, and the importance of credit scores. By building financial resilience, we enable communities to withstand economic shocks and pursue their aspirations with greater confidence and security.</p>
+        <p class="text-lg leading-relaxed">Furthermore, we are committed to continuous follow-up and mentorship for individuals and groups who have accessed our financial programs. This ongoing support ensures that they can navigate challenges, adapt to changing economic landscapes, and maximize the impact of their financial empowerment. We believe that true financial inclusion goes beyond mere access; it involves sustained education and support that leads to lasting change.</p>`,
+      educationMission: `
+        <h2 class="text-4xl font-bold mb-4 font-poppins">Educate Society</h2>
+        <p class="text-lg leading-relaxed mb-4">Beyond foundational literacy, our mission is to enlighten society on a spectrum of critical issues that profoundly impact daily lives and future prospects. We meticulously design and execute awareness campaigns focused on public health and hygiene, digital literacy, and fundamental civic rights and responsibilities. Our diverse programs are strategically crafted to empower citizens with invaluable knowledge, enabling them to make well-informed decisions that shape their personal lives and contribute actively to the collective betterment of their communities.</p>
+        <p class="text-lg leading-relaxed mb-4">We foster robust collaborations with respected local leaders, seasoned experts, and community organizations to deliver engaging and impactful workshops and seminars. These sessions delve into a wide array of topics, from adopting best practices in public health and sanitation to demystifying complex government schemes and understanding legal entitlements. By cultivating an informed, critically thinking, and actively engaged populace, we aspire to build a society that is inherently resilient, perpetually progressive, and fully capable of identifying and effectively addressing its own challenges with collective wisdom and concerted effort.</p>
+        <p class="text-lg leading-relaxed">Our educational initiatives also extend to promoting critical thinking and problem-solving skills, preparing individuals to navigate an increasingly complex world. We believe that an educated society is the bedrock of democracy and sustainable development, where every individual has the capacity to contribute meaningfully and advocate for positive change.</p>`,
+      sportsHealth: `
+        <h2 class="text-4xl font-bold mb-4 font-poppins">Sports and Health</h2>
+        <p class="text-lg leading-relaxed mb-4">Our mission seamlessly integrates the power of sports with comprehensive health initiatives to champion holistic well-being across all age groups. We actively establish and support community sports clubs, providing accessible platforms for physical activity and fostering a sense of camaraderie. Complementing this, we organize regular health camps that offer essential medical check-ups, vital health screenings, and tailored nutritional guidance, ensuring that basic healthcare is within reach for everyone.</p>
+        <p class="text-lg leading-relaxed mb-4">Sports activities serve as a dynamic vehicle to impart invaluable life lessons, including teamwork, discipline, leadership, and the cultivation of healthy lifestyle choices, with a particular emphasis on engaging and empowering youth. We also conduct interactive workshops on preventive healthcare measures, effective sanitation practices, and proactive disease management strategies. By vigorously encouraging consistent physical activity and relentlessly promoting widespread health awareness, our overarching aim is to cultivate healthier, more vibrant communities, significantly alleviate the burden of preventable diseases, and demonstrably enhance the overall quality of life for all residents, paving the way for a more energetic and productive society.</p>
+        <p class="text-lg leading-relaxed">Beyond physical health, our programs recognize the crucial link between sports and mental well-being, promoting stress reduction and building self-esteem. We also train community health volunteers to ensure sustained health education and support at the grassroots level.</p>`,
+      environmentMission: `
+        <h2 class="text-4xl font-bold mb-4 font-poppins">Environmental Stewardship</h2>
+        <p class="text-lg leading-relaxed mb-4">Our mission embodies an unwavering commitment to environmental protection and the steadfast promotion of sustainable living practices. We spearhead large-scale tree plantation drives in schools, along village roadsides, and within community spaces, actively contributing to reforestation and enhancing local biodiversity. Beyond planting, we champion rigorous waste segregation and recycling programs, and diligently educate communities on the paramount importance of conserving precious natural resources, including water and soil. We firmly believe that environmental responsibility is not merely an option but a shared, collective duty essential for forging a truly sustainable future.</p>
+        <p class="text-lg leading-relaxed mb-4">Furthermore, we passionately advocate for the adoption of sustainable agricultural practices, such as organic farming and crop rotation, which minimize ecological impact and enhance soil health. We promote innovative water harvesting techniques to combat water scarcity and encourage the transition to renewable energy solutions at the household and community levels. Through engaging communities in these diverse environmental initiatives, we aim to instill a profound respect for nature and cultivate practices that guarantee the long-term ecological health and vitality of our planet for the benefit of current and all future generations, ensuring a harmonious coexistence between humanity and nature.</p>
+        <p class="text-lg leading-relaxed">Our efforts also include organizing regular clean-up drives, establishing community compost pits, and raising awareness about the harmful effects of plastic pollution, encouraging the adoption of eco-friendly alternatives. We empower local environmental champions to lead initiatives and inspire their peers.</p>`,
+      communityDevelopment: `
+        <h2 class="text-4xl font-bold mb-4 font-poppins">Community Development</h2>
+        <p class="text-lg leading-relaxed mb-4">Our overarching mission is to foster integrated and holistic community development, with the ultimate goal of creating self-reliant, resilient, and thriving villages. We engage in deep collaboration with local governing bodies, respected community leaders, and the residents themselves to meticulously identify specific needs and co-create comprehensive, sustainable solutions. This includes vital infrastructure development projects, the implementation of robust livelihood generation programs, and strategic initiatives aimed at strengthening local governance structures to ensure effective and transparent administration.</p>
+        <p class="text-lg leading-relaxed mb-4">We champion participatory planning processes, ensuring that the authentic voices and aspirations of the community are consistently at the forefront of all development initiatives. By empowering local institutions, nurturing leadership from within, and vigorously promoting collective action, we aim to build communities that are not only capable of addressing their immediate challenges but are also equipped to achieve sustained progress and prosperity independently. Our approach emphasizes capacity building, enabling communities to take ownership of their development journey and create lasting positive change from within, fostering a sense of pride and collective achievement.</p>
+        <p class="text-lg leading-relaxed">This includes supporting the formation of self-help groups, vocational training centers, and community-led infrastructure projects. We believe that by investing in local capabilities and fostering a spirit of cooperation, we can unlock the full potential of rural communities and create models of sustainable development that can be replicated.</p>`
+    };
+
+    /**
+     * Shows the modal popup with content based on the provided type.
+     * @param {string} type - The type of content to display (e.g., 'finance', 'educationMission').
+     */
+    function showModal(type) {
+      const popup = document.getElementById('popup');
+      const popupContent = document.getElementById('popup-content');
+      // Set the innerHTML of the modal content, including the close button
+      popupContent.innerHTML = `<span class="absolute top-4 right-6 text-4xl cursor-pointer" onclick="closeModal()">&times;</span>` + contentMap[type];
+      // Display the modal using flexbox for centering
+      popup.style.display = 'flex';
+    }
+
+    /**
+     * Hides the modal popup.
+     */
+    function closeModal() {
+      document.getElementById('popup').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
