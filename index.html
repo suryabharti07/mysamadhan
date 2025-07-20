@@ -3,190 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samadhan Kendra - Holistic Development for Marginalized Communities</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Home - Samadhan Kendra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons in the new header -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Apply Inter font family to the entire body */
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            background-color: #f0fdf4; /* Light green background */
-            margin: 0; /* Added for the new header */
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #a7f3d0, #d1fae5); /* Light green to lighter green gradient */
-        }
-        .hero-section {
-            position: relative;
-            overflow: hidden;
-            padding-bottom: 150px; /* Increased padding for more space */
-        }
-        .hero-blob-1 {
-            position: absolute;
-            top: -10%;
-            right: -15%;
-            width: 600px;
-            height: 600px;
-            background: linear-gradient(135deg, #6ee7b7, #34d399); /* Green gradient */
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.7;
-            animation: blob-move-1 15s infinite alternate ease-in-out;
-            z-index: 0;
-        }
-        .hero-blob-2 {
-            position: absolute;
-            bottom: -20%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(135deg, #a78bfa, #c4b5fd); /* Purple gradient */
-            border-radius: 50%;
-            filter: blur(70px);
-            opacity: 0.6;
-            animation: blob-move-2 18s infinite alternate ease-in-out;
-            z-index: 0;
-        }
-        @keyframes blob-move-1 {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-20px, 30px) scale(1.05); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
-        @keyframes blob-move-2 {
-            0% { transform: translate(20px, -40px) scale(1.1); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
-        .card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .icon-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background-color: #d1fae5; /* Light green */
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .icon-container svg {
-            width: 32px;
-            height: 32px;
-            color: #059669; /* Green */
-        }
-        .animate-fade-in-up {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fade-in-up 0.8s ease-out forwards;
-        }
-        @keyframes fade-in-up {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-slide-in-left {
-            opacity: 0;
-            transform: translateX(-50px);
-            animation: slide-in-left 0.8s ease-out forwards;
-        }
-        @keyframes slide-in-left {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .animate-slide-in-right {
-            opacity: 0;
-            transform: translateX(50px);
-            animation: slide-in-right 0.8s ease-out forwards;
-        }
-        @keyframes slide-in-right {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
-        .delay-600 { animation-delay: 0.6s; }
-        .delay-700 { animation-delay: 0.7s; }
-        .delay-800 { animation-delay: 0.8s; }
-        .delay-900 { animation-delay: 0.9s; }
-        .delay-1000 { animation-delay: 1s; }
-
-        /* Custom button style for "Learn More" */
-        .btn-primary {
-            background-color: #059669; /* Green */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px; /* Fully rounded */
-            font-weight: 600;
-            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .btn-primary:hover {
-            background-color: #047857; /* Darker green */
-            transform: translateY(-2px);
-        }
-        .btn-secondary {
-            background-color: transparent;
-            color: #059669;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            border: 2px solid #059669;
-            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease-in-out;
-        }
-        .btn-secondary:hover {
-            background-color: #059669;
-            color: white;
-            transform: translateY(-2px);
+            margin: 0;
+            background-color: #f8f9fa; /* Light grey background for the page */
         }
 
-        /* Image transition styles */
-        .hero-image, .about-us-image {
-            transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
-        }
-        .hero-image.fade-out, .about-us-image.fade-out {
-            opacity: 0;
-        }
-        .hero-image.fade-in, .about-us-image.fade-in {
-            opacity: 1;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .hero-section {
-                padding-bottom: 100px;
-            }
-            .hero-blob-1, .hero-blob-2 {
-                width: 300px;
-                height: 300px;
-                filter: blur(50px);
-            }
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            .hero-content p {
-                font-size: 1rem;
-            }
-            .grid-cols-2-md {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* New header specific styles (merged from user's provided header) */
         /* Custom styling for the three-dot menu icon to match other icons */
         .three-dots-icon {
             font-size: 1.25rem; /* Equivalent to text-xl */
@@ -315,10 +143,8 @@
         }
     </style>
 </head>
-<body class="text-gray-800">
-
-    <!-- Header -->
-    <header class="bg-green-50 shadow-md py-3 px-6 flex items-center justify-between w-full rounded-b-xl">
+<body>
+    <header class="bg-white shadow-lg py-4 px-6 flex items-center justify-between w-full border-b border-gray-200 rounded-b-lg">
         <div class="flex items-center space-x-8">
             <!-- Logo linked to index.html -->
             <a href="index.html" class="inline-block">
@@ -350,7 +176,7 @@
                         <a href="su_sikshalaya.html" class="dropdown-item">SU-SIKSHALAYA</a>
                         <a href="apna_vidyalaya.html" class="dropdown-item">Apna Vidyalaya</a>
                         <a href="sports.html" class="dropdown-item">Sports</a>
-                        <a href="wsg.html" class="dropdown-item">WSHG</a>
+                        <a href="wsg.html" class="dropdown-item">WSG</a>
                         <a href="environment.html" class="dropdown-item">Environment</a>
                     </div>
                 </div>
@@ -361,8 +187,8 @@
         </div>
 
         <div id="desktopSearchBar" class="hidden lg:flex items-center flex-grow mx-4 max-w-xl
-                                             bg-white rounded-full shadow-md hover:shadow-lg
-                                             transition-shadow duration-300 p-2">
+                                         bg-white rounded-full shadow-md hover:shadow-lg
+                                         transition-shadow duration-300 p-2">
             <i class="fas fa-search text-gray-500 ml-2 mr-2 text-base"></i>
             <input type="text" id="desktopSearchInput"
                    class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-base"
@@ -380,7 +206,7 @@
                 <i class="fas fa-ellipsis-v three-dots-icon text-blue-600"></i>
             </button>
 
-            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
+            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
                 <i class="fas fa-search text-blue-600"></i>
             </button>
 
@@ -454,8 +280,9 @@
             </nav>
     </div>
 
-    <!-- Password Modal Styling -->
-    <div id="passwordModal" class="password-modal-overlay">
+    
+
+    <div id="passwordModal" class="password-modal-overlay hidden">
         <div class="password-modal-content">
             <h3 class="text-2xl font-semibold mb-4 text-gray-800">Enter Password</h3>
             <input type="password" id="passwordInput" placeholder="Password" class="mb-4">
@@ -467,371 +294,94 @@
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero-section relative py-20 md:py-32 text-center md:text-left overflow-hidden">
-        <div class="hero-blob-1"></div>
-        <div class="hero-blob-2"></div>
-        <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between">
-            <div class="hero-content md:w-1/2 mb-10 md:mb-0 animate-fade-in-up">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 mb-6 animate-slide-in-left delay-200">
-                    Empowering Communities for <span class="text-green-600">Holistic Development</span>
-                </h1>
-                <p class="text-lg md:text-xl text-gray-700 mb-8 animate-slide-in-left delay-400">
-                    Samadhan Kendra, a registered Society, is dedicated to uplifting marginalized communities through a philosophy of "by the people, for the people." We strive for comprehensive growth and sustainable change.
-                </p>
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start animate-fade-in-up delay-600">
-                    <a href="#" class="btn-primary">Learn More About Us</a>
-                    <a href="#" class="btn-secondary">Explore Our Programs</a>
-                </div>
-            </div>
-            <div class="md:w-1/2 flex justify-center md:justify-end animate-fade-in-up delay-800">
-                <!-- Image for auto-changing -->
-                <img id="hero-image" src="https://i.postimg.cc/HkZyqC1Q/Whats-App-Image-2025-07-13-at-07-27-39-e97646d5.jpg" alt="Community Impact Illustration" class="rounded-lg shadow-xl max-w-full h-auto hero-image fade-in">
-            </div>
-        </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section class="py-16 md:py-24 bg-gradient-to-r from-green-50 to-green-100">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
-            <div class="md:w-1/2 animate-slide-in-left delay-200">
-                <img id="about-us-image" src="https://i.postimg.cc/15sYj57N/Whats-App-Image-2025-07-20-at-11-11-18-36586723.jpg" alt="About Us Image" class="rounded-xl shadow-xl max-w-full h-auto about-us-image fade-in">
-            </div>
-            <div class="md:w-1/2 text-center md:text-left animate-fade-in-up delay-400">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6">About Samadhan Kendra</h2>
-                <p class="text-lg text-gray-700 mb-6">
-                    Samadhan Kendra was established as a registered Society under the Society Registration Act 1860, based on the philosophy of holistic development—by the people, for the people. We began with the mission to uplift marginalized communities. Our journey is driven by the belief that true progress comes from empowering individuals and communities to shape their own destinies.
-                </p>
-                <p class="text-lg text-gray-700 mb-8">
-                    We work tirelessly to create sustainable solutions that address the root causes of poverty and inequality, fostering a society where everyone has the opportunity to thrive.
-                </p>
-                <a href="#" class="btn-primary">Our Story</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Our Focus Areas Section -->
-    <section class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-12 animate-fade-in-up">Our Core Focus Areas</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Education Card -->
-                <div class="card bg-white p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-100">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.997 48.997 0 0112 21.75c2.357 0 4.72-.192 7.04-.513v-4.33a60.43 60.43 0 00-.49-6.347m-15.482 0A50.573 50.573 0 0112 3.75c2.357 0 4.72-.192 7.04-.513M12 4.5l-3 2.25L9 12.75l3 2.25 3-2.25L15 6.75l-3-2.25z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Education</h3>
-                    <p class="text-gray-600">Providing access to quality education, fostering literacy, and empowering the next generation with knowledge and skills for a brighter future.</p>
-                </div>
-                <!-- Sports Card -->
-                <div class="card bg-white p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-200">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Sports</h3>
-                    <p class="text-gray-600">Promoting physical well-being, teamwork, and discipline through various sports initiatives, building character and community spirit.</p>
-                </div>
-                <!-- WSHG Card -->
-                <div class="card bg-white p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-300">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">WSHG (Women Self-Help Groups)</h3>
-                    <p class="text-gray-600">Empowering women through self-help groups, fostering economic independence, and promoting social cohesion and leadership.</p>
-                </div>
-                <!-- Environment Protection Card -->
-                <div class="card bg-white p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-400">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Environment Protection</h3>
-                    <p class="text-gray-600">Initiating sustainable practices and awareness programs to protect our environment for future generations.</p>
-                </div>
-                <!-- Health Card -->
-                <div class="card bg-white p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-500">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.835 3 8.25c0 7.219 2.912 11.318 7.971 14.119.47.274.96.499 1.409.68a2.25 2.25 0 002.116 0c.45-.181.94-.406 1.41-.681 5.059-2.801 7.97-6.9 7.97-14.119z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Health</h3>
-                    <p class="text-gray-600">Ensuring access to basic healthcare, promoting hygiene, and conducting health awareness campaigns for community well-being.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Our Impact Section -->
-    <section class="py-16 md:py-24 bg-gradient-to-r from-green-50 to-green-100">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 animate-fade-in-up">Our Impact in Numbers</h2>
-            <p class="text-lg text-gray-700 mb-12 max-w-3xl mx-auto animate-fade-in-up delay-200">
-                Witness the tangible difference Samadhan Kendra has made in the lives of marginalized communities. Our efforts are driven by dedication and supported by your invaluable contributions.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-lg animate-fade-in-up delay-300">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.672.882c-.655 1.659-2.227 2.92-4.101 3.227-1.497.23-2.964-.421-3.972-1.107-.624-.416-1.171-.87-1.554-1.352M9.75 8.625c0-.828.46-1.5 1.028-1.5.57 0 1.028.672 1.028 1.5s-.458 1.5-1.028 1.5c-.568 0-1.028-.672-1.028-1.5zM12 21.75c-1.414 0-2.818-.38-4.088-1.107C6.077 20.118 4.5 17.933 4.5 15.75c0-2.676.584-5.216 1.632-7.499A17.933 17.933 0 0112 4.5c2.676 0 5.216.584 7.499 1.632C20.118 8.077 21.75 10.262 21.75 12.75c0 2.227-1.577 4.412-3.838 5.626-1.27.727-2.674 1.107-4.088 1.107z" />
-                        </svg>
-                    </div>
-                    <p class="text-4xl font-bold text-green-700">50,0000+</p>
-                    <p class="text-gray-600 mt-2">Lives Impacted</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg animate-fade-in-up delay-400">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21L.93 10.3c-.08-.738.36-1.442 1.096-1.684l10.5-3.5a1.5 1.5 0 011.684 1.096l3.5 10.5c.242.736-.202 1.44-.94 1.684l-10.5 3.5a1.5 1.5 0 01-1.684-1.096L2.25 21z" />
-                        </svg>
-                    </div>
-                    <p class="text-4xl font-bold text-green-700">2000+</p>
-                    <p class="text-gray-600 mt-2">Students</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg animate-fade-in-up delay-500">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v17.25m-2.25-10.5h19.5m-4.5 0a2.25 2.25 0 01-2.25 2.25H11.25a2.25 2.25 0 01-2.25-2.25m-1.5 0H5.25m1.5 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5H12a1.5 1.5 0 011.5 1.5v1.5m-4.5 0h-1.5m-1.5 0H5.25m1.5 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5H12a1.5 1.5 0 011.5 1.5v1.5" />
-                        </svg>
-                    </div>
-                    <p class="text-4xl font-bold text-green-700">10,000+</p>
-                    <p class="text-gray-600 mt-2">Trees Planted</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg animate-fade-in-up delay-600">
-                    <div class="icon-container mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
-                    </div>
-                    <p class="text-4xl font-bold text-green-700">500+</p>
-                    <p class="text-gray-600 mt-2">Active Volunteers</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-12 animate-fade-in-up">Voices of Change</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-green-50 p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-100">
-                    <p class="text-lg italic text-gray-700 mb-6">"Samadhan Kendra transformed my life. Their education programs gave me the tools to pursue my dreams and uplift my family."</p>
-                    <p class="font-semibold text-gray-900">- Priya Sharma</p>
-                    <p class="text-sm text-gray-600">Beneficiary, Education Program</p>
-                </div>
-                <div class="bg-green-50 p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-200">
-                    <p class="text-lg italic text-gray-700 mb-6">"Through the WSHG, I found my voice and financial independence. Samadhan Kendra truly empowers women."</p>
-                    <p class="font-semibold text-gray-900">- Kavita Devi</p>
-                    <p class="text-sm text-gray-600">WSHG Member</p>
-                </div>
-                <div class="bg-green-50 p-8 rounded-xl shadow-lg text-center animate-fade-in-up delay-300">
-                    <p class="text-lg italic text-gray-700 mb-6">"Their health camps are a blessing for our village. We now have access to basic medical care and crucial health awareness."</p>
-                    <p class="font-semibold text-gray-900">- Rajesh Kumar</p>
-                    <p class="text-sm text-gray-600">Community Elder</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- News/Blog Section -->
-    <section class="py-16 md:py-24 bg-gradient-to-r from-green-50 to-green-100">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-12 animate-fade-in-up">Latest News & Updates</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- News Article 1 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden animate-fade-in-up delay-100">
-                    <img src="https://i.postimg.cc/vbYCx4QN/Whats-App-Image-2025-07-19-at-16-40-05-8078f600.jpg" alt="News Image 1" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Planting and Environment </h3>
-                        <p class="text-sm text-gray-500 mb-4">July 15, 2025</p>
-                        <p class="text-gray-600 mb-4">We are thrilled to announce the opening of our new Planting center, providing resources to Farmers ...</p>
-                        <a href="#" class="text-green-600 hover:text-green-800 font-medium">Read More &rarr;</a>
-                    </div>
-                </div>
-                <!-- News Article 2 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden animate-fade-in-up delay-200">
-                    <img src="https://i.postimg.cc/HkZyqC1Q/Whats-App-Image-2025-07-13-at-07-27-39-e97646d5.jpg" alt="News Image 2" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Prize Distribution</h3>
-                        <p class="text-sm text-gray-500 mb-4">July 10, 2025</p>
-                        <p class="text-gray-600 mb-4">Raghopur Running Competition , prices and prize to winners ...</p>
-                        <a href="#" class="text-green-600 hover:text-green-800 font-medium">Read More &rarr;</a>
-                    </div>
-                </div>
-                <!-- News Article 3 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden animate-fade-in-up delay-300">
-                    <img src="https://i.postimg.cc/sXnwzZrY/Whats-App-Image-2025-07-13-at-07-27-37-d4ad719e.jpg" alt="News Image 3" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Media Coverage</h3>
-                        <p class="text-sm text-gray-500 mb-4">July 14, 2025</p>
-                        <p class="text-gray-600 mb-4">Our recent Sports camp provided Runners to show their skills...</p>
-                        <a href="#" class="text-green-600 hover:text-green-800 font-medium">Read More &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Call to Action Section -->
-    <section class="py-16 md:py-24 bg-green-700 text-white text-center">
-        <div class="container mx-auto px-6 animate-fade-in-up">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-6">Join Us in Making a Difference</h2>
-            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">
-                Your support can transform lives. Whether through volunteering, donations, or spreading awareness, every action contributes to a brighter future for marginalized communities.
-            </p>
-            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
-                <a href="#" class="btn-secondary !border-white !text-white hover:!bg-white hover:!text-green-700">Volunteer Now</a>
-                <a href="#" class="btn-primary !bg-white !text-green-700 hover:!bg-gray-200">Donate Today</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-12">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <h3 class="text-xl font-bold text-white mb-4">Samadhan Kendra</h3>
-                <p class="text-sm">Dedicated to holistic development, empowering marginalized communities through education, health, sports, and environmental protection.</p>
-                <div class="flex space-x-4 mt-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.812c-3.233 0-5.188 1.501-5.188 4.722v2.278z"/></svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c3.309 0 3.702 0 5.016.072 1.314.062 1.839.278 2.361.493.639.267 1.173.619 1.714 1.16.541.541.893 1.075 1.16 1.714.215.522.431 1.047.493 2.361.072 1.314.072 1.707.072 5.016s0 3.702-.072 5.016c-.062 1.314-.278 1.839-.493 2.361-.267.639-.619 1.173-1.16 1.714-.541.541-.893 1.075-1.16 1.714-.215.522-.431 1.047-.493 2.361-.072 1.314-.072 1.707-.072 5.016s0-3.702.072-5.016c.062-1.314.278-1.839.493-2.361.267-.639.619-1.173 1.16-1.714.541-.541 1.075-.893 1.714-1.16.522-.215 1.047-.431 2.361-.493c1.314-.072 1.707-.072 5.016-.072zm0-2c-3.369 0-3.788.014-5.123.076-1.335.065-2.164.312-2.887.603-.765.316-1.45.772-2.063 1.385-.613.613-1.069 1.298-1.385 2.063-.291.723-.538 1.552-.603 2.887-.062 1.335-.076 1.754-.076 5.123s.014 3.788.076 5.123c.065 1.335.312 2.164.603 2.887.316.765.772 1.45 1.385 2.063.613.613 1.298 1.069 2.063 1.385.723.291 1.552.538 2.887.603 1.335.062 1.754.076 5.123.076s3.788-.014 5.123-.076c1.335-.065 2.164-.312 2.887-.603.765-.316 1.45-.772 2.063-1.385-.613-.613-1.069-1.298-2.063-1.385-.723-.291-1.552-.538-2.887-.603-1.335-.062-1.754-.076-5.123-.076zm0 5a5 5 0 110 10 5 5 0 010-10zm0 8a3 3 0 100-6 3 3 0 000 6z"/></svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold text-white mb-4">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Home</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Programs</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Impact</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold text-white mb-4">Programs</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Education Initiatives</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Sports Development</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Women Empowerment</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Environmental Projects</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Health & Wellness</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold text-white mb-4">Contact Us</h3>
-                <p class="text-sm">123 Samadhan Marg, Welfare City, State, Pin Code</p>
-                <p class="text-sm mt-2">Email: info@samadhankendra.org</p>
-                <p class="text-sm mt-2">Phone: +91 12345 67890</p>
-            </div>
-        </div>
-        <div class="text-center text-gray-500 text-sm mt-10">
-            &copy; 2025 Samadhan Kendra. All rights reserved.
-        </div>
-    </footer>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // New header script content
-            const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
-            const CORRECT_PASSWORD = 'admin123'; // Define the correct password here
+        // The URL of your published Google Sheet CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
+        const CORRECT_PASSWORD = 'admin123'; // Define the correct password here
 
-            let sheetData = []; // To store the parsed CSV data
+        let sheetData = []; // To store the parsed CSV data
 
-            // Function to fetch and parse the CSV data
-            async function fetchCSVData() {
-                try {
-                    const response = await fetch(CSV_URL);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const csvText = await response.text();
-                    sheetData = parseCSV(csvText);
-                    console.log('CSV Data Loaded:', sheetData); // Log the loaded data
-                } catch (error) {
-                    console.error('Error fetching or parsing CSV:', error);
+        // Function to fetch and parse the CSV data
+        async function fetchCSVData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                const csvText = await response.text();
+                sheetData = parseCSV(csvText);
+                console.log('CSV Data Loaded:', sheetData); // Log the loaded data
+            } catch (error) {
+                console.error('Error fetching or parsing CSV:', error);
             }
+        }
 
-            // Simple CSV parser function
-            function parseCSV(csv) {
-                const lines = csv.split('\n').filter(line => line.trim() !== '');
-                if (lines.length === 0) return [];
+        // Simple CSV parser function
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
 
-                const headers = lines[0].split(',').map(header => header.trim());
-                const data = [];
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
 
-                for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(',').map(value => value.trim());
-                    if (values.length === headers.length) {
-                        let row = {};
-                        headers.forEach((header, index) => {
-                            row[header] = values[index];
-                        });
-                        data.push(row);
-                    } else {
-                        console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
-                    }
-                }
-                return data;
-            }
-
-            // Function to handle the search
-            function performSearch(searchInput) {
-                const searchTerm = searchInput.value.trim();
-
-                if (searchTerm === '') {
-                    return;
-                }
-
-                console.log('Searching for:', searchTerm);
-                console.log('Current sheetData:', sheetData);
-
-                const userNameColumn = 'User Name';
-                const webLinkColumn = 'WEB LINK';
-
-                let foundLink = null;
-
-                for (const row of sheetData) {
-                    if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
-                        if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
-                            foundLink = row[webLinkColumn];
-                            break;
-                        }
-                    }
-                }
-
-                if (foundLink) {
-                    if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
-                        foundLink = 'https://' + foundLink;
-                    }
-                    console.log('Attempting to open link in new tab:', foundLink);
-
-                    try {
-                        window.open(foundLink, '_blank');
-                    } catch (e) {
-                        console.error('Error opening window (possibly pop-up blocked):', e);
-                    }
-
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                if (values.length === headers.length) {
+                    let row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    data.push(row);
                 } else {
-                    console.log('No link found for:', searchTerm);
+                    console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
+                }
+            }
+            return data;
+        }
+
+        // Function to handle the search
+        function performSearch(searchInput) {
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm === '') {
+                return;
+            }
+
+            console.log('Searching for:', searchTerm);
+            console.log('Current sheetData:', sheetData);
+
+            const userNameColumn = 'User Name';
+            const webLinkColumn = 'WEB LINK';
+
+            let foundLink = null;
+
+            for (const row of sheetData) {
+                if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
+                    if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
+                        foundLink = row[webLinkColumn];
+                        break;
+                    }
                 }
             }
 
+            if (foundLink) {
+                if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
+                    foundLink = 'https://' + foundLink;
+                }
+                console.log('Attempting to open link in new tab:', foundLink);
+
+                try {
+                    window.open(foundLink, '_blank');
+                } catch (e) {
+                    console.error('Error opening window (possibly pop-up blocked):', e);
+                }
+
+            } else {
+                console.log('No link found for:', searchTerm);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
             // Desktop dropdown logic (hover)
             const dropdownTimeouts = {};
 
@@ -970,14 +520,9 @@
             const submitPasswordButton = document.getElementById('submitPasswordButton');
             const cancelPasswordButton = document.getElementById('cancelPasswordButton');
 
-            // Ensure password modal is hidden on page load
-            if (passwordModal) {
-                passwordModal.style.display = 'none';
-            }
-
             function handleConsoleAccess(event) {
                 event.preventDefault(); // Prevent default link navigation
-                passwordModal.style.display = 'flex'; // Show the modal
+                passwordModal.classList.remove('hidden');
                 passwordError.classList.add('hidden'); // Hide any previous errors
                 passwordInput.value = ''; // Clear input field
                 passwordInput.focus(); // Focus the input for immediate typing
@@ -986,7 +531,7 @@
             function attemptPasswordLogin() {
                 const enteredPassword = passwordInput.value;
                 if (enteredPassword === CORRECT_PASSWORD) {
-                    passwordModal.style.display = 'none'; // Hide the modal
+                    passwordModal.classList.add('hidden');
                     passwordInput.value = '';
                     window.location.href = 'https://mysamadhan.in/iadmin'; // Redirect to the console
                 } else {
@@ -1010,7 +555,7 @@
 
             if (cancelPasswordButton) {
                 cancelPasswordButton.addEventListener('click', () => {
-                    passwordModal.style.display = 'none'; // Hide the modal
+                    passwordModal.classList.add('hidden');
                     passwordInput.value = '';
                     passwordError.classList.add('hidden');
                 });
@@ -1027,8 +572,8 @@
 
             // Close modal with Escape key
             document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && passwordModal.style.display !== 'none') {
-                    passwordModal.style.display = 'none'; // Hide the modal
+                if (event.key === 'Escape' && !passwordModal.classList.contains('hidden')) {
+                    passwordModal.classList.add('hidden');
                     passwordInput.value = '';
                     passwordError.classList.add('hidden');
                 }
@@ -1036,71 +581,495 @@
 
             // Initial fetch when the page loads to populate sheetData
             fetchCSVData();
+        });
+    </script>
+</body>
+</html>
 
-            // Existing image animation script content (merged)
-            const heroImage = document.getElementById('hero-image');
-            const images = [
-                'https://i.postimg.cc/HkZyqC1Q/Whats-App-Image-2025-07-13-at-07-27-39-e97646d5.jpg',
-                'https://i.postimg.cc/25hS2d0s/Whats-App-Image-2025-07-19-at-10-18-19-89ea0b07.jpg',
-                'https://i.postimg.cc/J4079CTc/Whats-App-Image-2025-07-19-at-10-18-46-d0569fb2.jpg',
-                'https://i.postimg.cc/vbYCx4QN/Whats-App-Image-2025-07-19-at-16-40-05-8078f600.jpg'
-            ];
-            let currentIndex = 0;
 
-            function changeHeroImage() {
-                // Start fade-out
-                heroImage.classList.remove('fade-in');
-                heroImage.classList.add('fade-out');
 
-                setTimeout(() => {
-                    // Change image source after fade-out
-                    currentIndex = (currentIndex + 1) % images.length;
-                    heroImage.src = images[currentIndex];
-                    heroImage.onerror = function() {
-                        this.src = "https://placehold.co/600x400/cccccc/333333?text=Image+Error"; // Fallback image
-                    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="pageTitle">Samadhan Kendra Sports Campaign - Empowering Rural Talent</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for Inter font and smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8f9fa; /* Light background */
+        }
+        /* Animation for elements fading in/sliding up */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
 
-                    // Start fade-in
-                    heroImage.classList.remove('fade-out');
-                    heroImage.classList.add('fade-in');
-                }, 1000); // This timeout should match the transition duration (1s)
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg p-4 sticky top-0 z-50 rounded-b-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-red-700" data-key="campaignName">Samadhan Kendra Sports Campaign</a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#" class="text-gray-600 hover:text-red-700 transition duration-300 ease-in-out" data-key="navHome">Home</a>
+                <a href="#campaign" class="text-gray-600 hover:text-red-700 transition duration-300 ease-in-out" data-key="navCampaign">The Campaign</a>
+                <a href="#expansion" class="text-gray-600 hover:text-red-700 transition duration-300 ease-in-out" data-key="navExpansion">Expansion</a>
+                <a href="#vision" class="text-gray-600 hover:text-red-700 transition duration-300 ease-in-out" data-key="navVision">Our Vision</a>
+                <a href="#impact" class="text-gray-600 hover:text-red-700 transition duration-300 ease-in-out" data-key="navImpact">Impact</a>
+                <a href="#contact" class="text-gray-600 hover:text-red-700 transition duration-300 ease-in-out" data-key="navContact">Contact</a>
+                <!-- Language Selector -->
+                <div class="ml-4">
+                    <button id="lang-en" class="px-3 py-1 rounded-full text-sm font-semibold border border-red-500 text-red-500 hover:bg-red-50 transition duration-200">EN</button>
+                    <button id="lang-hi" class="px-3 py-1 rounded-full text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-100 transition duration-200 ml-2">HI</button>
+                </div>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden mt-4 space-y-2 bg-white rounded-lg shadow-md p-4">
+            <a href="#" class="block text-gray-600 hover:text-red-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navHome">Home</a>
+            <a href="#campaign" class="block text-gray-600 hover:text-red-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navCampaign">The Campaign</a>
+            <a href="#expansion" class="block text-gray-600 hover:text-red-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navExpansion">Expansion</a>
+            <a href="#vision" class="block text-gray-600 hover:text-red-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navVision">Our Vision</a>
+            <a href="#impact" class="block text-gray-600 hover:text-red-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navImpact">Impact</a>
+            <a href="#contact" class="block text-gray-600 hover:text-red-700 transition duration-300 ease-in-out py-2 px-3 rounded-md" data-key="navContact">Contact</a>
+            <!-- Language Selector for Mobile -->
+            <div class="mt-4 border-t pt-4">
+                <button id="mobile-lang-en" class="w-full px-3 py-2 rounded-md text-sm font-semibold border border-red-500 text-red-500 hover:bg-red-50 transition duration-200">EN</button>
+                <button id="mobile-lang-hi" class="w-full px-3 py-2 rounded-md text-sm font-semibold border border-gray-300 text-gray-600 hover:bg-gray-100 transition duration-200 mt-2">HI</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-red-600 to-orange-600 text-white py-20 px-4 text-center rounded-b-3xl shadow-xl">
+        <div class="container mx-auto">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4 leading-tight fade-in-up" data-key="heroHeading">Empowering Rural Talent Through Athletics</h1>
+            <p class="text-xl md:text-2xl mb-8 fade-in-up" style="transition-delay: 0.2s;" data-key="heroSubheading">
+                Samadhan Kendra's Sports Campaign: Fostering sportsmanship, healthy lifestyles, and hidden talent.
+            </p>
+            <a href="#campaign" class="inline-block bg-white text-red-700 hover:bg-red-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition duration-300 ease-in-out transform hover:scale-105 fade-in-up" style="transition-delay: 0.4s;" data-key="heroButton">
+                Learn More About Our Campaign
+            </a>
+        </div>
+    </header>
+
+    <!-- The Campaign Section -->
+    <section id="campaign" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-red-700 mb-12 fade-in-up" data-key="campaignHeading">The Campaign: Running Towards Change</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Image/Illustration Placeholder -->
+                <div class="flex justify-center fade-in-up" style="transition-delay: 0.6s;">
+                    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgyg1dgvlZXdpnQpeLYBJ4jxPx9OSiTvy406KNIHIJfjDyvl9LSDtj0Iq3hthVA09Q66hWCt1OmpOJip6wyRtootrjcAR1CkelavxLX8ykFyaon39ah8pEHqZluqKgaiLu5tDpOjN20v_-YcltfA7sJT_SzL5t7CyWT7BnhFxph-D8n4szQX_nOywmgX66k"
+                         alt="Rural running competition"
+                         class="w-full h-auto max-w-lg rounded-lg shadow-lg object-cover"
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0E7FF/3B82F6?text=Image+Not+Found';">
+                </div>
+
+                <!-- Text Content -->
+                <div class="space-y-6">
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.8s;" data-key="campaignPara1">
+                        In 2024, <strong class="text-red-700">Samadhan Kendra</strong> took a powerful step toward recognizing and nurturing athletic talent in rural areas by launching a village-level Running Competition. This initiative, aimed at fostering sportsmanship, encouraging healthy lifestyles, and identifying hidden talent, quickly became a popular and impactful movement within a short span of time.
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.0s;" data-key="campaignPara2">
+                        The campaign began with village-level running competitions, inviting participants from all age groups to take part. These events were more than just races—they were celebrations of energy, determination, and community spirit. Participants competed with enthusiasm, and winners were awarded attractive prizes, motivating others to engage and perform better.
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.2s;" data-key="campaignPara3">
+                        The simplicity of the format made it accessible and inclusive. With minimal resources and maximum community involvement, the campaign created a wave of excitement among youth and local athletes. It provided a platform for those who rarely get such opportunities, especially in rural and underdeveloped regions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expansion Section -->
+    <section id="expansion" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-red-700 mb-12 fade-in-up" data-key="expansionHeading">From Villages to the District Arena</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="expansionPara1">
+                    Due to the overwhelming response and the impressive display of talent, Samadhan Kendra is now expanding the campaign to the district level. This move will bring together top performers from various villages, allowing them to compete on a larger stage, gain visibility, and experience competition beyond their immediate surroundings.
+                </p>
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.4s;" data-key="expansionPara2">
+                    District-level events will feature organized tracks, structured formats, professional timekeeping, and a higher standard of competition. It aims not only to recognize talent but also to prepare them for future opportunities at state and national levels.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-red-700 mb-12 fade-in-up" data-key="visionHeading">Our Vision: State-Level Sports Platform for All</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="space-y-6">
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="visionIntro">
+                        The ultimate vision of Samadhan Kendra is to elevate this initiative to the state level, making it one of the largest rural sports platforms in the region. By doing so, they aim to:
+                    </p>
+                    <ul class="list-disc list-inside text-lg space-y-2 text-gray-700">
+                        <li class="fade-in-up" style="transition-delay: 0.4s;" data-key="visionPoint1">Identify and support promising athletes from grassroots.</li>
+                        <li class="fade-in-up" style="transition-delay: 0.6s;" data-key="visionPoint2">Bridge the gap between rural talent and professional training.</li>
+                        <li class="fade-in-up" style="transition-delay: 0.8s;" data-key="visionPoint3">Promote physical fitness and sports culture among the youth.</li>
+                        <li class="fade-in-up" style="transition-delay: 1.0s;" data-key="visionPoint4">Encourage gender-inclusive participation, offering equal opportunities for girls and boys alike.</li>
+                    </ul>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 1.2s;" data-key="visionConclusion">
+                        This future roadmap includes partnerships with schools, sports associations, and government bodies, ensuring that the campaign continues to grow with structure and sustainability.
+                    </p>
+                </div>
+                <!-- Image/Illustration Placeholder -->
+                <div class="flex justify-center fade-in-up" style="transition-delay: 1.4s;">
+                    <!-- Placeholder for a sports vision illustration -->
+                    <svg class="w-64 h-64 text-orange-500" fill="currentColor" viewBox="0 0 24 24" xmlns="https://i.postimg.cc/HkZyqC1Q/Whats-App-Image-2025-07-13-at-07-27-39-e97646d5.jpg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section id="impact" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-red-700 mb-12 fade-in-up" data-key="impactHeading">Impact in a Short Time</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="impactIntro">
+                    Although launched only in 2024, the Sports Campaign by Samadhan Kendra has already made a remarkable impact:
+                </p>
+                <ul class="list-disc list-inside text-lg space-y-2 text-gray-700 mb-8">
+                    <li class="fade-in-up" style="transition-delay: 0.4s;" data-key="impactPoint1">Hundreds of young participants have taken part with enthusiasm.</li>
+                    <li class="fade-in-up" style="transition-delay: 0.6s;" data-key="impactPoint2">Community members and local leaders have actively supported the cause.</li>
+                    <li class="fade-in-up" style="transition-delay: 0.8s;" data-key="impactPoint3">The campaign has become a symbol of hope and pride in many villages.</li>
+                    <li class="fade-in-up" style="transition-delay: 1.0s;" data-key="impactPoint4">It has instilled a renewed interest in fitness, discipline, and competition among rural youth.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion" class="py-16 px-4 bg-gray-50 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-red-700 mb-12 fade-in-up" data-key="conclusionHeading">Conclusion</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.2s;" data-key="conclusionPara1">
+                    Samadhan Kendra's Sports Campaign is not just a competition—it is a movement to discover rural champions, to give them a platform where they are seen, appreciated, and guided. In a country where countless talents go unnoticed due to lack of opportunity, this campaign lights the way forward.
+                </p>
+                <p class="text-2xl font-bold italic text-red-600 my-8 fade-in-up" style="transition-delay: 0.4s;" data-key="conclusionQuote">
+                    A race may last minutes, but its impact lasts a lifetime.
+                </p>
+                <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.6s;" data-key="conclusionPara2">
+                    With continued support and vision, this campaign is all set to become a statewide phenomenon, inspiring thousands and shaping the future of Indian sports from the very grassroots.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-16 px-4 bg-white rounded-t-3xl shadow-inner">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-red-700 mb-12 fade-in-up" data-key="contactHeading">Get in Touch / Get Involved</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Contact Information -->
+                <div class="space-y-6 fade-in-up" style="transition-delay: 0.2s;">
+                    <p class="text-lg flex items-center" data-key="contactLocation">
+                        <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Hajipur, Bihar, 844101, Samadhan Kendra
+                    </p>
+                    <p class="text-lg flex items-center" data-key="contactPhone">
+                        <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        +91 9006317381
+                    </p>
+                    <p class="text-lg flex items-center" data-key="contactEmail1">
+                        <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        samadhankendra3@gmail.com
+                    </p>
+                    <p class="text-lg flex items-center" data-key="contactEmail2">
+                        <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        subhashkumar.samadhan@gmail.com
+                    </p>
+                    <p class="text-lg leading-relaxed fade-in-up" style="transition-delay: 0.6s;" data-key="contactText">
+                        Interested in supporting our Sports Campaign or learning more? Reach out to us!
+                    </p>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="bg-gray-100 p-8 rounded-lg shadow-md fade-in-up" style="transition-delay: 0.4s;">
+                    <h3 class="text-2xl font-semibold text-red-700 mb-6" data-key="formHeading">Send Us a Message</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-700 text-sm font-bold mb-2" data-key="formNameLabel">Name</label>
+                            <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-red-500" data-key="formNamePlaceholder" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 text-sm font-bold mb-2" data-key="formEmailLabel">Email</label>
+                            <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-red-500" data-key="formEmailPlaceholder" placeholder="your@example.com">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-gray-700 text-sm font-bold mb-2" data-key="formSubjectLabel">Subject</label>
+                            <input type="text" id="subject" name="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-red-500" data-key="formSubjectPlaceholder" placeholder="Enquiry, Support, etc.">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 text-sm font-bold mb-2" data-key="formMessageLabel">Message</label>
+                            <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-red-500" data-key="formMessagePlaceholder" placeholder="Your message..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-red-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-800 transition duration-300 ease-in-out shadow-lg transform hover:scale-105" data-key="formSubmitButton">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 px-4 mt-16 rounded-t-lg">
+        <div class="container mx-auto text-center">
+            <p data-key="footerCopyright">&copy; 2025 Samadhan Kendra. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300" data-key="footerPrivacy">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300" data-key="footerTerms">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language Translations
+        const translations = {
+            en: {
+                pageTitle: "Samadhan Kendra Sports Campaign - Empowering Rural Talent",
+                campaignName: "Samadhan Kendra Sports Campaign",
+                navHome: "Home",
+                navCampaign: "The Campaign",
+                navExpansion: "Expansion",
+                navVision: "Our Vision",
+                navImpact: "Impact",
+                navContact: "Contact",
+                heroHeading: "Empowering Rural Talent Through Athletics",
+                heroSubheading: "Samadhan Kendra's Sports Campaign: Fostering sportsmanship, healthy lifestyles, and hidden talent.",
+                heroButton: "Learn More About Our Campaign",
+                campaignHeading: "The Campaign: Running Towards Change",
+                campaignPara1: `In 2024, <strong class="text-red-700">Samadhan Kendra</strong> took a powerful step toward recognizing and nurturing athletic talent in rural areas by launching a village-level Running Competition. This initiative, aimed at fostering sportsmanship, encouraging healthy lifestyles, and identifying hidden talent, quickly became a popular and impactful movement within a short span of time.`,
+                campaignPara2: `The campaign began with village-level running competitions, inviting participants from all age groups to take part. These events were more than just races—they were celebrations of energy, determination, and community spirit. Participants competed with enthusiasm, and winners were awarded attractive prizes, motivating others to engage and perform better.`,
+                campaignPara3: `The simplicity of the format made it accessible and inclusive. With minimal resources and maximum community involvement, the campaign created a wave of excitement among youth and local athletes. It provided a platform for those who rarely get such opportunities, especially in rural and underdeveloped regions.`,
+                expansionHeading: "From Villages to the District Arena",
+                expansionPara1: `Due to the overwhelming response and the impressive display of talent, Samadhan Kendra is now expanding the campaign to the district level. This move will bring together top performers from various villages, allowing them to compete on a larger stage, gain visibility, and experience competition beyond their immediate surroundings.`,
+                expansionPara2: `District-level events will feature organized tracks, structured formats, professional timekeeping, and a higher standard of competition. It aims not only to recognize talent but also to prepare them for future opportunities at state and national levels.`,
+                visionHeading: "Our Vision: State-Level Sports Platform for All",
+                visionIntro: "The ultimate vision of Samadhan Kendra is to elevate this initiative to the state level, making it one of the largest rural sports platforms in the region. By doing so, they aim to:",
+                visionPoint1: "Identify and support promising athletes from grassroots.",
+                visionPoint2: "Bridge the gap between rural talent and professional training.",
+                visionPoint3: "Promote physical fitness and sports culture among the youth.",
+                visionPoint4: "Encourage gender-inclusive participation, offering equal opportunities for girls and boys alike.",
+                visionConclusion: "This future roadmap includes partnerships with schools, sports associations, and government bodies, ensuring that the campaign continues to grow with structure and sustainability.",
+                impactHeading: "Impact in a Short Time",
+                impactIntro: "Although launched only in 2024, the Sports Campaign by Samadhan Kendra has already made a remarkable impact:",
+                impactPoint1: "Hundreds of young participants have taken part with enthusiasm.",
+                impactPoint2: "Community members and local leaders have actively supported the cause.",
+                impactPoint3: "The campaign has become a symbol of hope and pride in many villages.",
+                impactPoint4: "It has instilled a renewed interest in fitness, discipline, and competition among rural youth.",
+                conclusionHeading: "Conclusion",
+                conclusionPara1: "Samadhan Kendra's Sports Campaign is not just a competition—it is a movement to discover rural champions, to give them a platform where they are seen, appreciated, and guided. In a country where countless talents go unnoticed due to lack of opportunity, this campaign lights the way forward.",
+                conclusionQuote: "A race may last minutes, but its impact lasts a lifetime.",
+                conclusionPara2: "With continued support and vision, this campaign is all set to become a statewide phenomenon, inspiring thousands and shaping the future of Indian sports from the very grassroots.",
+                contactHeading: "Get in Touch / Get Involved",
+                contactLocation: "Hajipur, Bihar, 844101, Samadhan Kendra",
+                contactPhone: "+91 9006317381",
+                contactEmail1: "samadhankendra3@gmail.com",
+                contactEmail2: "subhashkumar.samadhan@gmail.com",
+                contactText: "Interested in supporting our Sports Campaign or learning more? Reach out to us!",
+                formHeading: "Send Us a Message",
+                formNameLabel: "Name",
+                formNamePlaceholder: "Your Name",
+                formEmailLabel: "Email",
+                formEmailPlaceholder: "your@example.com",
+                formSubjectLabel: "Subject",
+                formSubjectPlaceholder: "Enquiry, Support, etc.",
+                formMessageLabel: "Message",
+                formMessagePlaceholder: "Your message...",
+                formSubmitButton: "Send Message",
+                footerCopyright: "&copy; 2025 Samadhan Kendra. All rights reserved.",
+                footerPrivacy: "Privacy Policy",
+                footerTerms: "Terms of Service"
+            },
+            hi: {
+                pageTitle: "समाधान केंद्र खेल अभियान - ग्रामीण प्रतिभा को सशक्त बनाना",
+                campaignName: "समाधान केंद्र खेल अभियान",
+                navHome: "होम",
+                navCampaign: "अभियान",
+                navExpansion: "विस्तार",
+                navVision: "हमारा दृष्टिकोण",
+                navImpact: "प्रभाव",
+                navContact: "संपर्क करें",
+                heroHeading: "एथलेटिक्स के माध्यम से ग्रामीण प्रतिभा को सशक्त बनाना",
+                heroSubheading: "समाधान केंद्र का खेल अभियान: खेल भावना को बढ़ावा देना, स्वस्थ जीवन शैली को प्रोत्साहित करना और छिपी हुई प्रतिभाओं की पहचान करना।",
+                heroButton: "हमारे अभियान के बारे में और जानें",
+                campaignHeading: "अभियान: बदलाव की ओर दौड़",
+                campaignPara1: `2024 में, <strong class="text-red-700">समाधान केंद्र</strong> ने ग्रामीण क्षेत्रों में एथलेटिक प्रतिभा को पहचानने और पोषित करने की दिशा में एक शक्तिशाली कदम उठाया, जिसमें एक ग्राम-स्तरीय दौड़ प्रतियोगिता शुरू की गई। खेल भावना को बढ़ावा देने, स्वस्थ जीवन शैली को प्रोत्साहित करने और छिपी हुई प्रतिभाओं की पहचान करने के उद्देश्य से यह पहल थोड़े ही समय में एक लोकप्रिय और प्रभावशाली आंदोलन बन गई।`,
+                campaignPara2: `यह अभियान ग्राम-स्तरीय दौड़ प्रतियोगिताओं के साथ शुरू हुआ, जिसमें सभी आयु वर्ग के प्रतिभागियों को भाग लेने के लिए आमंत्रित किया गया। ये आयोजन सिर्फ दौड़ से कहीं अधिक थे - वे ऊर्जा, दृढ़ संकल्प और सामुदायिक भावना का उत्सव थे। प्रतिभागियों ने उत्साह के साथ प्रतिस्पर्धा की, और विजेताओं को आकर्षक पुरस्कार दिए गए, जिससे दूसरों को बेहतर प्रदर्शन करने के लिए प्रेरित किया गया।`,
+                campaignPara3: `प्रारूप की सादगी ने इसे सुलभ और समावेशी बना दिया। न्यूनतम संसाधनों और अधिकतम सामुदायिक भागीदारी के साथ, इस अभियान ने युवाओं और स्थानीय एथलीटों के बीच उत्साह की लहर पैदा की। इसने उन लोगों के लिए एक मंच प्रदान किया जिन्हें ऐसे अवसर शायद ही कभी मिलते हैं, खासकर ग्रामीण और अविकसित क्षेत्रों में।`,
+                expansionHeading: "गांवों से जिला स्तर तक",
+                expansionPara1: `अभूतपूर्व प्रतिक्रिया और प्रतिभा के प्रभावशाली प्रदर्शन के कारण, समाधान केंद्र अब इस अभियान को जिला स्तर तक बढ़ा रहा है। यह कदम विभिन्न गांवों के शीर्ष प्रदर्शन करने वालों को एक साथ लाएगा, जिससे उन्हें एक बड़े मंच पर प्रतिस्पर्धा करने, दृश्यता प्राप्त करने और अपने तत्काल परिवेश से परे प्रतिस्पर्धा का अनुभव करने का अवसर मिलेगा।`,
+                expansionPara2: `जिला-स्तरीय आयोजनों में संगठित ट्रैक, संरचित प्रारूप, पेशेवर समय-निर्धारण और उच्च स्तरीय प्रतिस्पर्धा होगी। इसका उद्देश्य न केवल प्रतिभा को पहचानना है, बल्कि उन्हें राज्य और राष्ट्रीय स्तर पर भविष्य के अवसरों के लिए तैयार करना भी है।`,
+                visionHeading: "हमारा दृष्टिकोण: सभी के लिए राज्य-स्तरीय खेल मंच",
+                visionIntro: "समाधान केंद्र का अंतिम दृष्टिकोण इस पहल को राज्य स्तर तक बढ़ाना है, जिससे यह क्षेत्र के सबसे बड़े ग्रामीण खेल मंचों में से एक बन जाए। ऐसा करके, उनका लक्ष्य है:",
+                visionPoint1: "जमीनी स्तर से होनहार एथलीटों की पहचान करना और उनका समर्थन करना।",
+                visionPoint2: "ग्रामीण प्रतिभा और पेशेवर प्रशिक्षण के बीच के अंतर को पाटना।",
+                visionPoint3: "युवाओं के बीच शारीरिक फिटनेस और खेल संस्कृति को बढ़ावा देना।",
+                visionPoint4: "लड़कियों और लड़कों दोनों के लिए समान अवसर प्रदान करते हुए लैंगिक-समावेशी भागीदारी को प्रोत्साहित करना।",
+                visionConclusion: "इस भविष्य के रोडमैप में स्कूलों, खेल संघों और सरकारी निकायों के साथ साझेदारी शामिल है, यह सुनिश्चित करते हुए कि अभियान संरचना और स्थिरता के साथ बढ़ता रहे।",
+                impactHeading: "कम समय में प्रभाव",
+                impactIntro: "हालांकि 2024 में ही शुरू किया गया, समाधान केंद्र के खेल अभियान ने पहले ही उल्लेखनीय प्रभाव डाला है:",
+                impactPoint1: "सैकड़ों युवा प्रतिभागियों ने उत्साह के साथ भाग लिया है।",
+                impactPoint2: "समुदाय के सदस्यों और स्थानीय नेताओं ने सक्रिय रूप से इस कारण का समर्थन किया है।",
+                impactPoint3: "यह अभियान कई गांवों में आशा और गौरव का प्रतीक बन गया है।",
+                impactPoint4: "इसने ग्रामीण युवाओं में फिटनेस, अनुशासन और प्रतिस्पर्धा में नई रुचि पैदा की है।",
+                conclusionHeading: "निष्कर्ष",
+                conclusionPara1: "समाधान केंद्र का खेल अभियान सिर्फ एक प्रतियोगिता नहीं है - यह ग्रामीण चैंपियनों की खोज करने, उन्हें एक ऐसा मंच देने का एक आंदोलन है जहाँ उन्हें देखा, सराहा और निर्देशित किया जाता है। एक ऐसे देश में जहाँ अवसर की कमी के कारण अनगिनत प्रतिभाएं अनसुनी रह जाती हैं, यह अभियान आगे का मार्ग प्रशस्त करता है।",
+                conclusionQuote: "एक दौड़ कुछ मिनटों तक चल सकती है, लेकिन इसका प्रभाव जीवन भर रहता है।",
+                conclusionPara2: "निरंतर समर्थन और दृष्टिकोण के साथ, यह अभियान एक राज्यव्यापी घटना बनने के लिए तैयार है, जो हजारों लोगों को प्रेरित करेगा और जमीनी स्तर से भारतीय खेलों के भविष्य को आकार देगा।",
+                contactHeading: "संपर्क करें / शामिल हों",
+                contactLocation: "हाजीपुर, बिहार, 844101, समाधान केंद्र",
+                contactPhone: "+91 9006317381",
+                contactEmail1: "samadhankendra3@gmail.com",
+                contactEmail2: "subhashkumar.samadhan@gmail.com",
+                contactText: "हमारे खेल अभियान का समर्थन करने या अधिक जानने में रुचि है? हमसे संपर्क करें!",
+                formHeading: "हमें एक संदेश भेजें",
+                formNameLabel: "नाम",
+                formNamePlaceholder: "आपका नाम",
+                formEmailLabel: "ईमेल",
+                formEmailPlaceholder: "आपका@उदाहरण.कॉम",
+                formSubjectLabel: "विषय",
+                formSubjectPlaceholder: "पूछताछ, समर्थन, आदि।",
+                formMessageLabel: "संदेश",
+                formMessagePlaceholder: "आपका संदेश...",
+                formSubmitButton: "संदेश भेजें",
+                footerCopyright: "&copy; 2025 समाधान केंद्र। सर्वाधिकार सुरक्षित।",
+                footerPrivacy: "गोपनीयता नीति",
+                footerTerms: "सेवा की शर्तें"
             }
+        };
 
-            // Set interval for hero image change (4 seconds total, including 1s fade-out and 1s fade-in)
-            setInterval(changeHeroImage, 4000);
+        let currentLanguage = 'en'; // Default language
 
-            // About Us Image Animation
-            const aboutUsImage = document.getElementById('about-us-image');
-            const aboutUsImages = [
-                'https://i.postimg.cc/15sYj57N/Whats-App-Image-2025-07-20-at-11-11-18-36586723.jpg',
-                'https://i.postimg.cc/8CMRGLjk/Whats-App-Image-2025-07-20-at-11-11-19-b72efad5.jpg',
-                'https://i.postimg.cc/PxK8fyhH/Whats-App-Image-2025-07-20-at-11-11-19-6713bf17.jpg',
-                'https://i.postimg.cc/76cwNJn7/Whats-App-Image-2025-07-20-at-11-11-20-34d2950c.jpg',
-                'https://i.postimg.cc/zvCDXXTg/Whats-App-Image-2025-07-20-at-11-11-21-3ea535f1.jpg'
-            ];
-            let aboutUsIndex = 0;
+        // Function to update text content based on selected language
+        function updateContent(lang) {
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key]; // Use innerHTML to preserve strong tags
+                    }
+                }
+            });
+            // Update page title separately as it's not a direct element in body
+            document.title = translations[lang].pageTitle;
 
-            function changeAboutUsImage() {
-                // Start fade-out
-                aboutUsImage.classList.remove('fade-in');
-                aboutUsImage.classList.add('fade-out');
+            // Update active language button styles
+            document.getElementById('lang-en').classList.remove('border-red-500', 'text-red-500', 'bg-red-50');
+            document.getElementById('lang-en').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            document.getElementById('lang-hi').classList.remove('border-red-500', 'text-red-500', 'bg-red-50');
+            document.getElementById('lang-hi').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
 
-                setTimeout(() => {
-                    // Change image source after fade-out
-                    aboutUsIndex = (aboutUsIndex + 1) % aboutUsImages.length;
-                    aboutUsImage.src = aboutUsImages[aboutUsIndex];
-                    aboutUsImage.onerror = function() {
-                        this.src = "https://placehold.co/600x400/cccccc/333333?text=Image+Error"; // Fallback image
-                    };
+            document.getElementById('mobile-lang-en').classList.remove('border-red-500', 'text-red-500', 'bg-red-50');
+            document.getElementById('mobile-lang-en').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            document.getElementById('mobile-lang-hi').classList.remove('border-red-500', 'text-red-500', 'bg-red-50');
+            document.getElementById('mobile-lang-hi').classList.add('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
 
-                    // Start fade-in
-                    aboutUsImage.classList.remove('fade-out');
-                    aboutUsImage.classList.add('fade-in');
-                }, 1000); // This timeout should match the transition duration (1s)
+
+            if (lang === 'en') {
+                document.getElementById('lang-en').classList.add('border-red-500', 'text-red-500', 'bg-red-50');
+                document.getElementById('lang-en').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+                document.getElementById('mobile-lang-en').classList.add('border-red-500', 'text-red-500', 'bg-red-50');
+                document.getElementById('mobile-lang-en').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+            } else {
+                document.getElementById('lang-hi').classList.add('border-red-500', 'text-red-500', 'bg-red-50');
+                document.getElementById('lang-hi').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
+                document.getElementById('mobile-lang-hi').classList.add('border-red-500', 'text-red-500', 'bg-red-50');
+                document.getElementById('mobile-lang-hi').classList.remove('border-gray-300', 'text-gray-600', 'hover:bg-gray-100');
             }
+            currentLanguage = lang;
+        }
 
-            // Set interval for About Us image change (4 seconds total, including 1s fade-out and 1s fade-in)
-            setInterval(changeAboutUsImage, 4000);
+        // Event listeners for language buttons
+        document.getElementById('lang-en').addEventListener('click', () => updateContent('en'));
+        document.getElementById('lang-hi').addEventListener('click', () => updateContent('hi'));
+        document.getElementById('mobile-lang-en').addEventListener('click', () => updateContent('en'));
+        document.getElementById('mobile-lang-hi').addEventListener('click', () => updateContent('hi'));
+
+
+        // JavaScript for mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // JavaScript for scroll-triggered animations
+        const faders = document.querySelectorAll('.fade-in-up');
+
+        const appearOptions = {
+            threshold: 0.2, /* Trigger when 20% of the element is visible */
+            rootMargin: "0px 0px -50px 0px" /* Adjust to start animation slightly before element enters viewport */
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add('animate');
+                    appearOnScroll.unobserve(entry.target); /* Stop observing once animated */
+                }
+            });
+        }, appearOptions);
+
+        faders.forEach(fader => {
+            appearOnScroll.observe(fader);
+        });
+
+        // Initial content load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateContent(currentLanguage);
         });
     </script>
 </body>
