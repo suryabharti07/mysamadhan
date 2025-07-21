@@ -3,499 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Header</title>
-    <!-- Tailwind CSS CDN for utility classes -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter for a modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Apply Inter font family to the entire body */
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            background-color: #f8f9fa; /* Light grey background for the page */
-        }
-
-        /* Custom styling for the three-dot menu icon to match other icons */
-        .three-dots-icon {
-            font-size: 1.25rem; /* Equivalent to text-xl */
-            color: #5f6368; /* A standard gray color for icons */
-        }
-
-        /* Dropdown specific styles for desktop (hover) */
-        .dropdown-menu {
-            position: absolute;
-            background-color: white;
-            /* Stronger shadow for better visual depth */
-            box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.15);
-            z-index: 1000; /* Ensure dropdown is on top of other content */
-            min-width: 180px; /* Slightly wider dropdowns */
-            border-radius: 0.5rem; /* More rounded corners */
-            overflow: hidden; /* Ensures content stays within rounded corners */
-            padding: 0.5rem 0; /* Vertical padding */
-            opacity: 0; /* Initially hidden */
-            visibility: hidden; /* Initially hidden */
-            /* Smooth transition for appearance */
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            transform: translateY(10px); /* Slight downward translation for entrance effect */
-            top: 100%; /* Position below the parent link */
-            left: 0;
-            border: 1px solid #e2e8f0; /* Subtle border */
-        }
-
-        /* Class to show the dropdown */
-        .show-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0); /* Reset translation to show */
-        }
-
-        /* Styling for individual dropdown items */
-        .dropdown-item {
-            padding: 0.75rem 1.25rem; /* More padding for better click/tap area */
-            display: block;
-            color: #4a5568; /* Darker gray for text */
-            text-decoration: none;
-            font-size: 0.9rem; /* Slightly larger font size */
-            white-space: nowrap; /* Prevent text wrapping */
-            transition: background-color 0.2s ease, color 0.2s ease; /* Smooth hover transition */
-        }
-
-        .dropdown-item:hover {
-            background-color: #e0f2fe; /* Light blue background on hover */
-            color: #1d4ed8; /* Darker blue text on hover */
-        }
-
-        /* Custom style for the mobile menu transition */
-        #mobileMenu, #mobileSearchOverlay {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* No custom styles needed for search bars as they are now fully Tailwind-styled */
-    </style>
-</head>
-<body>
-    <!-- Header section with enhanced styling -->
-    <!-- The header uses flexbox and w-full for fluid width. Padding is also relative to screen size. -->
-    <header class="bg-white shadow-lg py-4 px-6 flex items-center justify-between w-full border-b border-gray-200 rounded-b-lg">
-        <!-- Left Section: Logo and Main Navigation -->
-        <div class="flex items-center space-x-8">
-            <!-- Logo with increased margin for separation -->
-            <img src="https://i.postimg.cc/nrW2HNXp/samadhan-kendra-logo.png" alt="Samadhan Kendra Logo" class="h-8 mr-4">
-
-            <!-- Desktop Navigation - hidden on small screens, visible on large screens -->
-            <nav class="hidden lg:flex items-center space-x-8 text-gray-700 text-base font-medium">
-                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Home</a>
-
-                <!-- About us Dropdown -->
-                <div class="relative dropdown" id="aboutUsDropdown">
-                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
-                        About us
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">Our Journey</a>
-                        <a href="#" class="dropdown-item">Vision</a>
-                        <a href="#" class="dropdown-item">Mission</a>
-                        <a href="#" class="dropdown-item">Management And Administrative structure</a>
-                    </div>
-                </div>
-
-                <!-- Programs Dropdown -->
-                <div class="relative dropdown" id="programsDropdown">
-                    <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
-                        Programs
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">SU-SIKSHALAYA</a>
-                        <a href="#" class="dropdown-item">Apna Vidyalaya</a>
-                        <a href="#" class="dropdown-item">Sports</a>
-                        <a href="#" class="dropdown-item">WSG</a>
-                        <a href="#" class="dropdown-item">Environment</a>
-                    </div>
-                </div>
-
-                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Founder</a>
-                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Gallery</a>
-            </nav>
-        </div>
-
-        <!-- Desktop Search Bar - positioned to take available space in the middle -->
-        <div id="desktopSearchBar" class="hidden lg:flex items-center flex-grow mx-4 max-w-xl
-                                         bg-white rounded-full shadow-md hover:shadow-lg
-                                         transition-shadow duration-300 p-2">
-            <i class="fas fa-search text-gray-500 ml-2 mr-2 text-base"></i>
-            <input type="text" id="desktopSearchInput"
-                   class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-base"
-                   placeholder="Search User Name">
-        </div>
-
-        <!-- Right Section: Secondary Navigation and Utility Buttons -->
-        <div class="flex items-center space-x-4">
-            <!-- Secondary Navigation - hidden on small screens, visible on medium and large screens -->
-            <nav class="hidden md:flex items-center space-x-6 text-gray-700 text-base font-medium lg:block">
-                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Download</a>
-                <a href="#" class="hover:text-blue-700 transition-colors duration-200">Contact</a>
-                <a href="https://mysamadhan.in/iadmin" class="hover:text-blue-700 transition-colors duration-200">Console</a>
-            </nav>
-
-            <!-- More Options Button - hidden on small screens, visible on large screens -->
-            <button class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden lg:block cursor-pointer transition-colors duration-200" aria-label="More options">
-                <i class="fas fa-ellipsis-v three-dots-icon text-blue-600"></i>
-            </button>
-
-            <!-- Mobile Search Toggle Button - visible on small/medium screens, hidden on large screens -->
-            <button id="mobileSearchToggleButton" class="p-2.5 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 lg:hidden cursor-pointer transition-colors duration-200" aria-label="Open mobile search">
-                <i class="fas fa-search text-blue-600"></i>
-            </button>
-
-            <!-- Mobile Menu Toggle Button - visible on small/medium screens, hidden on large screens -->
-            <button id="mobileMenuButton" class="p-2.5 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden cursor-pointer" aria-label="Open mobile menu">
-                <i class="fas fa-bars text-gray-600"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Mobile Search Overlay -->
-    <div id="mobileSearchOverlay" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
-        <div class="flex justify-end p-6">
-            <!-- Close Mobile Search Button -->
-            <button id="closeMobileSearchButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile search">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
-        </div>
-        <div class="p-6 flex flex-col items-center justify-center h-full -mt-16"> <!-- Adjusted height and margin for centering -->
-            <h2 class="text-3xl font-bold text-blue-600 mb-6">Search</h2>
-            <!-- Mobile Search Input styled like Google search bar -->
-            <div class="relative flex items-center w-full max-w-md
-                        bg-white rounded-full shadow-md hover:shadow-lg
-                        transition-shadow duration-300 p-3">
-                <i class="fas fa-search text-gray-500 ml-2 mr-3 text-lg"></i>
-                <input type="text" id="mobileSearchInput"
-                       class="bg-transparent outline-none text-gray-800 placeholder-gray-500 flex-grow text-lg"
-                       placeholder="Enter User Name (exact)">
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile Menu Overlay -->
-    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
-        <div class="flex justify-end p-6">
-            <!-- Close Mobile Menu Button - changed color to match header icons -->
-            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer transition-colors duration-200" aria-label="Close mobile menu">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
-        </div>
-        <!-- Mobile Navigation Links - text color changed to text-gray-800 -->
-        <nav class="flex flex-col items-start p-6 space-y-3 text-gray-800 text-lg font-medium">
-            <!-- Hover background changed to light gray, hover text to blue -->
-            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Home</a>
-
-            <!-- Mobile About us Dropdown Toggle -->
-            <div class="w-full">
-                <!-- Hover background changed to light gray, hover text to blue -->
-                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileAboutUsToggle" aria-haspopup="true" aria-expanded="false">
-                    About us
-                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
-                </button>
-                <!-- Nested dropdown background changed to lighter gray -->
-                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileAboutUsMenu">
-                    <!-- Nested dropdown item hover background changed to light gray, hover text to blue -->
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Our Journey</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Vision</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Mission</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Management And Administrative structure</a>
-                </div>
-            </div>
-
-            <!-- Mobile Programs Dropdown Toggle -->
-            <div class="w-full">
-                <!-- Hover background changed to light gray, hover text to blue -->
-                <button class="flex items-center justify-between w-full py-3 px-4 text-left hover:bg-gray-100 rounded-md transition-colors duration-200 cursor-pointer hover:text-blue-600" id="mobileProgramsToggle" aria-haspopup="true" aria-expanded="false">
-                    Programs
-                    <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200"></i>
-                </button>
-                <!-- Nested dropdown background changed to lighter gray -->
-                <div class="pl-6 mt-2 space-y-2 hidden bg-gray-50 rounded-md py-2" id="mobileProgramsMenu">
-                    <!-- Nested dropdown item hover background changed to light gray, hover text to blue -->
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">SU-SIKSHALAYA</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Apna Vidyalaya</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Sports</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">WSG</a>
-                    <a href="#" class="block py-2 px-4 text-base hover:bg-gray-100 rounded-md transition-colors duration-200 hover:text-blue-600">Environment</a>
-                </div>
-            </div>
-
-            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Founder</a>
-            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Gallery</a>
-
-            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Download</a>
-            <a href="#" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Contact</a>
-            <a href="https://mysamadhan.in/iadmin" class="hover:bg-gray-100 rounded-md w-full py-3 px-4 transition-colors duration-200 hover:text-blue-600">Console</a>
-
-            <!-- Removed Mobile Start Button -->
-        </nav>
-    </div>
-
-    <!-- Main content area (currently empty) -->
-    <main class="p-6">
-        <!-- Content will go here -->
-    </main>
-
-    <script>
-        // The URL of your published Google Sheet CSV
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP57XIVtj9TV3s-ix5FQs_5CDB4nCWO_fQUmTyundV47OYNGY-y9mfJgf-9Y7-JtAVz7Ze_om8LTeG/pub?output=csv';
-
-        let sheetData = []; // To store the parsed CSV data
-
-        // Function to fetch and parse the CSV data
-        async function fetchCSVData() {
-            try {
-                const response = await fetch(CSV_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const csvText = await response.text();
-                sheetData = parseCSV(csvText);
-                console.log('CSV Data Loaded:', sheetData); // Log the loaded data
-            } catch (error) {
-                console.error('Error fetching or parsing CSV:', error);
-            }
-        }
-
-        // Simple CSV parser function
-        function parseCSV(csv) {
-            const lines = csv.split('\n').filter(line => line.trim() !== '');
-            if (lines.length === 0) return [];
-
-            const headers = lines[0].split(',').map(header => header.trim());
-            const data = [];
-
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',').map(value => value.trim());
-                if (values.length === headers.length) {
-                    let row = {};
-                    headers.forEach((header, index) => {
-                        row[header] = values[index];
-                    });
-                    data.push(row);
-                } else {
-                    console.warn(`Skipping malformed row: ${lines[i]} (expected ${headers.length} columns, got ${values.length})`);
-                }
-            }
-            return data;
-        }
-
-        // Function to handle the search
-        function performSearch(searchInput) {
-            const searchTerm = searchInput.value.trim();
-
-            if (searchTerm === '') {
-                return;
-            }
-
-            console.log('Searching for:', searchTerm);
-            console.log('Current sheetData:', sheetData);
-
-            const userNameColumn = 'User Name';
-            const webLinkColumn = 'WEB LINK';
-
-            let foundLink = null;
-
-            for (const row of sheetData) {
-                if (row[userNameColumn] !== undefined && row[webLinkColumn] !== undefined) {
-                    if (row[userNameColumn].toLowerCase() === searchTerm.toLowerCase()) {
-                        foundLink = row[webLinkColumn];
-                        break;
-                    }
-                }
-            }
-
-            if (foundLink) {
-                if (!foundLink.startsWith('http://') && !foundLink.startsWith('https://')) {
-                    foundLink = 'https://' + foundLink;
-                }
-                console.log('Attempting to open link in new tab:', foundLink);
-
-                try {
-                    window.open(foundLink, '_blank');
-                } catch (e) {
-                    console.error('Error opening window (possibly pop-up blocked):', e);
-                }
-
-            } else {
-                console.log('No link found for:', searchTerm);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Desktop dropdown logic (hover)
-            const dropdownTimeouts = {};
-
-            function setupDropdown(dropdownId, menuClass) {
-                const dropdown = document.getElementById(dropdownId);
-                if (dropdown) {
-                    const toggleLink = dropdown.querySelector('a[aria-haspopup="true"]');
-                    const menu = dropdown.querySelector(`.${menuClass}`);
-
-                    if (menu && toggleLink) {
-                        dropdown.addEventListener('mouseenter', () => {
-                            if (dropdownTimeouts[dropdownId]) {
-                                clearTimeout(dropdownTimeouts[dropdownId]);
-                            }
-                            menu.classList.add('show-menu');
-                            toggleLink.setAttribute('aria-expanded', 'true');
-                        });
-
-                        dropdown.addEventListener('mouseleave', () => {
-                            dropdownTimeouts[dropdownId] = setTimeout(() => {
-                                menu.classList.remove('show-menu');
-                                toggleLink.setAttribute('aria-expanded', 'false');
-                            }, 150);
-                        });
-
-                        menu.addEventListener('mouseenter', () => {
-                            if (dropdownTimeouts[dropdownId]) {
-                                clearTimeout(dropdownTimeouts[dropdownId]);
-                            }
-                        });
-
-                        menu.addEventListener('mouseleave', () => {
-                            dropdownTimeouts[dropdownId] = setTimeout(() => {
-                                menu.classList.remove('show-menu');
-                                toggleLink.setAttribute('aria-expanded', 'false');
-                            }, 150);
-                        });
-                    }
-                }
-            }
-
-            setupDropdown('aboutUsDropdown', 'dropdown-menu');
-            setupDropdown('programsDropdown', 'dropdown-menu');
-
-            // Mobile menu logic (click)
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
-
-            if (mobileMenuButton && mobileMenu && closeMobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.remove('translate-x-full');
-                    mobileMenu.classList.add('translate-x-0');
-                    mobileMenuButton.setAttribute('aria-expanded', 'true');
-                });
-
-                closeMobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.remove('translate-x-0');
-                    mobileMenu.classList.add('translate-x-full');
-                    mobileMenuButton.setAttribute('aria-expanded', 'false');
-                });
-            }
-
-            // Mobile dropdowns (click)
-            function setupMobileDropdownToggle(toggleId, menuId) {
-                const toggleButton = document.getElementById(toggleId);
-                const menu = document.getElementById(menuId);
-
-                if (toggleButton && menu) {
-                    toggleButton.addEventListener('click', () => {
-                        const isHidden = menu.classList.toggle('hidden');
-                        const icon = toggleButton.querySelector('i');
-                        if (icon) {
-                            icon.classList.toggle('fa-chevron-down');
-                            icon.classList.toggle('fa-chevron-up');
-                        }
-                        toggleButton.setAttribute('aria-expanded', !isHidden);
-                    });
-                }
-            }
-
-            setupMobileDropdownToggle('mobileAboutUsToggle', 'mobileAboutUsMenu');
-            setupMobileDropdownToggle('mobileProgramsToggle', 'mobileProgramsMenu');
-
-            // --- Search Functionality Integration ---
-
-            // Desktop Search Elements
-            const desktopSearchInput = document.getElementById('desktopSearchInput');
-
-            // Mobile Search Elements
-            const mobileSearchToggleButton = document.getElementById('mobileSearchToggleButton');
-            const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
-            const closeMobileSearchButton = document.getElementById('closeMobileSearchButton');
-            const mobileSearchInput = document.getElementById('mobileSearchInput');
-
-            // Event Listeners for Desktop Search Input (Enter key)
-            if (desktopSearchInput) {
-                desktopSearchInput.addEventListener('keypress', (event) => {
-                    if (event.key === 'Enter') {
-                        performSearch(desktopSearchInput);
-                    }
-                });
-            }
-
-            // Event Listeners for Mobile Search Overlay (Open/Close)
-            if (mobileSearchToggleButton && mobileSearchOverlay && closeMobileSearchButton) {
-                mobileSearchToggleButton.addEventListener('click', () => {
-                    mobileSearchOverlay.classList.remove('translate-x-full');
-                    mobileSearchOverlay.classList.add('translate-x-0');
-                    mobileSearchToggleButton.setAttribute('aria-expanded', 'true');
-                    mobileSearchInput.focus();
-                });
-
-                closeMobileSearchButton.addEventListener('click', () => {
-                    mobileSearchOverlay.classList.remove('translate-x-0');
-                    mobileSearchOverlay.classList.add('translate-x-full');
-                    mobileSearchToggleButton.setAttribute('aria-expanded', 'false');
-                });
-            }
-
-            // Event Listeners for Mobile Search Input (Enter key)
-            if (mobileSearchInput) {
-                mobileSearchInput.addEventListener('keypress', (event) => {
-                    if (event.key === 'Enter') {
-                        performSearch(mobileSearchInput);
-                    }
-                });
-            }
-
-            // Initial fetch when the page loads to populate sheetData
-            fetchCSVData();
-        });
-    </script>
-</body>
-</html>
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Base styles for dark theme */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+            padding: 1.5rem; /* Add padding directly to body */
         }
+
+        /* Main content area now takes full width */
+        .main-content {
+            flex-grow: 1;
+            width: 100%; /* Take full width */
+            max-width: 1280px; /* Optional: Max width for content centering */
+            margin: 0 auto; /* Center content */
+        }
+
         /* Custom scrollbar for table container */
         .table-container::-webkit-scrollbar {
             height: 8px;
-            background-color: #f1f1f1;
+            background-color: #2d3748; /* Darker scrollbar track */
             border-radius: 10px;
         }
         .table-container::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1; /* Gray-300 */
+            background-color: #4a5568; /* Dark gray scrollbar thumb */
             border-radius: 10px;
         }
         .table-container::-webkit-scrollbar-thumb:hover {
-            background-color: #94a3b8; /* Gray-400 */
+            background-color: #6a768e; /* Lighter gray on hover */
         }
 
         /* Full-screen modal overlay */
@@ -505,11 +52,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            background-color: rgba(0, 0, 0, 0.8); /* Darker semi-transparent black */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            z-index: 1000;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -521,24 +68,41 @@
         }
 
         .modal-content {
-            background-color: #fff;
-            width: 95%; /* Slightly less than full width */
-            height: 95%; /* Slightly less than full height */
-            border-radius: 0.75rem; /* rounded-xl */
+            background-color: #2d3748; /* Dark modal background */
+            color: #e2e8f0;
+            width: 95%;
+            height: 95%;
+            border-radius: 0.75rem;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deeper shadow for dark theme */
         }
 
         .modal-header {
             padding: 1rem;
             display: flex;
             justify-content: flex-end;
-            border-bottom: 1px solid #e2e8f0; /* Gray-200 */
+            border-bottom: 1px solid #4a5568; /* Darker border */
+            background-color: #2d3748;
+        }
+
+        .modal-header #closeModalBtn { /* Specificity for the button */
+            position: relative; /* Ensure z-index works */
+            z-index: 1001; /* Make sure it's on top within the modal, higher than iframe */
+            outline: 2px solid transparent; /* Default transparent outline */
+            outline-offset: 2px;
+            transition: outline-color 0.2s ease; /* Smooth transition for focus outline */
+            cursor: pointer; /* Explicitly set cursor to pointer */
+            pointer-events: auto; /* Ensure clicks are registered */
+        }
+
+        .modal-header #closeModalBtn:focus {
+            outline-color: #63b3ed; /* blue-300 for focus ring */
         }
 
         .modal-body {
-            flex-grow: 1; /* Take up remaining space */
+            flex-grow: 1;
         }
 
         .modal-body iframe {
@@ -546,38 +110,164 @@
             height: 100%;
             border: none;
         }
+
+        /* Custom message box styles */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #38a169; /* Green for success/info */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1100;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .message-box.error {
+            background-color: #e53e3e; /* Red for error */
+        }
+
+        .message-box.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-box .close-btn {
+            margin-left: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Loading indicator styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #4299e1; /* Blue spinner */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark mode specific styles for form elements and tables */
+        .dark-theme-element {
+            background-color: #2d3748; /* Darker background for inputs/selects */
+            border-color: #4a5568; /* Darker border */
+            color: #e2e8f0; /* Light text */
+        }
+        .dark-theme-element::placeholder {
+            color: #a0aec0; /* Lighter placeholder text */
+        }
+
+        .dark-table-header {
+            background-color: #2d3748; /* Darker table header */
+            color: #a0aec0; /* Lighter header text */
+        }
+        .dark-table-row {
+            background-color: #1a202c; /* Darker row background */
+            color: #e2e8f0; /* Light row text */
+        }
+        .dark-table-row:hover {
+            background-color: #2d3748; /* Slightly lighter on hover */
+        }
+        .dark-table-divide {
+            border-color: #4a5568; /* Darker divider */
+        }
     </style>
 </head>
-<body class="p-4 sm:p-6 lg:p-8">
-    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Admin Dashboard</h1>
+<body class="selection:bg-blue-600 selection:text-white">
 
-        <!-- Search and Filter (Optional - Add if needed) -->
-        <div class="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <input type="text" id="searchInput" placeholder="Search by User Name..."
-                   class="w-full sm:w-auto flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out">
-            <button class="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 ease-in-out">
-                Add New Entry
-            </button>
-        </div>
+    <!-- Main Content Area (Now full width) -->
+    <div class="main-content flex flex-col">
+        <!-- Dashboard Header (Simplified) -->
+        <header class="bg-gray-800 rounded-xl shadow-md py-4 px-6 mb-6 flex items-center justify-between">
+            <h1 class="text-3xl font-extrabold text-white">Admin Dashboard</h1>
+            <div class="flex items-center space-x-4">
+                <img src="https://placehold.co/32x32/000000/FFFFFF?text=AS" alt="User Avatar" class="rounded-full border-2 border-blue-400">
+            </div>
+        </header>
 
-        <!-- Table Container for Horizontal Scrolling -->
-        <div class="overflow-x-auto rounded-lg shadow-md table-container">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Father/Husband Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact No</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BLOCK</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- Data will be populated here by JavaScript -->
-                </tbody>
-            </table>
+        <!-- Block-wise User Distribution Section -->
+        <section class="bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8 mb-8">
+            <h3 class="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-3">Block-wise User Distribution</h3>
+            <div id="blockDistribution" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Block statistics will be populated here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Main Data Table Section -->
+        <div class="bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8">
+            <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-4">Manage User Data</h2>
+
+            <!-- Search and Filter Section -->
+            <div class="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <input type="text" id="searchInput" placeholder="Search by User Name, Teacher, Father, or Contact No..."
+                       class="w-full sm:w-auto flex-grow px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out dark-theme-element placeholder-gray-400 text-gray-200">
+                <select id="blockFilter"
+                        class="w-full sm:w-auto px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out dark-theme-element text-gray-200">
+                    <option value="">All Blocks</option>
+                    <!-- Block options will be populated here by JavaScript -->
+                </select>
+            </div>
+
+            <!-- Table Container for Horizontal Scrolling -->
+            <div class="overflow-x-auto rounded-lg shadow-md table-container border border-gray-700">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="dark-table-header">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="userName">
+                                User Name <i class="fas fa-sort ml-1 text-gray-500"></i>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="teacherName">
+                                Teacher Name <i class="fas fa-sort ml-1 text-gray-500"></i>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Father/Husband Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Contact No</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="block">
+                                Block <i class="fas fa-sort ml-1 text-gray-500"></i>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody" class="divide-y dark-table-divide">
+                        <!-- Data will be populated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -585,7 +275,7 @@
     <div id="sheetModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                <button id="closeModalBtn" class="text-gray-400 hover:text-white focus:outline-none p-1 rounded-full hover:bg-gray-700 transition duration-150 ease-in-out">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -597,180 +287,428 @@
         </div>
     </div>
 
+    <!-- Custom Message Box -->
+    <div id="messageBox" class="message-box">
+        <span id="messageText"></span>
+        <button class="close-btn" onclick="hideMessageBox()">&times;</button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dataTableBody = document.getElementById('dataTableBody');
-            const sheetModal = document.getElementById('sheetModal'); // Re-added modal elements
-            const closeModalBtn = document.getElementById('closeModalBtn'); // Re-added modal elements
-            const sheetIframe = document.getElementById('sheetIframe'); // Re-added modal elements
+        // Global variables for DOM elements
+        const dataTableBody = document.getElementById('dataTableBody');
+        const sheetModal = document.getElementById('sheetModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const sheetIframe = document.getElementById('sheetIframe');
+        const searchInput = document.getElementById('searchInput');
+        const blockFilter = document.getElementById('blockFilter');
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const blockDistributionContainer = document.getElementById('blockDistribution');
 
-            // This URL is your deployed Google Apps Script web app link.
-            // It will fetch the data from your Google Sheet.
-            const GOOGLE_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbxP5bi_dBPn5WgNdNEACcNu-w-arxpJIyFdS10RHvRCqOg6vlZNeiq9cFRBolWvV4N5gw/exec';
 
-            // --- Dummy Data (This will only be used if fetching from the Google Sheet URL fails) ---
-            const dummyData = [
-                {
-                    "User Name": "Alice Johnson",
-                    "Teacher Name": "Mr. Smith",
-                    "FATHER/HUSBAND NAME": "Robert Johnson",
-                    "CONTACT NO": "123-456-7890",
-                    "BLOCK": "BIDUPUR",
-                    "WEB LINK": "https://example.com/alice",
-                    "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_alice/edit?usp=sharing"
-                },
-                {
-                    "User Name": "Bob Williams",
-                    "Teacher Name": "Ms. Davis",
-                    "FATHER/HUSBAND NAME": "Sarah Williams",
-                    "CONTACT NO": "098-765-4321",
-                    "CENTER TIME": "02:00 PM",
-                    "WEB LINK": "https://example.com/bob",
-                    "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_bob/edit?usp=sharing"
-                },
-                {
-                    "User Name": "Charlie Brown",
-                    "Teacher Name": "Mrs. White",
-                    "FATHER/HUSBAND NAME": "Lucy Brown",
-                    "CONTACT NO": "555-123-4567",
-                    "CENTER TIME": "09:30 AM",
-                    "WEB LINK": "https://example.com/charlie",
-                    "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_charlie/edit?usp=sharing"
+        let allData = []; // Stores all fetched data for filtering and sorting
+        let currentSortColumn = null;
+        let currentSortDirection = 'asc'; // 'asc' or 'desc'
+
+        // This URL is your deployed Google Apps Script web app link.
+        // It will fetch the data from your Google Sheet.
+        const GOOGLE_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbxP5bi_dBPn5WgNdNEACcNu-w-arxpJIyFdS10RHvRCqOg6vlZNeiq9cFRBolWvV4N5gw/exec';
+
+        // --- Dummy Data (This will only be used if fetching from the Google Sheet URL fails) ---
+        const dummyData = [
+            {
+                "User Name": "Amit Kumar",
+                "Teacher Name": "Mr. Sharma",
+                "FATHER/HUSBAND NAME": "Rajesh Kumar",
+                "CONTACT NO": "9876543210",
+                "BLOCK": "Bidupur",
+                "WEB LINK": "https://example.com/amit",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_amit/edit?usp=sharing"
+            },
+            {
+                "User Name": "Bhavna Devi",
+                "Teacher Name": "Ms. Verma",
+                "FATHER/HUSBAND NAME": "Suresh Singh",
+                "CONTACT NO": "8765432109",
+                "BLOCK": "Hajipur",
+                "WEB LINK": "https://example.com/bhavna",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_bhavna/edit?usp=sharing"
+            },
+            {
+                "User Name": "Chandan Gupta",
+                "Teacher Name": "Mrs. Mishra",
+                "FATHER/HUSBAND NAME": "Vijay Gupta",
+                "CONTACT NO": "7654321098",
+                "BLOCK": "Patepur",
+                "WEB LINK": "https://example.com/chandan",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_chandan/edit?usp=sharing"
+            },
+            {
+                "User Name": "Divya Singh",
+                "Teacher Name": "Mr. Yadav",
+                "FATHER/HUSBAND NAME": "Ajay Singh",
+                "CONTACT NO": "6543210987",
+                "BLOCK": "Bidupur",
+                "WEB LINK": "https://example.com/divya",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_divya/edit?usp=sharing"
+            },
+            {
+                "User Name": "Ishan Sharma",
+                "Teacher Name": "Ms. Kapoor",
+                "FATHER/HUSBAND NAME": "Naveen Sharma",
+                "CONTACT NO": "5432109876",
+                "BLOCK": "Hajipur",
+                "WEB LINK": "https://example.com/ishan",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_ishan/edit?usp=sharing"
+            },
+            {
+                "User Name": "Fatima Khan",
+                "Teacher Name": "Mr. Singh",
+                "FATHER/HUSBAND NAME": "Abbas Khan",
+                "CONTACT NO": "4321098765",
+                "BLOCK": "Patepur",
+                "WEB LINK": "https://example.com/fatima",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_fatima/edit?usp=sharing"
+            },
+            {
+                "User Name": "Gaurav Jain",
+                "Teacher Name": "Ms. Gupta",
+                "FATHER/HUSBAND NAME": "Prakash Jain",
+                "CONTACT NO": "3210987654",
+                "BLOCK": "Bidupur",
+                "WEB LINK": "https://example.com/gaurav",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_gaurav/edit?usp=sharing"
+            },
+            {
+                "User Name": "Harmanpreet Kaur",
+                "Teacher Name": "Mr. Dhawan",
+                "FATHER/HUSBAND NAME": "Jaspal Kaur",
+                "CONTACT NO": "9988776655",
+                "BLOCK": "Raghopur",
+                "WEB LINK": "https://example.com/harman",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_harman/edit?usp=sharing"
+            },
+            {
+                "User Name": "Imran Hashmi",
+                "Teacher Name": "Mr. Khan",
+                "FATHER/HUSBAND NAME": "Anwar Hashmi",
+                "CONTACT NO": "1122334455",
+                "BLOCK": "Raghopur",
+                "WEB LINK": "https://example.com/imran",
+                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_imran/edit?usp=sharing"
+            }
+        ];
+        // --- END DUMMY DATA ---
+
+        /**
+         * Shows a custom message box with a given message and type.
+         * @param {string} message - The message to display.
+         * @param {string} type - 'success' or 'error'.
+         */
+        function showMessageBox(message, type = 'success') {
+            messageText.textContent = message;
+            messageBox.classList.remove('success', 'error'); // Remove previous types
+            messageBox.classList.add(type);
+            messageBox.classList.add('active');
+            setTimeout(() => {
+                hideMessageBox();
+            }, 3000); // Hide after 3 seconds
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function hideMessageBox() {
+            messageBox.classList.remove('active');
+        }
+
+        /**
+         * Shows the loading overlay.
+         */
+        function showLoading() {
+            loadingOverlay.classList.add('active');
+        }
+
+        /**
+         * Hides the loading overlay.
+         */
+        function hideLoading() {
+            loadingOverlay.classList.remove('active');
+        }
+
+        /**
+         * Fetches data from the specified Google Sheet URL.
+         * This function will replace the dummy data if successful.
+         */
+        async function fetchData() {
+            showLoading(); // Show loading indicator
+            try {
+                const response = await fetch(GOOGLE_SHEET_DATA_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}. Please check your Google Apps Script deployment and permissions.`);
                 }
-            ];
-            // --- END DUMMY DATA ---
+                const data = await response.json();
+                hideLoading(); // Hide loading indicator on success
+                return data;
+            } catch (error) {
+                console.error("Could not fetch data from Google Sheet:", error);
+                showMessageBox(`Could not fetch data. Using dummy data. Error: ${error.message}`, 'error');
+                hideLoading(); // Hide loading indicator on error
+                return dummyData; // Fallback to dummy data for demonstration
+            }
+        }
 
-            /**
-             * Fetches data from the specified Google Sheet URL.
-             * This function will replace the dummy data if successful.
-             */
-            async function fetchData() {
-                try {
-                    const response = await fetch(GOOGLE_SHEET_DATA_URL);
-                    if (!response.ok) {
-                        // If the response is not OK, throw an error
-                        throw new Error(`HTTP error! status: ${response.status}. Please check your Google Apps Script deployment and permissions.`);
-                    }
-                    const data = await response.json();
-                    return data;
-                } catch (error) {
-                    console.error("Could not fetch data from Google Sheet:", error);
-                    // Fallback to dummy data for demonstration if fetching fails
-                    console.warn("Using dummy data as a fallback. Please ensure your Google Apps Script is correctly deployed and accessible.");
-                    return dummyData;
-                }
+        /**
+         * Populates the table with data.
+         * @param {Array<Object>} data - An array of objects, where each object is a row.
+         */
+        function populateTable(data) {
+            dataTableBody.innerHTML = ''; // Clear existing rows
+            if (data.length === 0) {
+                const noDataRow = document.createElement('tr');
+                noDataRow.innerHTML = `<td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400 italic">No matching data found.</td>`;
+                dataTableBody.appendChild(noDataRow);
+                return;
             }
 
-            /**
-             * Populates the table with data.
-             * @param {Array<Object>} data - An array of objects, where each object is a row.
-             */
-            function populateTable(data) {
-                dataTableBody.innerHTML = ''; // Clear existing rows
-                if (data.length === 0) {
-                    const noDataRow = document.createElement('tr');
-                    noDataRow.innerHTML = `<td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No data available.</td>`;
-                    dataTableBody.appendChild(noDataRow);
-                    return;
+            data.forEach(rowData => {
+                const row = document.createElement('tr');
+                row.classList.add('dark-table-row'); // Apply dark theme row class
+
+                // Create table cells for each column
+                const userNameCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'font-medium'], rowData["User Name"] || '');
+                const teacherNameCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["Teacher Name"] || '');
+                const fatherHusbandNameCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["FATHER/HUSBAND NAME"] || '');
+                const contactNoCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["CONTACT NO"] || '');
+                const blockCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["BLOCK"] || '');
+
+                // Action buttons cell
+                const actionCell = document.createElement('td');
+                actionCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-center', 'text-sm', 'font-medium');
+
+                const webButton = document.createElement('button');
+                webButton.textContent = 'Web';
+                webButton.classList.add(
+                    'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
+                    'rounded-md', 'shadow-sm', 'text-white', 'bg-green-600', 'hover:bg-green-700', 'focus:outline-none',
+                    'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500', 'transition', 'duration-150', 'ease-in-out',
+                    'mr-2', 'rounded-lg'
+                );
+                webButton.onclick = () => {
+                    if (rowData["WEB LINK"]) {
+                        window.open(rowData["WEB LINK"], '_blank');
+                    } else {
+                        showMessageBox("Web link not available for this entry.", 'error');
+                    }
+                };
+
+                const sheetButton = document.createElement('button');
+                sheetButton.textContent = 'Sheet';
+                sheetButton.classList.add(
+                    'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
+                    'rounded-md', 'shadow-sm', 'text-white', 'bg-indigo-600', 'hover:bg-indigo-700', 'focus:outline-none',
+                    'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-indigo-500', 'transition', 'duration-150', 'ease-in-out',
+                    'rounded-lg'
+                );
+                sheetButton.onclick = () => {
+                    if (rowData["SHEET LINK"]) {
+                        sheetIframe.src = rowData["SHEET LINK"];
+                        sheetModal.classList.add('active'); // Show modal
+                    } else {
+                        showMessageBox("Sheet link not available for this entry.", 'error');
+                    }
+                };
+
+                actionCell.appendChild(webButton);
+                actionCell.appendChild(sheetButton);
+
+                // Append all cells to the row
+                row.appendChild(userNameCell);
+                row.appendChild(teacherNameCell);
+                row.appendChild(fatherHusbandNameCell);
+                row.appendChild(contactNoCell);
+                row.appendChild(blockCell);
+                row.appendChild(actionCell);
+
+                dataTableBody.appendChild(row);
+            });
+        }
+
+        // Helper function to create elements with classes and text content
+        function newElement(tag, classes, textContent) {
+            const element = document.createElement(tag);
+            element.classList.add(...classes);
+            element.textContent = textContent;
+            return element;
+        }
+
+        /**
+         * Populates the block filter dropdown with unique block names.
+         * @param {Array<Object>} data - An array of objects containing all data.
+         */
+        function populateBlockFilter(data) {
+            const blocks = new Set();
+            data.forEach(item => {
+                if (item.BLOCK) {
+                    blocks.add(item.BLOCK);
                 }
+            });
+            blockFilter.innerHTML = '<option value="">All Blocks</option>'; // Keep default option
+            Array.from(blocks).sort().forEach(block => {
+                const option = document.createElement('option');
+                option.value = block;
+                option.textContent = block;
+                blockFilter.appendChild(option);
+            });
+        }
 
-                data.forEach(rowData => {
-                    const row = document.createElement('tr');
-                    row.classList.add('hover:bg-gray-50'); // Hover effect for rows
+        /**
+         * Calculates and displays block-wise user distribution.
+         * @param {Array<Object>} data - The full dataset.
+         */
+        function populateBlockStatistics(data) {
+            const blockCounts = {};
+            data.forEach(item => {
+                const block = item.BLOCK || 'Unknown Block';
+                blockCounts[block] = (blockCounts[block] || 0) + 1;
+            });
 
-                    // Create table cells for each column
-                    const userNameCell = document.createElement('td');
-                    userNameCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'font-medium', 'text-gray-900');
-                    userNameCell.textContent = rowData["User Name"] || '';
+            blockDistributionContainer.innerHTML = ''; // Clear previous stats
 
-                    const teacherNameCell = document.createElement('td');
-                    teacherNameCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-500');
-                    teacherNameCell.textContent = rowData["Teacher Name"] || '';
+            // Sort blocks alphabetically
+            const sortedBlocks = Object.keys(blockCounts).sort();
 
-                    const fatherHusbandNameCell = document.createElement('td');
-                    fatherHusbandNameCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-500');
-                    fatherHusbandNameCell.textContent = rowData["FATHER/HUSBAND NAME"] || '';
+            sortedBlocks.forEach(block => {
+                const count = blockCounts[block];
+                const card = document.createElement('div');
+                card.classList.add(
+                    'bg-gray-700', 'rounded-lg', 'p-4', 'shadow-md', 'flex', 'items-center', 'justify-between',
+                    'transition', 'duration-200', 'hover:scale-105', 'hover:bg-gray-600'
+                );
+                card.innerHTML = `
+                    <div>
+                        <p class="text-gray-300 text-sm font-medium">${block}</p>
+                        <h4 class="text-white text-2xl font-bold mt-1">${count}</h4>
+                        <p class="text-gray-400 text-xs">Users</p>
+                    </div>
+                    <i class="fas fa-map-marker-alt text-blue-400 text-3xl opacity-60"></i>
+                `;
+                blockDistributionContainer.appendChild(card);
+            });
+        }
 
-                    const contactNoCell = document.createElement('td');
-                    contactNoCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-500');
-                    contactNoCell.textContent = rowData["CONTACT NO"] || '';
+        /**
+         * Filters and sorts the data based on search input, block selection, and current sort state.
+         */
+        function filterAndSortData() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedBlock = blockFilter.value;
 
-                    const centerTimeCell = document.createElement('td');
-                    centerTimeCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-500');
-                    centerTimeCell.textContent = rowData["CENTER TIME"] || '';
+            let filteredData = allData.filter(item => {
+                // Search across User Name, Teacher Name, Father/Husband Name, and Contact No
+                const matchesSearch = (!searchTerm ||
+                                       (item["User Name"] && item["User Name"].toLowerCase().includes(searchTerm)) ||
+                                       (item["Teacher Name"] && item["Teacher Name"].toLowerCase().includes(searchTerm)) ||
+                                       (item["FATHER/HUSBAND NAME"] && item["FATHER/HUSBAND NAME"].toLowerCase().includes(searchTerm)) ||
+                                       (item["CONTACT NO"] && item["CONTACT NO"].includes(searchTerm)));
 
-                    // Action buttons cell
-                    const actionCell = document.createElement('td');
-                    actionCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-center', 'text-sm', 'font-medium'); // Changed to text-center for buttons
+                const matchesBlock = selectedBlock === "" || (item.BLOCK && item.BLOCK === selectedBlock);
+                return matchesSearch && matchesBlock;
+            });
 
-                    const webButton = document.createElement('button');
-                    webButton.textContent = 'Web';
-                    webButton.classList.add(
-                        'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
-                        'rounded-md', 'shadow-sm', 'text-white', 'bg-green-600', 'hover:bg-green-700', 'focus:outline-none',
-                        'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500', 'transition', 'duration-150', 'ease-in-out',
-                        'mr-2', 'rounded-lg'
-                    );
-                    webButton.onclick = () => {
-                        if (rowData["WEB LINK"]) {
-                            window.open(rowData["WEB LINK"], '_blank');
-                        } else {
-                            console.warn("Web link not available for this entry.");
-                            // Optionally, show a small message on the UI
-                        }
-                    };
+            // Apply sorting if a column is selected
+            if (currentSortColumn) {
+                filteredData.sort((a, b) => {
+                    let valA, valB;
+                    if (currentSortColumn === 'userName') {
+                        valA = a["User Name"] || '';
+                        valB = b["User Name"] || '';
+                    } else if (currentSortColumn === 'teacherName') {
+                        valA = a["Teacher Name"] || '';
+                        valB = b["Teacher Name"] || '';
+                    } else if (currentSortColumn === 'block') {
+                        valA = a["BLOCK"] || '';
+                        valB = b["BLOCK"] || '';
+                    }
 
-                    const sheetButton = document.createElement('button');
-                    sheetButton.textContent = 'Sheet';
-                    sheetButton.classList.add(
-                        'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
-                        'rounded-md', 'shadow-sm', 'text-white', 'bg-indigo-600', 'hover:bg-indigo-700', 'focus:outline-none',
-                        'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-indigo-500', 'transition', 'duration-150', 'ease-in-out',
-                        'rounded-lg'
-                    );
-                    // Modified to open in a full-screen modal (iframe)
-                    sheetButton.onclick = () => {
-                        if (rowData["SHEET LINK"]) {
-                            sheetIframe.src = rowData["SHEET LINK"];
-                            sheetModal.classList.add('active'); // Show modal
-                        } else {
-                            console.warn("Sheet link not available for this entry.");
-                            // Optionally, show a small message on the UI
-                        }
-                    };
-
-                    actionCell.appendChild(webButton);
-                    actionCell.appendChild(sheetButton);
-
-                    // Append all cells to the row
-                    row.appendChild(userNameCell);
-                    row.appendChild(teacherNameCell);
-                    row.appendChild(fatherHusbandNameCell);
-                    row.appendChild(contactNoCell);
-                    row.appendChild(centerTimeCell);
-                    row.appendChild(actionCell);
-
-                    dataTableBody.appendChild(row);
+                    if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
+                    return 0;
                 });
             }
 
-            // Close modal functionality
+            populateTable(filteredData);
+        }
+
+        /**
+         * Handles column header clicks for sorting.
+         * @param {Event} event - The click event.
+         */
+        function handleColumnSort(event) {
+            const th = event.currentTarget;
+            const column = th.dataset.sort;
+
+            if (column) {
+                if (currentSortColumn === column) {
+                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSortColumn = column;
+                    currentSortDirection = 'asc';
+                }
+
+                // Update sort icons
+                document.querySelectorAll('th[data-sort] i').forEach(icon => {
+                    icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                    icon.classList.add('fa-sort');
+                });
+
+                const currentIcon = th.querySelector('i');
+                if (currentIcon) {
+                    currentIcon.classList.remove('fa-sort');
+                    currentIcon.classList.add(currentSortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
+                }
+
+                filterAndSortData(); // Re-filter and sort
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial data load and table population
+            fetchData().then(data => {
+                allData = data; // Store all fetched data
+                populateBlockFilter(allData); // Populate block filter
+                populateBlockStatistics(allData); // Populate block-wise statistics
+                filterAndSortData(); // Populate initial table with potential default sorting
+            });
+
+            // Search and Filter Event Listeners
+            searchInput.addEventListener('input', filterAndSortData); // Use 'input' for real-time filtering
+            blockFilter.addEventListener('change', filterAndSortData);
+
+            // Modal Event Listeners
             closeModalBtn.addEventListener('click', () => {
+                console.log("Close button clicked!"); // Added for debugging
                 sheetModal.classList.remove('active'); // Hide modal
                 sheetIframe.src = ''; // Clear iframe src to stop any loaded content
             });
-
-            // Close modal if clicked outside content (optional, but good UX)
             sheetModal.addEventListener('click', (event) => {
+                // This checks if the click was directly on the overlay, not its children
                 if (event.target === sheetModal) {
                     sheetModal.classList.remove('active');
                     sheetIframe.src = '';
                 }
             });
 
-            // Initial data load and table population
-            fetchData().then(data => {
-                populateTable(data);
+            // Add sorting event listeners to table headers
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', handleColumnSort);
             });
         });
     </script>
