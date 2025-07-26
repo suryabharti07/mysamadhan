@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्थान चयन पॉपअप</title>
+    <!-- Google Fonts से Poppins फ़ॉन्ट आयात करें -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* बॉडी के लिए सामान्य स्टाइलिंग */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* पॉपअप के पीछे के पेज के लिए हल्का बैकग्राउंड */
+        }
+
+        /* पॉपअप ओवरले के लिए स्टाइलिंग */
+        #popupOverlay {
+            display: none; /* डिफ़ॉल्ट रूप से छिपा हुआ */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* अर्ध-पारदर्शी काला ओवरले */
+            z-index: 1000; /* सुनिश्चित करें कि यह शीर्ष पर है */
+            backdrop-filter: blur(5px); /* आधुनिक ब्लर प्रभाव */
+            display: flex; /* सामग्री को केंद्र में रखने के लिए फ्लेक्सबॉक्स का उपयोग करें */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* पॉपअप कंटेनर के लिए स्टाइलिंग */
+        #popupContainer {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px; /* चिकने गोल कोने */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* गहरा, नरम छाया */
+            text-align: center;
+            max-width: 450px; /* बड़ी स्क्रीन के लिए अधिकतम चौड़ाई */
+            width: 90%; /* प्रतिक्रियाशील चौड़ाई */
+            position: relative; /* बंद बटन की स्थिति के लिए */
+            opacity: 0; /* फेड-इन के लिए अदृश्य से शुरू करें */
+            transform: scale(0.9); /* स्केल-इन के लिए थोड़ा छोटा से शुरू करें */
+            transition: all 0.3s ease-out; /* फेड और स्केल के लिए एनीमेशन */
+        }
+
+        /* जब पॉपअप सक्रिय हो */
+        #popupContainer.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* शीर्षक (H2) के लिए स्टाइलिंग */
+        #popupContainer h2 {
+            color: #333;
+            margin-top: 0;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        /* पैराग्राफ (P) के लिए स्टाइलिंग */
+        #popupContainer p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* विकल्प बटन के लिए स्टाइलिंग */
+        .option-button {
+            display: block; /* बटन को पूरी चौड़ाई लेने के लिए */
+            background-color: #007bff; /* प्राथमिक नीला रंग */
+            color: white;
+            padding: 12px 25px;
+            margin: 15px auto; /* ऊर्ध्वाधर रिक्ति के साथ केंद्रित */
+            border-radius: 8px; /* गोल बटन */
+            text-decoration: none; /* लिंक से अंडरलाइन हटाएँ */
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: background-color 0.2s ease, transform 0.1s ease; /* चिकने होवर प्रभाव */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* सूक्ष्म बटन छाया */
+        }
+
+        /* होवर पर विकल्प बटन के लिए स्टाइलिंग */
+        .option-button:hover {
+            background-color: #0056b3; /* होवर पर गहरा नीला */
+            transform: translateY(-2px); /* हल्का लिफ्ट प्रभाव */
+        }
+
+        /* बंद बटन के लिए स्टाइलिंग */
+        #closePopup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 28px; /* बड़ा 'X' */
+            color: #aaa; /* हल्का ग्रे रंग */
+            cursor: pointer;
+            transition: color 0.2s ease;
+            line-height: 1; /* 'X' के बेहतर ऊर्ध्वाधर संरेखण के लिए */
+        }
+
+        /* होवर पर बंद बटन के लिए स्टाइलिंग */
+        #closePopup:hover {
+            color: #666; /* होवर पर गहरा ग्रे */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- पॉपअप ओवरले - जब पॉपअप खुला हो तो पृष्ठभूमि को कवर करता है -->
+    <div id="popupOverlay">
+        <!-- पॉपअप कंटेनर - वास्तविक पॉपअप सामग्री को रखता है -->
+        <div id="popupContainer">
+            <!-- पॉपअप बंद करने के लिए बटन -->
+            <button id="closePopup">&times;</button>
+            <h2>अपना स्थान चुनें</h2>
+            <p>आगे बढ़ने के लिए कृपया अपना पसंदीदा स्थान चुनें।</p>
+            <!-- राघोपुर के लिए लिंक बटन -->
+            <a href="https://script.google.com/macros/s/AKfycby4xRip_Nfe3I8L_i0AGKHsgARgCU-8QudQwLbLD6em1iAu1bMc6dTtWXLv-Jw8RG8l9A/exec" class="option-button">राघोपुर</a>
+            <!-- बिदुपुर के लिए लिंक बटन -->
+            <a href="https://script.google.com/macros/s/AKfycbzmG8ChhWSFdKfxHQ8o3EJteIlPidPZPnATw9t8xJ2zQbzmnPcKd_zfyuiaEfmNW9wWWw/exec" class="option-button">बिदुपुर</a>
+        </div>
+    </div>
+
+    <script>
+        // HTML तत्वों का संदर्भ प्राप्त करें
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupContainer = document.getElementById('popupContainer');
+        const closePopupButton = document.getElementById('closePopup'); // वेरिएबल का नाम बदला गया
+
+        // पॉपअप खोलने के लिए फ़ंक्शन
+        function openPopup() {
+            popupOverlay.style.display = 'flex'; // ओवरले को दृश्यमान करें
+            // 'active' क्लास जोड़ने से पहले डिस्प्ले प्रॉपर्टी को प्रभावी होने देने के लिए एक छोटा विलंब का उपयोग करें
+            setTimeout(() => {
+                popupContainer.classList.add('active');
+            }, 10);
+        }
+
+        // पॉपअप बंद करने के लिए फ़ंक्शन (नाम बदला गया)
+        function handleClosePopup() {
+            popupContainer.classList.remove('active');
+            // ओवरले को छिपाने से पहले एनीमेशन के समाप्त होने की प्रतीक्षा करें
+            setTimeout(() => {
+                popupOverlay.style.display = 'none';
+            }, 300); // CSS ट्रांज़िशन अवधि से मेल खाना चाहिए
+        }
+
+        // बंद बटन पर क्लिक करने पर पॉपअप बंद करें (नए फ़ंक्शन नाम का उपयोग करें)
+        closePopupButton.addEventListener('click', handleClosePopup);
+
+        // पॉपअप कंटेनर के बाहर (ओवरले पर) क्लिक करने पर पॉपअप बंद करें (नए फ़ंक्शन नाम का उपयोग करें)
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                handleClosePopup();
+            }
+        });
+
+        // पेज लोड होने पर स्वचालित रूप से पॉपअप खोलें
+        // एक वास्तविक एप्लिकेशन में, आप इसे एक बटन क्लिक या विशिष्ट घटना पर ट्रिगर करना चाह सकते हैं।
+        document.addEventListener('DOMContentLoaded', openPopup);
+    </script>
+
+</body>
+</html>
