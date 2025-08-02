@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APNA VIDYALAYA - Media Gallery</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles for the progress bar and volume slider thumb */
+        .progress-bar-fill {
+            background-color: #10b981; /* Emerald-500 for a fresh accent */
+        }
+        .volume-slider::-webkit-slider-thumb,
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #10b981; /* Emerald-500 */
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3); /* Emerald-500 with transparency */
+        }
+        .volume-slider::-moz-range-thumb,
+        .progress-bar::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #10b981; /* Emerald-500 */
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Hide default video controls */
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+        video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
+
+        /* Custom scrollbar for gallery */
+        #mediaGallery::-webkit-scrollbar,
+        #videoGallery::-webkit-scrollbar {
+            height: 8px; /* For horizontal scrollbar on shorts */
+            width: 8px; /* For vertical scrollbar on main galleries */
+        }
+        #mediaGallery::-webkit-scrollbar-track,
+        #videoGallery::-webkit-scrollbar-track {
+            background: #e5e7eb; /* Gray-200 */
+            border-radius: 10px;
+        }
+        #mediaGallery::-webkit-scrollbar-thumb,
+        #videoGallery::-webkit-scrollbar-thumb {
+            background: #9ca3af; /* Gray-400 */
+            border-radius: 10px;
+        }
+        #mediaGallery::-webkit-scrollbar-thumb:hover,
+        #videoGallery::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* Gray-500 */
+        }
+
+        /* Custom styles for the range input track fill */
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: transparent; /* Hide default track */
+        }
+        input[type="range"]::-moz-range-track {
+            background: transparent; /* Hide default track */
+        }
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        /* Adjusting main content area for full width as sidebar is removed */
+        .content-area {
+            width: 100%; /* Always full width now */
+            margin-left: 0; /* No margin needed from sidebar */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Header (APNA VIDYALAYA) -->
+    <header class="w-full bg-white p-4 flex items-center justify-between shadow-md z-30 fixed top-0 left-0 right-0">
+        <div class="flex items-center space-x-2 sm:space-x-4 ml-2">
+            <!-- Removed menu icon -->
+            <div class="flex items-center space-x-1">
+                <i class="fab fa-youtube text-2xl sm:text-3xl text-emerald-600"></i>
+                <span class="text-xl sm:text-2xl font-bold text-gray-900 hidden sm:block">APNA VIDYALAYA</span>
+            </div>
+        </div>
+        <div class="flex-grow max-w-xs sm:max-w-2xl mx-2 sm:mx-4 flex items-center">
+            <div class="relative flex-grow">
+                <input type="text" id="searchBar" placeholder="Search" class="w-full p-2 pl-4 pr-10 rounded-l-full bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:border-emerald-500">
+                <button class="absolute right-0 top-0 h-full w-10 sm:w-14 bg-gray-200 rounded-r-full flex items-center justify-center border border-gray-300 hover:bg-gray-300">
+                    <i class="fas fa-search text-lg sm:text-xl text-gray-600"></i>
+                </button>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4 mr-2">
+            <!-- Removed unresponsive icons -->
+        </div>
+    </header>
+
+    <!-- Main Layout: Content (Sidebar removed) -->
+    <div class="flex flex-grow mt-[68px]"> <!-- Margin top to account for fixed header -->
+        <!-- Left Sidebar - Removed entirely -->
+
+        <!-- Main Content Area -->
+        <main class="flex flex-col flex-grow p-4 gap-6 content-area">
+
+            <!-- Home Page Gallery -->
+            <section id="homePage" class="w-full">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 hidden">Explore Media</h2> <!-- Hidden as per YouTube design -->
+                <div id="mediaGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-x-4 gap-y-8 overflow-y-auto max-h-[calc(100vh-180px)] pr-2">
+                    <!-- Media items will be loaded here by JavaScript -->
+                    <p id="homeLoadingMessage" class="col-span-full text-center text-gray-500">मीडिया लोड हो रहा है...</p>
+                </div>
+            </section>
+
+            <!-- Video Player Page -->
+            <section id="videoPlayerPage" class="hidden flex-col lg:flex-row w-full gap-6">
+                <!-- Main Media Player Section (Left/Top) -->
+                <div class="flex-1 bg-white rounded-xl shadow-2xl overflow-hidden lg:max-w-[70%]">
+                    <!-- Media container -->
+                    <div class="relative group aspect-video" id="main-media-player-container">
+                        <video id="videoPlayer" class="w-full h-full rounded-t-xl bg-black" src="" poster="https://placehold.co/1280x720/334155/E2E8F0?text=Select+a+video" preload="auto"></video>
+                        <img id="imagePlayer" class="w-full h-full object-contain rounded-t-xl bg-black hidden" src="" alt="Selected Image">
+
+                        <!-- Loading Spinner Overlay -->
+                        <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-20 hidden">
+                            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-emerald-500"></div>
+                        </div>
+
+                        <!-- Play/Pause overlay button (Video-specific) -->
+                        <div id="playOverlay" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-100 transition-opacity duration-300 group-hover:opacity-100 cursor-pointer">
+                            <button class="text-white text-6xl opacity-75 hover:opacity-100 transition-opacity duration-200">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+
+                        <!-- Custom Controls (Video-specific) -->
+                        <div id="controls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex flex-col space-y-2 hidden">
+                            <!-- Progress Bar -->
+                            <div class="relative w-full h-2 bg-gray-300 rounded-full cursor-pointer" id="progressBarContainer">
+                                <div class="absolute h-full bg-emerald-500 rounded-full" id="progressBarFill" style="width: 0%;"></div>
+                                <input type="range" id="progressBar" value="0" min="0" max="100" class="absolute w-full h-full appearance-none bg-transparent cursor-pointer top-0 left-0 z-10">
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <!-- Play/Pause Button -->
+                                    <button id="playPauseBtn" class="text-white text-2xl hover:text-emerald-400 transition-colors">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+
+                                    <!-- Volume Control -->
+                                    <div class="flex items-center space-x-2">
+                                        <button id="muteBtn" class="text-white text-xl hover:text-emerald-400 transition-colors">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" class="volume-slider w-20 h-1 bg-gray-300 rounded-full appearance-none cursor-pointer">
+                                    </div>
+
+                                    <!-- Time Display -->
+                                    <div class="text-gray-300 text-sm">
+                                        <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Fullscreen Button -->
+                                <button id="fullscreenBtn" class="text-white text-2xl hover:text-emerald-400 transition-colors">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Media Title and Info -->
+                    <div class="p-4">
+                        <h1 id="videoTitle" class="text-xl font-bold text-gray-900 mb-2">गैलरी से एक मीडिया चुनें</h1>
+                        <div class="flex items-center text-gray-600 text-sm">
+                            <span id="videoUploadDate">कोई तारीख नहीं</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Videos/Images Section (Right/Bottom) -->
+                <div class="w-full lg:w-96 bg-white rounded-xl shadow-2xl p-4 flex-shrink-0">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">अधिक सामग्री</h2>
+                    <div id="videoGallery" class="flex flex-col gap-4 max-h-[80vh] overflow-y-auto pr-2">
+                        <!-- Related videos/images will be loaded here by JavaScript -->
+                        <p id="relatedLoadingMessage" class="col-span-full text-center text-gray-500">संबंधित सामग्री लोड हो रही है...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Custom Message Box Modal -->
+    <div id="messageBox" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center border border-gray-300">
+            <p id="messageBoxContent" class="text-gray-900 text-lg mb-4"></p>
+            <button id="messageBoxCloseBtn" class="px-6 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">ठीक है</button>
+        </div>
+    </div>
+
+
+    <script>
+        // Google Drive API Configuration
+        const FOLDER_ID = "1LXYRya4OETFcyjdPpoPE9_UR34C-JkYy";
+        const API_KEY = "AIzaSyBiJ001rSt1s-oYX7iG7sD_7JWP2xDzNK0"; // Your provided API Key
+
+        // Declare variables globally
+        let homePage, videoPlayerPage, homeBtn, searchBar;
+        let videoPlayer, imagePlayer, playPauseBtn, playOverlay, progressBar, progressBarFill,
+            volumeSlider, muteBtn, currentTimeSpan, durationSpan, fullscreenBtn, controls,
+            mainMediaPlayerContainer, videoTitleElement, videoUploadDateElement, loadingSpinner;
+        let mediaGallery, videoGallery, homeLoadingMessage, relatedLoadingMessage;
+        let messageBox, messageBoxContent, messageBoxCloseBtn;
+
+        let isDraggingProgressBar = false;
+        let lastVolume = 1; // Store last volume before muting
+        let controlsTimeout; // For hiding controls after inactivity
+        let currentPage = 'home'; // Current page state: 'home' or 'player'
+        let allMediaFiles = []; // To store all fetched media for filtering
+
+        // --- Utility Functions ---
+
+        // Function to format time (e.g., 00:00)
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return "00:00";
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        // Custom message box instead of alert()
+        function showMessageBox(message) {
+            messageBoxContent.textContent = message;
+            messageBox.classList.remove('hidden');
+        }
+
+        // --- Page Navigation Functions ---
+
+        // Function to show/hide pages
+        function showPage(pageName) {
+            if (pageName === 'home') {
+                homePage.classList.remove('hidden');
+                videoPlayerPage.classList.add('hidden');
+                currentPage = 'home';
+
+                // Reset player state
+                videoPlayer.pause();
+                videoPlayer.src = "";
+                videoPlayer.load();
+                videoPlayer.poster = "https://placehold.co/1280x720/334155/E2E8F0?text=Select+a+video";
+                imagePlayer.src = ""; // Clear image source
+                imagePlayer.classList.add('hidden'); // Ensure image player is hidden
+                videoPlayer.classList.remove('hidden'); // Ensure video player is visible (with poster)
+
+                videoTitleElement.textContent = "गैलरी से एक मीडिया चुनें"; // Select media from gallery
+                videoUploadDateElement.textContent = "कोई तारीख नहीं"; // No date
+                currentTimeSpan.textContent = "00:00";
+                durationSpan.textContent = "00:00";
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playOverlay.style.opacity = '1';
+                progressBar.value = 0;
+                progressBarFill.style.width = '0%';
+                // Ensure video controls are hidden on home page
+                controls.classList.add('hidden');
+                playOverlay.classList.remove('hidden'); // Play overlay should be visible on home for video player
+                currentTimeSpan.classList.add('hidden');
+                durationSpan.classList.add('hidden');
+                progressBarContainer.classList.add('hidden');
+                playPauseBtn.classList.add('hidden');
+                muteBtn.classList.add('hidden');
+                volumeSlider.classList.add('hidden');
+                fullscreenBtn.classList.add('hidden');
+
+                listMedia(); // Reload media for the homepage
+            } else if (pageName === 'player') {
+                homePage.classList.add('hidden');
+                videoPlayerPage.classList.remove('hidden');
+                videoPlayerPage.classList.add('flex'); // Ensure flex display for player layout
+                currentPage = 'player';
+            }
+        }
+
+        // --- Main Media Player Functions ---
+
+        // Toggle Play/Pause for the main player (Video-specific)
+        function togglePlayPause() {
+            if (imagePlayer.classList.contains('hidden')) { // Only act if video player is visible
+                if (!videoPlayer.src) {
+                    showMessageBox("कृपया पहले गैलरी से एक वीडियो चुनें।"); // Please select a video from the gallery first.
+                    return;
+                }
+                if (videoPlayer.paused || videoPlayer.ended) {
+                    videoPlayer.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playOverlay.style.opacity = '0'; // Hide overlay on play
+                } else {
+                    videoPlayer.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playOverlay.style.opacity = '1'; // Show overlay on pause
+                }
+            }
+        }
+
+        // Update volume icon based on current volume level (Video-specific)
+        function updateVolumeIcon() {
+            if (videoPlayer.volume === 0) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else if (videoPlayer.volume < 0.5) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        }
+
+        // --- Google Drive Media Gallery Functions ---
+
+        // Function to render media items in the gallery
+        function renderMediaItems(filesToRender, targetGalleryElement, isHomePage = true) {
+            targetGalleryElement.innerHTML = ""; // Clear existing content
+
+            if (filesToRender.length === 0) {
+                targetGalleryElement.innerHTML = `<p class='col-span-full text-center text-gray-500'>${isHomePage ? 'कोई मीडिया नहीं मिला।' : 'कोई संबंधित सामग्री नहीं मिली।'}</p>`;
+                return;
+            }
+
+            filesToRender.forEach(file => {
+                const isVideo = file.mimeType.includes('video');
+                const isImage = file.mimeType.includes('image');
+
+                const uploadDate = file.modifiedTime ? new Date(file.modifiedTime).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) : 'Unknown date';
+                // Using thumbnailLink which is provided by Google Drive API. True 4K thumbnails are not directly available via this link.
+                const thumbnailUrl = file.thumbnailLink || (isVideo ? 'https://placehold.co/160x96/4B5563/D1D5DB?text=No+Thumbnail' : 'https://placehold.co/160x96/4B5563/D1D5DB?text=Image');
+
+                const mediaItem = document.createElement("div");
+                mediaItem.className = isHomePage ? "bg-white rounded-lg shadow-xl overflow-hidden cursor-pointer transform hover:scale-105 transition-transform duration-200" : "flex items-start gap-3 cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition-colors duration-200";
+
+                if (isHomePage) {
+                    mediaItem.innerHTML = `
+                        <div class="relative w-full aspect-video">
+                            <img src="${thumbnailUrl}" alt="${file.name}" class="w-full h-full object-cover" loading="lazy">
+                            ${isVideo ? '<span class="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded">0:00</span>' : ''}
+                            ${isImage ? '<i class="fas fa-image absolute top-2 left-2 text-white text-lg bg-black bg-opacity-50 p-1 rounded"></i>' : ''}
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-base font-semibold text-gray-900 line-clamp-2">${file.name}</h3>
+                            <p class="text-xs text-gray-600">चैनल का नाम (उदाहरण)</p>
+                            <p class="text-xs text-gray-600">${uploadDate}</p>
+                        </div>
+                    `;
+                } else { // For related content gallery
+                    mediaItem.innerHTML = `
+                        <div class="flex-shrink-0 w-40 h-24 rounded-lg overflow-hidden relative">
+                            <img src="${thumbnailUrl}" alt="${file.name}" class="w-full h-full object-cover" loading="lazy">
+                            ${isVideo ? '<span class="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded">0:00</span>' : ''}
+                            ${isImage ? '<i class="fas fa-image absolute top-2 left-2 text-white text-lg bg-black bg-opacity-50 p-1 rounded"></i>' : ''}
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">${file.name}</h3>
+                            <p class="text-xs text-gray-600">चैनल का नाम (उदाहरण)</p>
+                            <p class="text-xs text-gray-600">${uploadDate}</p>
+                        </div>
+                    `;
+                }
+
+                mediaItem.addEventListener('click', () => {
+                    showPage('player'); // Always go to player page
+
+                    // Reset player area state
+                    loadingSpinner.classList.remove('hidden'); // Show spinner initially
+                    videoPlayer.pause(); // Always pause any playing video
+                    videoPlayer.src = ""; // Clear video source
+                    videoPlayer.load(); // Ensure video player state is reset
+                    imagePlayer.src = ""; // Clear image source
+
+                    // Hide video-specific controls by default
+                    controls.classList.add('hidden');
+                    playOverlay.classList.add('hidden'); // Hide play overlay for images
+                    currentTimeSpan.classList.add('hidden');
+                    durationSpan.classList.add('hidden');
+                    progressBarContainer.classList.add('hidden');
+                    playPauseBtn.classList.add('hidden');
+                    muteBtn.classList.add('hidden');
+                    volumeSlider.classList.add('hidden');
+                    fullscreenBtn.classList.add('hidden');
+
+
+                    if (isVideo) {
+                        videoPlayer.classList.remove('hidden');
+                        imagePlayer.classList.add('hidden');
+
+                        // Show video-specific controls
+                        controls.classList.remove('hidden');
+                        playOverlay.classList.remove('hidden'); // Show play overlay for videos
+                        currentTimeSpan.classList.remove('hidden');
+                        durationSpan.classList.remove('hidden');
+                        progressBarContainer.classList.remove('hidden');
+                        playPauseBtn.classList.remove('hidden');
+                        muteBtn.classList.remove('hidden');
+                        volumeSlider.classList.remove('hidden');
+                        fullscreenBtn.classList.remove('hidden');
+
+
+                        videoPlayer.src = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`;
+                        videoPlayer.load();
+                        videoTitleElement.textContent = file.name;
+                        videoUploadDateElement.textContent = uploadDate;
+                        renderMediaItems(allMediaFiles.filter(m => m.id !== file.id && m.mimeType.includes('video')), videoGallery, false); // Populate related videos
+                    } else if (isImage) {
+                        videoPlayer.classList.add('hidden');
+                        imagePlayer.classList.remove('hidden');
+
+                        imagePlayer.src = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`;
+                        videoTitleElement.textContent = file.name;
+                        videoUploadDateElement.textContent = uploadDate;
+                        // For images, related content could be other images or videos. For simplicity, let's just show other images.
+                        renderMediaItems(allMediaFiles.filter(m => m.id !== file.id && m.mimeType.includes('image')), videoGallery, false);
+                        // loadingSpinner.classList.add('hidden'); // Spinner handled by imagePlayer.onload/onerror
+                    }
+                });
+                targetGalleryElement.appendChild(mediaItem);
+            });
+        }
+
+
+        // Function to fetch and list videos and images from Google Drive
+        const listMedia = async () => {
+            homeLoadingMessage.textContent = "मीडिया लोड हो रहा है..."; // Loading media...
+            relatedLoadingMessage.textContent = "सं संबंधित सामग्री लोड हो रही है..."; // Loading related content...
+
+            // Query for both video and image mimeTypes
+            const endpoint = `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents+and+(mimeType+contains+'video'+or+mimeType+contains+'image')&key=${API_KEY}&fields=files(id,name,thumbnailLink,modifiedTime,mimeType)`;
+
+            try {
+                const res = await fetch(endpoint);
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error("Error fetching media (HTTP error):", res.status, res.statusText, errorText);
+                    const errorMessage = `<p class='col-span-full text-center text-emerald-600'>मीडिया लोड करने में त्रुटि (${res.status}). अपनी एपीआई कुंजी, फ़ोल्डर आईडी और फ़ाइल अनुमतियों की जाँच करें।</p>`;
+                    mediaGallery.innerHTML = errorMessage;
+                    videoGallery.innerHTML = errorMessage;
+                    allMediaFiles = [];
+                    return;
+                }
+
+                const data = await res.json();
+                console.log("Google Drive API Response (parsed):", data); // Log the full response
+
+                if (!data.files || !Array.isArray(data.files) || data.files.length === 0) {
+                    console.log("No files found or malformed response.");
+                    const noContentMessage = "<p class='col-span-full text-center text-gray-500'>इस फोल्डर में कोई मीडिया नहीं मिला या एक्सेस अस्वीकृत है।</p>";
+                    mediaGallery.innerHTML = noContentMessage;
+                    videoGallery.innerHTML = noContentMessage;
+                    allMediaFiles = [];
+                    return;
+                }
+
+                allMediaFiles = data.files; // Store all fetched files globally
+                renderMediaItems(allMediaFiles, mediaGallery, true); // Render all files on homepage
+                renderMediaItems(allMediaFiles.filter(m => m.mimeType.includes('video')), videoGallery, false); // Populate related videos initially
+
+            } catch (err) {
+                console.error("Error loading media (catch block):", err);
+                const errorMessage = "<p class='col-span-full text-center text-emerald-600'>मीडिया लोड करने में त्रुटि। अपनी एपीआई कुंजी, फ़ोल्डर आईडी और फ़ाइल अनुमतियों की जाँच करें।</p>"; // Error loading media. Check your API key, folder ID, and file permissions.
+                mediaGallery.innerHTML = errorMessage;
+                videoGallery.innerHTML = errorMessage;
+                allMediaFiles = []; // Clear stored files on error
+            }
+        };
+
+        // Function to filter media based on search query
+        function filterMedia() {
+            const query = searchBar.value.toLowerCase().trim();
+            if (query === "") {
+                renderMediaItems(allMediaFiles, mediaGallery, true); // Show all if search is empty
+                return;
+            }
+
+            const filtered = allMediaFiles.filter(file =>
+                file.name.toLowerCase().includes(query)
+            );
+            renderMediaItems(filtered, mediaGallery, true); // Render filtered results
+        }
+
+
+        // --- Event Listeners ---
+
+        // Initialize the app on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Assign elements after DOM is loaded
+            homePage = document.getElementById('homePage');
+            videoPlayerPage = document.getElementById('videoPlayerPage');
+            homeBtn = document.getElementById('homeBtn');
+            searchBar = document.getElementById('searchBar');
+
+            videoPlayer = document.getElementById('videoPlayer');
+            imagePlayer = document.getElementById('imagePlayer');
+            playPauseBtn = document.getElementById('playPauseBtn');
+            playOverlay = document.getElementById('playOverlay');
+            progressBar = document.getElementById('progressBar');
+            progressBarFill = document.getElementById('progressBarFill');
+            volumeSlider = document.getElementById('volumeSlider');
+            muteBtn = document.getElementById('muteBtn');
+            currentTimeSpan = document.getElementById('currentTime');
+            durationSpan = document.getElementById('duration');
+            fullscreenBtn = document.getElementById('fullscreenBtn');
+            controls = document.getElementById('controls');
+            mainMediaPlayerContainer = document.getElementById('main-media-player-container');
+            videoTitleElement = document.getElementById('videoTitle');
+            videoUploadDateElement = document.getElementById('videoUploadDate');
+            loadingSpinner = document.getElementById('loadingSpinner');
+
+            mediaGallery = document.getElementById('mediaGallery');
+            videoGallery = document.getElementById('videoGallery');
+            homeLoadingMessage = document.getElementById('homeLoadingMessage');
+            relatedLoadingMessage = document.getElementById('relatedLoadingMessage');
+
+            messageBox = document.getElementById('messageBox');
+            messageBoxContent = document.getElementById('messageBoxContent');
+            messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
+
+
+            // Main Player Controls (Video-specific)
+            if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
+            if (playOverlay) playOverlay.addEventListener('click', togglePlayPause);
+            if (videoPlayer) videoPlayer.addEventListener('click', togglePlayPause); // Click video to play/pause
+
+            if (videoPlayer) {
+                videoPlayer.addEventListener('timeupdate', () => {
+                    if (!isDraggingProgressBar) { // Only update if not dragging the slider
+                        const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                        progressBar.value = progress;
+                        progressBarFill.style.width = `${progress}%`;
+                    }
+                    currentTimeSpan.textContent = formatTime(videoPlayer.currentTime);
+                });
+
+                videoPlayer.addEventListener('loadedmetadata', () => {
+                    durationSpan.textContent = formatTime(videoPlayer.duration);
+                    playOverlay.style.opacity = '1'; // Ensure play overlay is visible until played
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; // Reset play button icon
+                });
+
+                videoPlayer.addEventListener('ended', () => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playOverlay.style.opacity = '1';
+                    videoPlayer.currentTime = 0; // Reset to beginning
+                    progressBar.value = 0;
+                    progressBarFill.style.width = '0%';
+                });
+
+                videoPlayer.addEventListener('pause', () => {
+                    controls.style.opacity = '1';
+                    clearTimeout(controlsTimeout);
+                    playOverlay.style.opacity = '1'; // Show overlay when paused
+                });
+                videoPlayer.addEventListener('play', () => {
+                    playOverlay.style.opacity = '0'; // Hide overlay when video starts playing
+                    controlsTimeout = setTimeout(() => {
+                        controls.style.opacity = '0';
+                    }, 3000); // Start timeout to hide controls
+                });
+
+                videoPlayer.addEventListener('canplay', () => {
+                    loadingSpinner.classList.add('hidden'); // Hide spinner
+                });
+
+                videoPlayer.addEventListener('waiting', () => {
+                    loadingSpinner.classList.remove('hidden'); // Show spinner when buffering
+                });
+
+                videoPlayer.addEventListener('playing', () => {
+                    loadingSpinner.classList.add('hidden'); // Hide spinner when playing resumes
+                });
+
+                videoPlayer.addEventListener('error', () => {
+                    loadingSpinner.classList.add('hidden');
+                    playOverlay.style.opacity = '1';
+                    playPauseBtn.innerHTML = '<i class="fas fa-exclamation-triangle text-emerald-600"></i>'; // Show error icon
+                });
+            }
+
+
+            if (progressBar) {
+                progressBar.addEventListener('input', (e) => {
+                    const seekTime = (e.target.value / 100) * videoPlayer.duration;
+                    videoPlayer.currentTime = seekTime;
+                    progressBarFill.style.width = `${e.target.value}%`; // Update fill immediately
+                });
+
+                progressBar.addEventListener('mousedown', () => {
+                    isDraggingProgressBar = true;
+                });
+                progressBar.addEventListener('mouseup', () => {
+                    isDraggingProgressBar = false;
+                });
+            }
+
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', (e) => {
+                    videoPlayer.volume = e.target.value;
+                    updateVolumeIcon();
+                });
+            }
+
+            if (muteBtn) muteBtn.addEventListener('click', () => {
+                if (videoPlayer.volume === 0) {
+                    videoPlayer.volume = lastVolume; // Restore last volume
+                    volumeSlider.value = lastVolume;
+                } else {
+                    lastVolume = videoPlayer.volume; // Save current volume
+                    videoPlayer.volume = 0;
+                    volumeSlider.value = 0;
+                }
+                updateVolumeIcon();
+            });
+
+            if (fullscreenBtn) fullscreenBtn.addEventListener('click', () => {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    // Request fullscreen for the media player container
+                    if (mainMediaPlayerContainer.requestFullscreen) {
+                        mainMediaPlayerContainer.requestFullscreen();
+                    } else if (mainMediaPlayerContainer.mozRequestFullScreen) { /* Firefox */
+                        mainMediaPlayerContainer.mozRequestFullScreen();
+                    } else if (mainMediaPlayerContainer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        mainMediaPlayerContainer.webkitRequestFullscreen();
+                    } else if (mainMediaPlayerContainer.msRequestFullscreen) { /* IE/Edge */
+                        mainMediaPlayerContainer.msRequestFullscreen();
+                    }
+                }
+            });
+
+            document.addEventListener('fullscreenchange', () => {
+                if (document.fullscreenElement) {
+                    fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                } else {
+                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            });
+
+            if (mainMediaPlayerContainer) {
+                mainMediaPlayerContainer.addEventListener('mouseenter', () => {
+                    if (imagePlayer.classList.contains('hidden')) { // Only show controls if video is active
+                        clearTimeout(controlsTimeout);
+                        controls.style.opacity = '1';
+                    }
+                });
+
+                mainMediaPlayerContainer.addEventListener('mouseleave', () => {
+                    if (imagePlayer.classList.contains('hidden') && !videoPlayer.paused) { // Only hide if video is playing
+                        controlsTimeout = setTimeout(() => {
+                            controls.style.opacity = '0';
+                        }, 3000); // Hide after 3 seconds of inactivity
+                    }
+                });
+            }
+
+            if (imagePlayer) {
+                imagePlayer.addEventListener('load', () => {
+                    loadingSpinner.classList.add('hidden'); // Hide spinner
+                });
+
+                imagePlayer.addEventListener('error', () => {
+                    loadingSpinner.classList.add('hidden');
+                });
+            }
+
+
+            // Home Button
+            if (homeBtn) {
+                homeBtn.addEventListener('click', () => {
+                    searchBar.value = ""; // Clear search bar when going home
+                    showPage('home');
+                });
+            }
+
+
+            // Search Bar Input
+            if (searchBar) searchBar.addEventListener('input', filterMedia);
+
+            // Message Box Close Button
+            if (messageBoxCloseBtn) messageBoxCloseBtn.addEventListener('click', () => messageBox.classList.add('hidden'));
+
+            // Initial setup
+            showPage('home'); // Start on the homepage
+            updateVolumeIcon(); // Set initial volume icon
+        });
+    </script>
+</body>
+</html>
