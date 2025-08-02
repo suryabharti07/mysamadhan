@@ -372,7 +372,7 @@
                 if (isHomePage) {
                     mediaItem.innerHTML = `
                         <div class="relative w-full aspect-video">
-                            <img src="${thumbnailUrl}" alt="${file.name}" class="w-full h-full object-cover" loading="lazy">
+                            <img src="${thumbnailUrl}" alt="${file.name}" class="w-full h-full object-contain" loading="lazy">
                             ${isVideo ? '<span class="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded">0:00</span>' : ''}
                             ${isImage ? '<i class="fas fa-image absolute top-2 left-2 text-white text-lg bg-black bg-opacity-50 p-1 rounded"></i>' : ''}
                         </div>
@@ -384,7 +384,7 @@
                 } else { // For related content gallery
                     mediaItem.innerHTML = `
                         <div class="flex-shrink-0 w-40 h-24 rounded-lg overflow-hidden relative">
-                            <img src="${thumbnailUrl}" alt="${file.name}" class="w-full h-full object-cover" loading="lazy">
+                            <img src="${thumbnailUrl}" alt="${file.name}" class="w-full h-full object-contain" loading="lazy">
                             ${isVideo ? '<span class="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded">0:00</span>' : ''}
                             ${isImage ? '<i class="fas fa-image absolute top-2 left-2 text-white text-lg bg-black bg-opacity-50 p-1 rounded"></i>' : ''}
                         </div>
@@ -482,7 +482,7 @@
 
                 if (!data.files || !Array.isArray(data.files) || data.files.length === 0) {
                     console.log("No files found or malformed response.");
-                    const noContentMessage = "<p class='col-span-full text-center text-gray-500'>No media found in this folder or access denied.</p>";
+                    const noContentMessage = "<p class class='col-span-full text-center text-gray-500'>No media found in this folder or access denied.</p>";
                     mediaGallery.innerHTML = noContentMessage;
                     videoGallery.innerHTML = noContentMessage;
                     allMediaFiles = [];
