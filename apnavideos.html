@@ -435,6 +435,7 @@
 
                         videoPlayer.src = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`;
                         videoPlayer.load();
+                        videoPlayer.play(); // Automatically play the video
                         videoTitleElement.textContent = file.name;
                         videoUploadDateElement.textContent = uploadDate;
                         renderMediaItems(allMediaFiles.filter(m => m.id !== file.id && m.mimeType.includes('video')), videoGallery, false); // Populate related videos
