@@ -292,7 +292,7 @@
                 currentTimeSpan.textContent = "00:00";
                 durationSpan.textContent = "00:00";
                 playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-                playOverlay.style.opacity = '1';
+                playOverlay.style.opacity = '1'; // Show play overlay on home page
                 progressBar.value = 0;
                 progressBarFill.style.width = '0%';
                 // Ensure video controls are hidden on home page
@@ -436,6 +436,7 @@
                         videoPlayer.src = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`;
                         videoPlayer.load();
                         videoPlayer.play(); // Automatically play the video
+                        playOverlay.style.opacity = '0'; // वीडियो चलने पर ओवरले छिपाएँ
                         videoTitleElement.textContent = file.name;
                         videoUploadDateElement.textContent = uploadDate;
                         renderMediaItems(allMediaFiles.filter(m => m.id !== file.id && m.mimeType.includes('video')), videoGallery, false); // Populate related videos
@@ -571,7 +572,7 @@
 
                 videoPlayer.addEventListener('loadedmetadata', () => {
                     durationSpan.textContent = formatTime(videoPlayer.duration);
-                    playOverlay.style.opacity = '1'; // Ensure play overlay is visible until played
+                    // playOverlay.style.opacity = '1'; // यह लाइन हटा दी गई है ताकि वीडियो चलने पर ओवरले न दिखे
                     playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; // Reset play button icon
                 });
 
