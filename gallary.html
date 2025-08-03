@@ -1,1175 +1,1357 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Samadhan Kendra - Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APNA VIDYALAYA</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons (added for custom controls) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            /* UPDATED MODERN UI/UX COLOR PALETTE */
-            --primary: #4A2C6B; /* Calming dark purple */
-            --primary-light: #8B6BC1; /* Lighter shade of purple */
-            --primary-dark: #331E4A; /* Darker shade of purple */
-            --accent: #FFC107; /* Vibrant gold/orange */
-            --accent-dark: #FFA000; /* Darker shade of gold/orange */
-            --bg: #F8F8F8; /* Very light grey */
-            --text: #212121; /* Dark charcoal */
-            --text-light: #9E9E9E; /* Medium grey */
-            --card-bg: #FFFFFF; /* Pure white */
-            --footer-bg: var(--primary-dark);
-            --header-bg: var(--card-bg);
-
-            /* Shadow Variables */
-            --shadow-light: rgba(0, 0, 0, 0.05);
-            --shadow-medium: rgba(0, 0, 0, 0.10);
-            --shadow-strong: rgba(0, 0, 0, 0.18);
-
-            --border-radius-soft: 8px;
-            --transition-speed: 0.3s;
-        }
-
-        /* Base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
+        /* Custom CSS for YouTube-like dark theme and responsive layout */
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            scroll-behavior: smooth;
-            min-height: 100vh;
-            position: relative;
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #ffffff; /* White text */
         }
-
-        /* --- Header --- */
-        header {
-            background: var(--header-bg);
-            color: var(--primary);
-            padding: 10px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .video-container video {
+            position: absolute;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 15px var(--shadow-medium);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        /* Scrollbar styling for video list */
+        .video-list-scroll {
+            max-height: calc(100vh - 8rem); /* Adjust based on header/footer height */
+            overflow-y: auto;
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #4a4a4a #2a2a2a; /* Firefox */
         }
-
-        header .site-logo {
-            height: 60px;
-            width: auto;
-            vertical-align: middle;
-            filter: drop-shadow(0 2px 6px var(--shadow-medium));
+        .video-list-scroll::-webkit-scrollbar {
+            width: 8px;
         }
-
-        header h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: inherit;
+        .video-list-scroll::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 10px;
         }
-
-        /* Desktop Navigation */
-        nav {
-            display: flex;
-            align-items: center;
+        .video-list-scroll::-webkit-scrollbar-thumb {
+            background-color: #4a4a4a;
+            border-radius: 10px;
+            border: 2px solid #2a2a2a;
         }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
+        /* Style for video cards on home page */
+        .video-card {
+            background-color: #2a2a2a;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-
-        nav ul li {
-            position: relative;
-            margin-left: 25px;
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
         }
-
-        nav ul li a:not(.header-cta-button) {
-            color: var(--primary);
-            text-decoration: none;
+        .video-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for thumbnails */
+            object-fit: cover;
+        }
+        .video-card-info {
+            padding: 1rem;
+        }
+        .video-card-title {
             font-weight: 600;
             font-size: 1rem;
-            transition: color var(--transition-speed) ease, transform 0.2s ease;
-            position: relative;
-            padding: 5px 0;
-            display: block;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        nav ul li a:not(.header-cta-button)::after {
-            content: '';
+        .video-card-meta {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        /* Styles for search suggestions */
+        .search-suggestions {
             position: absolute;
-            width: 0;
-            height: 2px;
-            display: block;
-            bottom: 0;
-            left: 50%;
-            background: var(--accent);
-            transition: width var(--transition-speed) ease, left var(--transition-speed) ease;
+            background-color: #2a2a2a;
+            border-radius: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            /* Adjusted for full width of the search bar */
+            width: 100%; 
+            left: 0; 
+            right: 0; 
+            top: calc(100% + 0.5rem); /* Position below search input */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Enhanced shadow */
+            border: 1px solid #333; /* Subtle border */
         }
+        /* Removed media queries for search suggestions width as it's now 100% */
 
-        nav ul li a:not(.header-cta-button):hover::after {
-            width: 100%;
-            left: 0;
-        }
-
-        nav ul li a:not(.header-cta-button):hover {
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* Dropdown Menu Styles */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: var(--card-bg);
-            box-shadow: 0 8px 20px var(--shadow-medium);
-            border-radius: var(--border-radius-soft);
-            min-width: 200px;
-            z-index: 1001;
-            padding: 8px 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(8px);
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed) ease;
-        }
-
-        .nav-item-has-dropdown:hover > .dropdown-menu {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-menu li {
-            margin: 0;
-        }
-
-        .dropdown-menu li a {
-            color: var(--primary);
-            padding: 8px 18px;
-            text-decoration: none;
-            display: block;
-            white-space: nowrap;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
-
-        .dropdown-menu li a:hover {
-            background-color: var(--bg);
-            color: var(--accent);
-        }
-
-        /* Header CTA Button */
-        .header-cta-button {
-            padding: 8px 20px;
-            font-size: 0.9rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
+        .suggestion-item {
+            padding: 0.75rem 1rem;
             cursor: pointer;
-            box-shadow: 0 3px 8px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-left: 25px;
-        }
-
-        .header-cta-button:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 5px 12px var(--shadow-strong);
-        }
-
-        /* Mobile Navigation Toggle */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-around;
-            width: 28px;
-            height: 22px;
-            cursor: pointer;
-            z-index: 1001;
-            padding: 2px;
-        }
-        
-        .menu-toggle span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary);
-            transition: all var(--transition-speed) ease;
-            border-radius: 2px;
-        }
-
-        .nav-menu.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .menu-toggle.open span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .menu-toggle.open span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.open span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-        
-        /* --- Gallery Section Styles --- */
-        .gallery-section {
-            padding: 60px 5%;
-            text-align: center;
-            background: linear-gradient(135deg, var(--bg) 0%, rgba(255, 255, 255, 0.9) 100%); 
-            border-radius: var(--border-radius-soft);
-            box-shadow: 0 10px 30px var(--shadow-medium);
-            margin: 40px auto;
-            max-width: 1200px; /* Limiting width for aesthetic */
-        }
-
-        .gallery-section h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin-bottom: 60px;
-            position: relative;
-            display: inline-block;
-            text-shadow: 1px 1px 3px var(--shadow-light);
-        }
-
-        .gallery-section h2::after {
-            content: '';
-            position: absolute;
-            width: 80%;
-            height: 4px;
-            background: var(--accent);
-            bottom: -15px;
-            left: 10%;
-            border-radius: 2px;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-            gap: 25px; /* Space between images */
-            padding: 0 20px; /* Inner padding for grid */
-        }
-
-        .gallery-item {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius-soft);
-            box-shadow: 0 4px 15px var(--shadow-medium);
-            overflow: hidden; /* Ensures image corners are rounded */
-            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-            border: 1px solid rgba(0,0,0,0.08); /* Subtle border */
-            cursor: pointer; /* Indicate clickable */
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-8px) scale(1.03); /* Lift and slightly enlarge */
-            box-shadow: 0 12px 30px var(--shadow-strong); /* More pronounced shadow */
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 250px; /* Fixed height for consistent look */
-            object-fit: cover; /* Ensures images fill the space without distortion */
-            display: block; /* Remove extra space below image */
-            transition: transform var(--transition-speed) ease; /* Smooth scale on hover */
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05); /* Zoom image slightly on hover */
-        }
-
-        /* --- Footer --- */
-        footer {
-            background-color: var(--footer-bg);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 25px 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            box-shadow: 0 -3px 10px var(--shadow-medium);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 60px; /* Space above footer */
-        }
-
-        /* --- Scroll to Top Button --- */
-        .scroll-to-top {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--primary-light);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            justify-content: center;
+            color: #ffffff;
+            transition: background-color 0.2s ease-in-out;
+            border-bottom: 1px solid #333; /* Separator between items */
+            display: flex; /* For icon alignment */
             align-items: center;
-            font-size: 1.6rem;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+        .suggestion-item:hover {
+            background-color: #4a4a4a;
+            font-weight: 500; /* Slightly bolder on hover */
+        }
+        /* Filter button styles */
+        .filter-button {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px; /* Full rounded */
+            background-color: #333333;
+            color: #ffffff;
+            font-size: 0.875rem; /* text-sm */
             cursor: pointer;
-            box-shadow: 0 3px 10px var(--shadow-medium);
-            transition: all var(--transition-speed) ease;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 999;
+            transition: background-color 0.2s ease-in-out;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        .filter-button:hover {
+            background-color: #4a4a4a;
+        }
+        .filter-button.active {
+            background-color: #666666; /* Darker background for active state */
+            font-weight: 600; /* Semi-bold for active state */
         }
 
-        .scroll-to-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-to-top:hover {
-            background-color: var(--accent-dark);
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 12px var(--shadow-strong);
-        }
-
-        /* --- Modal Message Box for form submission (re-purposed for general messages) --- */
-        .message-box-overlay {
+        /* Image Modal Styles */
+        .image-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 50; /* Above everything else */
+            backdrop-filter: blur(5px); /* Optional: blur background */
         }
-
-        .message-box-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .message-box {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            max-width: 450px;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        .message-box-overlay.show .message-box {
-            transform: scale(1);
-        }
-
-        .message-box h4 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            color: var(--primary-dark);
-        }
-
-        .message-box p {
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            color: var(--text);
-        }
-
-        .message-box button {
-            padding: 10px 20px;
-            background-color: var(--primary-light);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-        .message-box button:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* --- Lightbox Gallery Styles --- */
-        .lightbox-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9); /* Darker overlay for images */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            padding: 20px; /* Padding for small screens */
-        }
-
-        .lightbox-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .lightbox-content {
+        .image-modal-content {
             position: relative;
             max-width: 90%;
             max-height: 90%;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column; /* For title below image */
         }
-
-        .lightbox-image {
+        .image-modal-content img {
             max-width: 100%;
-            max-height: 80vh; /* Adjust height based on viewport */
-            object-fit: contain; /* Ensure image fits without cropping */
-            border-radius: var(--border-radius-soft);
+            max-height: 100%;
+            object-fit: contain; /* Ensure image fits within bounds */
+            border-radius: 0.5rem;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease; /* For initial pop-in effect */
         }
-
-        .lightbox-overlay.show .lightbox-image {
-            transform: scale(1);
-        }
-
-        .lightbox-close, .lightbox-nav {
+        .image-modal-close {
             position: absolute;
-            background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
-            color: white;
-            border: none;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 2rem;
-            cursor: pointer;
+            width: 2.5rem;
+            height: 2.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            user-select: none; /* Prevent text selection */
-            z-index: 2001; /* Ensure buttons are above image */
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
         }
-
-        .lightbox-close {
-            top: 20px;
-            right: 20px;
-        }
-
-        .lightbox-nav.prev {
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .lightbox-nav.next {
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .lightbox-close:hover, .lightbox-nav:hover {
+        .image-modal-close:hover {
             background-color: rgba(255, 255, 255, 0.4);
-            transform: translateY(-50%) scale(1.1); /* For nav buttons */
         }
 
-        .lightbox-close:hover {
-            transform: scale(1.1); /* For close button */
+        /* Channel Logo Styles */
+        .channel-logo {
+            width: 2rem; /* 32px */
+            height: 2rem; /* 32px */
+            border-radius: 50%;
+            background-color: #ff0000; /* Red background for AV */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #ffffff;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .channel-name {
+            font-size: 0.9rem;
+            color: #aaaaaa;
+            margin-left: 0.5rem;
         }
 
-        .lightbox-title {
-            color: white;
-            font-size: 1.2rem;
-            margin-top: 15px;
-            text-align: center;
-            max-width: 80%;
-            word-wrap: break-word;
+        /* Message Box for Copy Confirmation (removed for this version) */
+        /* .message-box { ... } */
+
+        /* Styling for Block text (from web.html, kept for consistency) */
+        .block-text {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: bold; /* font-bold */
+            text-transform: uppercase; /* uppercase */
+            color: #60a5fa; /* text-blue-400, a sample color */
+            margin-top: 0.5rem;
         }
 
-
-        /* --- Responsive Adjustments --- */
-        /* Tablet and larger phones (up to 768px) */
-        @media (max-width: 768px) {
-            header {
-                padding: 10px 15px;
-            }
-
-            .header-left {
-                gap: 8px;
-            }
-
-            header .site-logo {
-                height: 50px;
-            }
-
-            header h1 {
-                font-size: 1.4rem;
-            }
-
-            .nav-menu {
-                flex-direction: column;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: var(--header-bg);
-                box-shadow: none;
-                padding: 80px 0 20px 0;
-                border-radius: 0;
-                opacity: 0;
-                transform: translateY(-100%);
-                transition: opacity 0.4s ease, transform 0.4s ease;
-                display: flex;
-                overflow-y: auto;
-            }
-
-            .nav-menu.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-                width: 100%;
-                align-items: center;
-            }
-
-            .nav-menu ul li {
-                margin: 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            .nav-menu li a:not(.header-cta-button) {
-                padding: 12px 20px;
-                font-size: 1rem;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-            }
-
-            .nav-menu li:last-child a:not(.header-cta-button) {
-                 border-bottom: none;
-            }
-
-            .nav-item-has-dropdown > a {
-                 position: relative;
-            }
-            .nav-item-has-dropdown > a::after {
-                content: '\f107';
-                font-family: "RemixIcon";
-                position: absolute;
-                right: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .nav-item-has-dropdown.open > a::after {
-                transform: translateY(-50%) rotate(180deg);
-            }
-
-            .dropdown-menu {
-                position: static;
-                width: 100%;
-                box-shadow: none;
-                border-radius: 0;
-                padding: 0;
-                background-color: rgba(0,0,0,0.02);
-                display: none;
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            .dropdown-menu.active-mobile {
-                display: block;
-            }
-
-            .dropdown-menu li a {
-                padding: 10px 30px;
-                font-size: 0.95rem;
-                border-bottom: 1px solid rgba(0,0,0,0.03);
-            }
-            .dropdown-menu li:last-child a {
-                border-bottom: none;
-            }
-
-            .header-cta-button {
-                margin: 20px auto;
-                padding: 12px 25px;
-                font-size: 0.95rem;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .scroll-to-top {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-            }
-
-            .gallery-section {
-                padding: 40px 15px;
-                margin: 20px auto;
-            }
-            .gallery-section h2 {
-                font-size: 2rem;
-                margin-bottom: 30px;
-            }
-            .gallery-section h2::after {
-                width: 70%;
-                left: 15%;
-            }
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for smaller screens */
-                gap: 15px;
-            }
-            .gallery-item img {
-                height: 200px; /* Smaller height for mobile */
-            }
-
-            /* Lightbox specific for mobile */
-            .lightbox-close, .lightbox-nav {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-            }
-            .lightbox-close {
-                top: 10px;
-                right: 10px;
-            }
-            .lightbox-nav.prev {
-                left: 10px;
-            }
-            .lightbox-nav.next {
-                right: 10px;
-            }
-            .lightbox-title {
-                font-size: 1rem;
-                margin-top: 10px;
-                max-width: 90%;
-            }
+        /* Custom styles for the progress bar and volume slider thumb (from try.html) */
+        .progress-bar-fill {
+            background-color: #ff0000; /* YouTube Red */
+        }
+        .volume-slider::-webkit-slider-thumb,
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff0000; /* YouTube Red */
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3); /* YouTube Red with transparency */
+        }
+        .volume-slider::-moz-range-thumb,
+        .progress-bar::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff0000; /* YouTube Red */
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
         }
 
-        /* Smaller phones (up to 480px) */
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.2rem;
-            }
+        /* Hide default video controls (from try.html) */
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+        video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
 
-            header .site-logo {
-                height: 35px;
-            }
+        /* Custom scrollbar for gallery (from try.html) */
+        #mediaGallery::-webkit-scrollbar,
+        #videoGallery::-webkit-scrollbar {
+            height: 8px; /* For horizontal scrollbar on shorts */
+            width: 8px; /* For vertical scrollbar on main galleries */
+        }
+        #mediaGallery::-webkit-scrollbar-track,
+        #videoGallery::-webkit-scrollbar-track {
+            background: transparent; /* Changed to transparent to hide the track line */
+            border-radius: 10px;
+        }
+        #mediaGallery::-webkit-scrollbar-thumb,
+        #videoGallery::-webkit-scrollbar-thumb {
+            background: #606060; /* Gray thumb */
+            border-radius: 10px;
+        }
+        #mediaGallery::-webkit-scrollbar-thumb:hover,
+        #videoGallery::-webkit-scrollbar-thumb:hover {
+            background: #808080; /* Lighter gray on hover */
+        }
 
-            .nav-menu li a:not(.header-cta-button) {
-                font-size: 0.9rem;
-                padding: 10px 15px;
-            }
+        /* Custom styles for the range input track fill (from try.html) */
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: transparent; /* Hide default track */
+        }
+        input[type="range"]::-moz-range-track {
+            background: transparent; /* Hide default track */
+        }
+        input[type="range"]:focus {
+            outline: none;
+        }
 
-            .dropdown-menu li a {
-                font-size: 0.85rem;
-                padding: 8px 20px;
-            }
+        /* Adjusting main content area for full width as sidebar is removed (from try.html) */
+        .content-area {
+            width: 100%; /* Always full width now */
+            margin-left: 0; /* No margin needed from sidebar */
+        }
 
-            .gallery-section h2 {
-                font-size: 1.6rem;
-                margin-bottom: 25px;
-            }
-            .gallery-section h2::after {
-                width: 60%;
-                left: 20%;
-            }
-            .gallery-grid {
-                grid-template-columns: 1fr; /* Single column on very small screens */
-                padding: 0 10px;
-            }
-            .gallery-item img {
-                height: 180px;
-            }
+        /* Added for fixed header adjustment */
+        .main-content-area {
+            margin-top: 68px; /* To account for fixed header height */
         }
     </style>
 </head>
-
-<body>
-    <header>
-        <div class="header-left">
-            <a href="#">
-                <img src="https://i.postimg.cc/Yq5LzgkH/download-1.png" alt="Samadhan Kendra Logo" class="site-logo">
-            </a>
-            <h1>Samadhan Kendra</h1>
+<body class="flex flex-col min-h-screen bg-gray-900 text-gray-100 font-sans">
+    <header class="w-full bg-gray-900 p-4 flex items-center justify-between shadow-md z-30 fixed top-0 left-0 right-0 border-b border-gray-800">
+        <div class="flex items-center space-x-2 sm:space-x-4 ml-2">
+            <!-- YouTube Logo with multicolor, acting as home link -->
+            <div class="flex items-center space-x-1 cursor-pointer" id="homeLink">
+                <span class="text-3xl font-bold bg-gradient-to-r from-green-500 via-yellow-600 to-orange-500 bg-clip-text text-transparent">
+                    <i class="fab fa-youtube"></i>
+                </span>
+                <span class="text-xl sm:text-2xl font-bold text-white hidden sm:block">APNA VIDYALAYA</span>
+            </div>
         </div>
 
-        <div class="menu-toggle" id="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="flex-grow w-full mx-2 sm:mx-4 flex items-center"> <!-- Changed max-w classes to w-full -->
+            <div class="relative flex-grow">
+                <input type="text" id="searchInput" placeholder="Search videos..."
+                       class="w-full p-2 pl-4 pr-10 rounded-full bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-red-600">
+                <button class="absolute right-0 top-0 h-full w-10 sm:w-14 bg-gray-700 rounded-r-full flex items-center justify-center border border-gray-700 hover:bg-gray-600">
+                    <i class="fas fa-search text-lg sm:text-xl text-gray-300"></i>
+                </button>
+                <div id="searchResultsContainer" class="search-suggestions hidden">
+                    <!-- Search suggestions will be injected here -->
+                </div>
+            </div>
         </div>
-
-        <nav class="nav-menu">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li class="nav-item-has-dropdown">
-                    <a href="#about-us-section">About Us <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="ourJourney.html">Our Journey</a></li>
-                        <li><a href="ourvision.html">Vision</a></li>
-                        <li><a href="ourmission.html">Mission</a></li>
-                        <li><a href="managment.html">Management And Administrative Structure</a></li>
-                    </ul>
-                </li>
-                <li><a href="programmes.html">Programs</a></li>
-                <li><a href="founder.html">Founder</a></li>
-                <li><a href="download.html">Annual Report</a></li> 
-                <li><a href="gallary.html">Gallery</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
-                <li class="nav-item-has-dropdown">
-                    <a href="#about-us-section">LOG - IN <i class="ri-arrow-down-s-line" style="vertical-align: middle;"></i></a>
-                    <ul class="dropdown-menu">
-                            <li><a href="SU-samedu.html">Su-Sikshalaya</a></li>
-                        <li><a href="raghopur.html">RAGHOPUR</a></li>
-                        <li><a href="bidupur.html">BIDUPUR</a></li>
-                        <li><a href="admin.html">ADMIN</a></li>
-            </ul>
-        </nav>
+        <div class="flex items-center space-x-4 mr-2">
+            <!-- User/Profile Icon (Placeholder) -->
+            <i class="fas fa-user-circle text-2xl text-gray-300"></i>
+        </div>
     </header>
 
-    <section id="gallery-section" class="gallery-section">
-        <h2>Our Gallery</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhbibdNOUIJKxw1Gvwl-u4VKMvMXqMa6RdMjR_iBfnxR4FzhYjtfgGaWTxOT5qwnxIL1jBgucfuDKr9S9k4IH2t3g1XyVpxaWXV3H_bLwLeVTbL8NCC8L5h5JTmCFzNVCN8zwvg0rQJ-aLk3gWy0Mo2BF1X8Ockjz-PKN6k-_QptXV9mAlJmEH-zsotBm3W" alt="Women engaged in a training or discussion session.">
+    <main class="flex-grow main-content-area">
+        <!-- Home Page Section -->
+        <section id="homePage" class="container mx-auto p-4">
+            <h2 class="text-3xl font-bold mb-6 text-white">Recommended Videos</h2>
+            <!-- Filter Buttons -->
+            <div id="filterButtons" class="flex flex-wrap gap-3 mb-6">
+                <button class="filter-button active" data-filter="all">सभी</button>
+                <button class="filter-button" data-filter="today">आज</button>
+                <button class="filter-button" data-filter="thisWeek">इस सप्ताह</button>
+                <button class="filter-button" data-filter="thisMonth">इस महीने</button>
             </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiFh2cFvBMfBFkrRun__hyUJM_8DfN0tQKXlxIGGLDu46-xpW35K7ivg_CRgXVcemE40AiAxTzhyltbj8xJV1KePTn37pXayJd9ZBUbaNU56_TuQwCCwN26WrJMXmZE7MrJpDYyAdRdcpzchG7zTND2UzTbiu-A_0oLFSbwJD9P-HrLK0nZ5s8O_vcKl8Bs" alt="A group of people, including children, participating in an outdoor community event.">
+            <div id="homeVideoGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Video cards and image cards will be injected here by JavaScript -->
+                <p id="homeLoadingMessage" class="col-span-full text-center text-gray-500">मीडिया लोड हो रहा है...</p>
             </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgyg1dgvlZXdpnQpeLYBJ4jxPx9OSiTvy406KNIHIJfjDyvl9LSDtj0Iq3hthVA09Q66hWCt1OmpOJip6wyRtootrjcAR1CkelavxLX8ykFyaon39ah8pEHqZluqKgaiLu5tDpOjN20v_-YcltfA7sJT_SzL5t7CyWT7BnhFxph-D8n4szQX_nOywmgX66k" alt="A speaker addressing a rural community gathering.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhgxFTFPdZhWZFeWoC1aOZs_6QQQyHuFMer1ZYuew8hGTWUek6VZzQxTpV3RYwz5gwknq0SwbrBZIs9E-5VOWZoZKhmMF8rcknpkeHytyoQKC01-qDqBxkww6YYG29Ma1AEXluw3IOL5KLbU4yuOKYbqhRsxhvKmqKzJQkreEIYLtouEoGV7oGGyV7-mDFd" alt="A large crowd gathered for an outdoor public event.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjAYPPIFvCqhKb_tzzYWIux319LwZwXkMQ92bDn6edgSEZmJaY3SsoqlNSl9xlspelRQAcl-zVojGt3pgQ1O2BqqVjxm2MUSTSAqsdUh2r1CahPg6D7dc88cwL7joIiVn3ag6ynYhJOpO2j7ksyD3Dzlzig9S0haSqszFLAgH09wdOOHVDVMKGmv_YpWtI9" alt="Women engaged in a training session or workshop.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjGmc-VQVCvsIbzY5uqzA7T7sSTbkunZx6wHiveDSlkLwy13ApL_kmEGxLkmpXPi9IwpLUoM--VIMgBygXx7DXPyhm1jhrn6wFzAkIvqru4kSIEY-AnHc3PdwuYMc_lVSJrVoRgRvjORP7GawKlBdV79UXWW9t_aWus4KxtXtjaw7ydJ1kvIb8l5QjBmJXE" alt="Community members gathered around tables for an activity or discussion.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgsWqnEjdCgMASPA6UNtVgsKbmNkZKMgRQkINhf0r9RLdB7RXIaljwQFqEw8FjDvMzBVlHrdQodaVMKy-fz6I88WoBA3ItzxZPjWTjRFOJ_IpAQLd7kzHryhYsZgmqN-__kvyR305MZCBL1hMmuEXPjhKd9eOk0JJUH843t123Dj8w7BiK_QcNqbEX_mG9Y" alt="A group of men in an outdoor setting, possibly a meeting.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiE8nyPg3nHY3LBLzze03US1xeePSuj6Eq4c7X-D75BEy7zp1WajZHKIiVbVKlpZtlfisHiy29HFjPcI_fV9VDMuPYy7ZJGrZy3fcfDwtRheMwEik1tiNAdPegYZ88VzEFwB6J2uJOL52iOGAy_X-47K4UgmI9iYmJKXf3yC06NGqqHV_EbMZX0iKTLmWM1" alt="An indoor gathering with people sitting and listening to a speaker.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEipROcN5nyuo48Wfs_11ShFUJqKkh6rRt0FnxSnheE4lSLEz9gkEvtGc28lJFzY7uQPzA2QNN6I1tPQPCKHUOTEgAFjBMvnlLVHl9H2jggsQ7XaprlRrxi5lsUUVzkgHPGMhsQ7-CN1NDyo_fmKcExSDLE4VAcItRTX1Ee1_N3MetgmXmdpCeb1BUEeIpKm" alt="Children engaged in a classroom or learning environment.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEglYgCZXmdIQBnABlUw1B1eeo37uFogfa-__mSuuMYW6MyKvCDawMT1kDBnLMM9lCsg2Yx03mt-abojzaVgXcFclj7W_FGOlXQy8noUI1iMNv-22HVP0EXmX323yhrDKVJe1fnvnBsFsGOjBEA_86GxT4tpCvTI8INhTI5wDgK1v9R5hw8weHveSH6-aFZh" alt="A group of individuals standing together in an outdoor setting.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhpnRvCCvs11zDDzmzw2_bm39jMkGBW9svq7YvvLYYqjpJMRHJ8bjgmPgBtc5s6mW_uYImsqpQbxP3SfM_NINm1wYI8hrP88SNkOcADBV_ISVurDz-oFasaHDXaz5AGZ1qlxWocJQFD6iK85WuJ2Kfo1ZuwHy_9q0RER6qiZkJsEM6rDE5whML0au5iotp3" alt="A speaker on a stage addressing an audience.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEj24bMlwU-7krIpAII5zbT2m3M7Zayr1cEd7jIJfp-WyhyRjSD8L125jEwGrlrAZiF7nvS8iIKa6buL2as7amADapY7UiO4ZacxtlFw0SupSvSLAz6-JEHIbDwLtycC0MmCoPI_OdyMnhVUbDB4J3qmdlDd6Bwr3QE5I1ZbqvCQRQZC8V6Qd2S-rx4lJeOO" alt="People receiving assistance or supplies from volunteers.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjeR9Ud_tiOlRlmVRGXZUf3_ibJ8bOZHiRRKuER4o9hNcDfI337glQsKG3kLtydf8FkbAdQ91arQLtUua4cQioN6CI1EeQTAL5bzt1CKU4mUFV1xlDvmlb9Bt0rwv6XvnT2c7gALgmnNWZKF_ob_qT9rflHA20_P5LJqSxZHi156cajp3bhKM2_TCedOy9u" alt="A diverse group of men and women listening intently.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgTTcurD_E18QgRP5lqxLBOvuTBzaE6Zpd-BMjYAgFL8QlbWKdOEp2LELnaGbyHM9H_dYB2985tfQgcK8asKB2TD-dpsm6L6_5iuTyt4g8aEjtRsgV39kBbQgVrgNgvpeZtclzer68URtlXeCoyVmaw58gjKo2FGeppdbkgJmTY5DGdzGoEfIifJJWt21_a" alt="Children participating in an interactive learning session.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhoOABtBtZr5EXDtVaCOP_T8slY9tXZLOreYGT-AQFu4Lfq7XHf-D_SPrjxBe2uiN3g6J4Tes9wLNw8gTqp2pYs1Lp50wCf2XVRWzcAFdFDc1T0-WoskZyKlcWknzHc-xAPkKteSLFrC0W1dbwiTfajs6_2lQQGrwI6mO6LBh5Mfm_EdTZq1Its7o88w7vm" alt="An outdoor gathering with people sitting and standing.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEijaCFX9C1b1srC7XI_WiM7bLbpo6FhnVNcYnL_ZIBB5z3uG8y5YT2NtqU2kO66SC9klCU2xtaPG6obAgNcij0avn64aJuJAdFXg7KYhGoce-Zlsve25mFkMx2HEbSl_a7e1HGZ8pjoUyaG9G_5CpaSvR8A_MV716I0ki8PffNxxmq8-OlNAs0Z312aFWLD" alt="Community members actively participating in a program.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiWhh0mB7_kpR9m1ZrmTI-Uh8IpjgVkvqiEY0Qj8ThC8hcIC-nN5icadd4-YT74mTqgkWSX4eXoeidZpcT7HjxDNXfdRjQNpq-lJGGNDzCnqoHWt9eTzxElycn4Hdvcuiuk5O-fu5M8CMkUTRGPToxzEpE0rCS3bKd0KlN8OswksR5GYfMQSDb3qSuryfpu" alt="Dignitaries and community members at an event.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjuJLWgWmN25t0dtbNAdvcoFj3c8eZSew30EBXQvy85suVfrvXZ7PebytA3BvreHZdDlZiSL3N4IedVA75GJjYsxvPDriE3IdSwqkE2u-v7aEhFSzirAih7bM2xvuTqy4pqgWmZxUYu09u8A-HOL9SG3NMjbCBZRkI6xn8ixzUz7oui_9VrmuJk-ZCLlXTr" alt="Award ceremony with a large gathering.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhj_Sktl_6SHBldC9Fnquqec2CBBoBEUaDasjFrFsoL4fWUlAs-vplnmx-_t3LHVyuUWDVSVU4t9O2LnpZmnsoJJFP-J9MKP5VvK2bE14hESwKhfF97ucRQsyVV8lO__hZNIxPKH3gwXAmnap4_6sXjK4WdnMvxP-Id_nAgNTQ2_0iVqepDSmlCnGW4HZDT" alt="A large community gathering outdoors.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjxDEe8Q-LBZyvqx7JSJQBSb8EbCdl4CXPGKx0_h4Hh1D7jY7HzxABC-EzBpH9lQvPZVSA4XmsXsweqNvYv0Ct5j9o5_mZYPb3N8hRXXq2u7NF09mfvvg0aWduM320szrmNJIawOCxmMgtGMqMvo5MhCezm1AOi1GBv6h7FOWhir6AA_UNflOfjuzof_mJc" alt="Children and adults watching a performance or presentation.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjA4G5qc7UTeFdU_goK0UfSwH1Hi_-Dg9sdiPku5gHQfNwjO6TtenmrlbOEm0hEE9f9wvPxchHQuKD8jG84m5MBxv9Wuq-RwaiC6qZNASXGVsTGn_yyan6DTJEU4Po-EwSN06_ADtM2IR7JnrKy1pLqAMBxGhiIn7D58nhvMwMmdVAX33ukL02p1vP7_Z10" alt="Students seated in rows in a classroom.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjdZXf76n7qU8rz3WGAd7UFLOO1ZmoTD8dwkUffve9AXcit-I-tGhXWXt6LdD6hksjJEB9dVG9XZoOYMPhxC2eyLPdQSiiyENZUHwJdLz08FJxirszHq8OcVHUS41rEy7NspqzhZdwD7Y4davaQK2CBrBZ-jxvOS-K6ZAYD-UB4uuotfDEcZMX8sIL0vYxP" alt="A health worker examining a child during a camp.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhVwPo6XLeTEJJbrJzyykGJHbpc5GRIMmRTFosgFc0oDvBkYvOPYQD_cnXbYIQoIl2OFJHU473XHCQKLFwP3GgFgQOXB69KqKjViBDRUPch4gkl4-nK8TsZo2GzPo1smPWuP0QjSJATD1Rm8gzy2d47IsoLKPutFCR_ZC8qYb9fEMCGOEtjmXYkK9DgBEk-" alt="Agricultural equipment being demonstrated or used in a field.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEi5NHSOTm5yhJm-hTNqfnQxyPheNGIgs-7Q18Rm3SctvxHR0jliikOEqWFuU41HzZ3KIdCasYZwVlqPvxEbAp9xvUbH9dv2LfbGVTklYXmCoF18g6N2VCJPv91kq-I28r3YoW6VV3LcnxIt2r_YXrJIR3JCTMQYBaMZOE0lvOI1mVgTbTsA-Cx5F_MdrDQ6" alt="Women in traditional attire attending a workshop.">
-            </div>
-            <!-- Newly added images from photo2.html -->
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLaNAfR2zCOqk39DC1sTxZXGRc4PqRHvyBcA7ZMKnmzU_M9pnZuKW4LUvu0IzHJXpcATRmITiQ66MgvjI8xnM2TLJ_gkEj0CFI3Mc9GhKs6VfPni_2uE5iXpK4h4jr69doZ3l1CZppBPL4iqboGkc3qMCNEDkxw9YoVdU3xdVZax3zJOewKQSBC6Tgl3SR/s320/IMG-20250625-WA0031.jpg" alt="A group of people, possibly children, gathered for an event.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPBcb2_qOMVHgifFELsKqSd7i6dCV_rnkHy0e_-n22e63kgjNmPf_ikmDkFFSn8s3KOuZF-EXVUKsPuy9H3T8q79da-VVc5PKZ_4hZ20tCTe9HlXcAYHhI3-ZXpVq7zwneKFkti3g204pUkteabkZplYHiIfJn2or1Yp3imVosFMJHVXSWq5e4fLSUGKqK/s320/IMG-20250625-WA0032.jpg" alt="A group of individuals in a formal setting, possibly a meeting or presentation.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjT2P_KByqu-IJXhHX_i5oxqHLvbT_S7A41ngdrOEo8BBo93XIv1CzCGtlxOtxUJZSnMLBdNzxG951SFPGljvNVJeG0R3sG751M4hOsq64KASGlhrBIS3KWeZx9samP7Xn_5H4BIfIg6mTzWA7DXMkUvleC7eZLJzUAF3-TTeHsGcYw_vVknWHWs2EwcMTi/s320/IMG-20250625-WA0033.jpg" alt="A group of people gathered outdoors, possibly for a training or workshop.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnx-SF3-gTpJ-G3hkgpLM1PgTZ2WNuBD8otFQs171XsIHckfZFdqyatOjmcOBPkotUT5ilno_u0Y632clnPwSpu4fOWqFyOlnOddkuX6J3oEyEDUL046ehIB2ZEUuzzi7i3xjQ67dL-iySVhDtfhv1V_baOx7Az-1JnRnNtxBQUXE076je_MGLa_9GUh6t/s320/IMG-20250625-WA0034.jpg" alt="A man speaking to a group of men in a field or open area.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjf2hDK9zyHduhsPAwmemOXfrqgS4MtA-GYhcTedgqcOwrDu7s-mGfcw_9ifICAsgK9LLy5nECKVhpHB3wv_-WccZlyRZDOFNBevRS13KOcdkKLj6uWMP_QCNNtd1aRHylSBp0Q9bvqKm3pMjhnUSS8G9D2cw29q7xVFiiQ5qaYRSjcfqVUT1Y9ayTkAm4q/s320/IMG-20250625-WA0035.jpg" alt="A group of people, including women, sitting and listening to a presentation.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2yMW_tFfIE7zkl0kpHRP-NxdtTdawkVwQCqGR16R3CHbArv8MIuVvLVfuRn-_qFO5YEYOGhdX1rSdCL2wxWbOjf2gne_F-HCwDDWFtkm4HcuKxx7rEbX-ZZEOIfkKBiYAn_qjkgsumAmYN9ToqSGThjzN6h1vdeDhPr7RttOHn0bXo0GoBFk039HTzFeL/s320/IMG-20250625-WA0036.jpg" alt="A group of children gathered around a speaker.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTCi-6gqTEbNbwhcZUtiU-ibWXx-VJPTk4-ABt54eCHk0DVLnR71uXuBR5doE1FGMeI-yeokoT9eIup3FoGnLXcKwm2G_LZ8pLJJLaqHfpzQeMNvhSg4koCEqWxpEo2MI-8VcYHiWm0UZgmr-LigfrYzHhIqMIkV_j231SdAhXeZ_RjjX1kus8hYntKBJ1/s320/IMG-20250625-WA0037.jpg" alt="Children participating in an outdoor activity.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNC7TXPvesNjd15x-nxrFRPVzFgOLtdnxO_96nelIRGuJfQ5ragFbofl3SAhiED-CyldUhBjzZ9x9JWy4beyxiP5YLCm1aCc47_IJ1ETKCWX8fTHE2ZkU5rKo6M_Qr3GHNoy7Lrq43D98jezwkNan7Qc02-BOONGJufSJObR2OcG7IszwVgl6fmT6tLy6B/s320/IMG-20250625-WA0038.jpg" alt="A group of people in a rural setting, engaged in a discussion.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEEBIllPBBCc4xXf2g2Uo_gJ7ggjIgfuHgNK-6eDHn9YIfsmhZIYTd8QykXkSwX3KXOfhFS78KfvJP_BBspCJpCf50O6FC9-IokepDBWAGCqhg5kDT84mKDU5vFVIXFkQ54gBrlTE8CAZ53HH1W7MHQQNeS9Y1bKMKSUYWm8p7mg1lVteKPqqNwJXwNhbL/s320/IMG-20250625-WA0039.jpg" alt="A group of women in a meeting or training session.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGysvzL7h-cdBtEkAD0Yo6KQhOQcPpDLKDcGzp8ab9pPNPwsz0B5sDr3lTMVROLv8AZ1G8sJDnMQKjnw0VbnhUXOMZxBuXvSy0LiN5GhhnBHbDheQ1vAMXvoTDyvyLwK2k23Gm8cC4QJXByVaJH6ZFXqoXRxL_amq408N1Hr6AzlQvUYwbhCPbu6fz0zol/s320/IMG-20250625-WA0040.jpg" alt="A child interacting with an adult in an outdoor setting.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqxoyTRHQLKAYliVq3P3PYRpLcht9igU5ZWTdVaF4vZzPr5r6_kUHHOWxUkkc7y-fTfToixDspIIJpys8KQDFHLt0eq_3bHXlCl3I9Pmk4KLFFROgmD5Wd7LN9WsqfDkuLwMInc_oveKON_CJF32Jj4t3gMts-T8eZGDDOvfl9BIPnEUE56pEgnCLoyo4e/s320/IMG-20250625-WA0041.jpg" alt="People gathered around a speaker for a presentation.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4fbI2xxchpVZRHhmZcbkRqh7xloDAsGw9WcdzZ2XPHa6plJVeKmfdgDvAkc12LfGWR4EOsctrrsmszGFKU9hqinxYeftJ1gdFptuF4tdFVphRQmRbZS4sXj9c243rS6wrHR17FicQSWCZdx8dVcASOqeDQDiEB6OCYMeh71lFEwqJ6mZHIa_2g3-nzX3c/s320/IMG-20250625-WA0042.jpg" alt="A large crowd gathered for a public address.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgQRkt4_nWxdgyyLN5Zp1uCf-HTzNgGNfuyVU92C587Guj0mbSGPfIx61ZoYEmiVobsgf1pA-ondDS35lKatJZlevV7jAlfhAbKc95NU_eRBNkgYHHr5b6Zn6RBQIe_YyBRU9frSdyB43Tfmwd8nV6wze0Y1QpO3Px8DUSUd1iX-1NFNLM9zx6BRayDD0Xj/s320/IMG-20250625-WA0043.jpg" alt="Students engaged in a learning activity in a classroom.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqrnaITUKArSCWvwY9-Qh5jMZ2RymBqbyomDM7a-ZCHMlC09kGu3Uik9W2ZBT7t9pgm9Yz6cLGB3PO6r1tZsfYPnSSOPNsR0sglFvBMcIyLV7S-XpCoF9y1H56VJMZTGPXM4r5sJBA6V1EhWtHsDo1_n2ZDbHnS1DfsBryoicf9KsLX7KkVWhN9wjmcD6S/s320/IMG-20250625-WA0044.jpg" alt="A group of women involved in a vocational training session.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizBXK1uwqxM_1Lr3qyQSLDQiW99hmfADUXQDLsHAk-5yF20O3gc6grHGjYDAwVFjWzxJh3wMQTZ5Eimc1YOAQSJe8r-nYGHHf-gZqB9fD5zddA1I2dZeI5xS1z2tqeG3c5xwTLc4RaHJfCnz0kFEr7LqQrOyrEx6GVLIVoPtP29zGqmRWMtYpAEnK7NGTZ/s320/IMG-20250625-WA0001.jpg" alt="A man speaking to a group of people, possibly during a workshop.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7irhJ5ksQoYaKHhtP4sIPa0LdtU6qbKmWzjHUWB5dilfJ0IQZPXWGPhA9uUKUtWDatPxPV1NTStp9dkpl-P3o8YrCXDzTtkEmuXtkPCKQFKXgsKYr1ng9QLqQrEd8G-8_zXz-RdkYoxIvyywHPauMadOQ5SFN92okkJ8s9Ho7t4xHG2LFPkxl-eCqo4FG/s320/IMG-20250625-WA0002.jpg" alt="A woman in traditional attire speaking to a group.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjfzsKI3lCv2CngWUi-aw0crzoIebYXhM0EHxHVSinW0kPsbTwyL6_sMCIzwTbfgRF3sCuSLy-LSZLxSav8c9TceTaxQ4SO0gnqryQPa3gSJwrdkQUFFRCOgW1XKy1bHVb_VxyLv6XOq633G9TpIvSDLB1op9kcv4kuem8l8htC9n8NJwioGHY3pVNlqk0j/s320/IMG-20250625-WA0003.jpg" alt="A group of young men participating in a program.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_HeJHjQ6PTM3HiVP9PRRt8xz78FT3O02ku6zOJVF7_6ungoEpUxFg54zIaEZ3D1R2lG5Go6BtzBfrTKJ5V1mgvrtPMXEqo5RENkqhcI0FNp9KNa_PVuFaH5Y3jI2ADZxqxYP2ZoDEncQjvNSr7LpjzXzAQZdhN_k9P2pyhqB3GIaUQ9-oHmSR7Fpd0Lcca/s320/IMG-20250625-WA0004.jpg" alt="Adults and children gathered outdoors, possibly for an event.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPaOG1vPECFSy3oAr2nOE4I7X9x8z__xepwCsgZHHq3YT3UKv2vYi1FAZncSvs-W5mo0Xl_5EbUEhv89jLjzfuX9f7Ed7LtkP9p2wSjj4_J9c8WNpdBrWgmZibn72o8ncIOkopv_tfr2BteYMbPeMCf1eTbnxuk3rJqHz0nnzBrxm9J4hN7fUzHX0qibIt/s320/IMG-20250625-WA0005.jpg" alt="A group of people, including women, attending a meeting.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixKhc2h5UvcXqHP4Aqb4sEqtLRdhoeKBVBQ2S5JpNVWTtex64vU-BzDtOWm5dWP02TaRLHlaYeBanmXD8oSa2-NFHMFusRQabBuF2serc2lTNVSMeybHQXKQiMxPPKKBwS4RBQ3zU7HdSPwvtMyQ7e8P2omD1DV_kEqww-1NrT4vgXghZbg_NlDAuPaTLF/s320/IMG-20250625-WA0006.jpg" alt="A speaker addressing a mixed audience.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibHy_V7Te6pxVg2DYcwG8j912RR4rgQyb0TrasT8QnDyyTbCT_rv6pzC3RSWoJzOl9ZVndiFieGa1w99UidMgOGUgmFj7BeFhnW5aQPYCrCznsP5g2-jD63KvGndfmwO_7Ej3S3mzWNf29p-uyP2b_qS0UnUD0krt_CVpfWrs8jlObiYP5mzCmYBk2NH5N/s320/IMG-20250625-WA0007.jpg" alt="A group of men and women sitting in a semi-circle.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEir0a_MwyQUh6CAe9x4c0frZZTyY4kWwBHn_5JM8Mi0nd-m7lKf02C9yZNk4IJC6z-HifzUmI205loGXzUVt1x6XlzYAXAaJxS1Zx5pRRFRvsyZlgr17W17DTVGNgP3loJ5z7EgXsKhyHH9DEdGl6hkwrpnWhAUXyBsTx2ibDTN7J2bBZTllj87KMpbH6vN/s320/IMG-20250625-WA0008.jpg" alt="People gathered in an outdoor setting for an event.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhF11c72KT572GSLyVTjpANsRH4FngoaiF5hMYQ-06FPNvAb_R6a4CvClYyACnu7hSWRGPzMNv1osO4JmD_nwtJuQKWlAbIyoq6xfRav5wvUXLRXYB68XbXFSiF8udAZABceCLRcUUvmBseUyBs1ajZbI6kS81YPs-KDPbxlHBNlJlZWYkRW4Q1_UROS-WR/s320/IMG-20250625-WA0009.jpg" alt="A group of women standing together with a banner.">
-            </div>
-            <div class="gallery-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiI4eiLhiB47cH_a7EcLNqG1aTbLUiD7zOcReuC59k9C7WPPlnvBjTo2Nu3Ntjdh8eAbW1VAVo4Ox8vM_kTxPXTgrNLr29AmtR6lBaiHEOpm-oJGBYrYJRKnFVOsND6CYyxNRxV00T77NtcFnxr-3rbL0yYjE28BUXi1uDVsnT5lJnohcCnAnYWgmer_LUx/s320/IMG-20250625-WA0010.jpg" alt="A large crowd gathered for a demonstration or rally.">
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <p>&copy; 2025 Samadhan Kendra. All rights reserved. | Built with purpose.</p>
+        <!-- Video Player Page Section -->
+        <!-- Changed from container mx-auto p-4 to w-full p-4 to allow full width -->
+        <section id="videoPlayerPage" class="hidden flex-col lg:flex-row flex-grow w-full p-4 gap-4">
+            <!-- Main Media Player Section (Left/Top) -->
+            <section class="lg:w-3/4 w-full bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+                <div class="relative group aspect-video" id="mainMediaPlayerContainer">
+                    <!-- Removed specific poster text to allow dynamic poster -->
+                    <video id="mainVideoPlayer" class="w-full h-full rounded-t-lg bg-black" src="" poster="" preload="auto"></video>
+                    <img id="imagePlayer" class="w-full h-full object-contain rounded-t-lg bg-black hidden" src="" alt="Selected Image">
+
+                    <!-- Loading Spinner Overlay -->
+                    <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-20 hidden">
+                        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600"></div>
+                    </div>
+
+                    <!-- Play/Pause overlay button (Video-specific) -->
+                    <div id="playOverlay" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-100 transition-opacity duration-300 group-hover:opacity-100 cursor-pointer hidden">
+                        <button class="text-white text-6xl opacity-75 hover:opacity-100 transition-opacity duration-200">
+                            <i class="fas fa-play-circle"></i>
+                        </button>
+                    </div>
+
+                    <!-- Custom Controls (Video-specific) -->
+                    <div id="controls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex flex-col space-y-2 hidden">
+                        <!-- Progress Bar -->
+                        <div class="relative w-full h-2 bg-gray-600 rounded-full cursor-pointer" id="progressBarContainer">
+                            <div class="absolute h-full bg-red-600 rounded-full" id="progressBarFill" style="width: 0%;"></div>
+                            <input type="range" id="progressBar" value="0" min="0" max="100" class="absolute w-full h-full appearance-none bg-transparent cursor-pointer top-0 left-0 z-10">
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <!-- Play/Pause Button -->
+                                <button id="playPauseBtn" class="text-white text-2xl hover:text-red-400 transition-colors">
+                                    <i class="fas fa-play"></i>
+                                </button>
+
+                                <!-- Volume Control -->
+                                <div class="flex items-center space-x-2">
+                                    <button id="muteBtn" class="text-white text-xl hover:text-red-400 transition-colors">
+                                        <i class="fas fa-volume-up"></i>
+                                    </button>
+                                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" class="volume-slider w-20 h-1 bg-gray-600 rounded-full appearance-none cursor-pointer">
+                                </div>
+
+                                <!-- Time Display -->
+                                <div class="text-gray-300 text-sm">
+                                    <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                                </div>
+                            </div>
+
+                            <!-- Fullscreen Button -->
+                            <button id="fullscreenBtn" class="text-white text-2xl hover:text-red-400 transition-colors">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h2 id="videoTitle" class="text-xl md:text-2xl font-semibold mb-2"></h2>
+                    <p id="videoDescription" class="text-gray-400 text-sm md:text-base"></p>
+                    <div class="flex items-center mt-4 text-gray-500 text-sm">
+                        <span id="videoViewsCount" class="mr-2">0 views</span> <!-- Added span for views -->
+                        <span class="mx-1">•</span>
+                        <span id="videoUploadDate"></span>
+                    </div>
+                    <div class="flex items-center mt-4 space-x-4"> <!-- Added space-x-4 for spacing buttons -->
+                        <button id="likeButton" class="text-gray-400 hover:text-red-500 transition-colors duration-200 flex items-center">
+                            <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                            <span id="videoLikesCount">0</span>
+                        </button>
+                        <button id="shareButton" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center">
+                            <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M15 8a3 3 0 10-2.977-2.977l-1.471 1.47A3.001 3.001 0 0010 10a3.001 3.001 0 00-1.526-.447l-1.471-1.47A3 3 0 102 12h.01a.75.75 0 000-1.5H2a1.5 1.5 0 011.06-2.56l1.47-1.47A3 3 0 005 5a1.5 1.5 0 012.56-1.06l1.47 1.47A3 3 0 0010 4a3 3 0 10-2.977 2.977l1.471 1.47A3.001 3.001 0 0010 10a3.001 3.001 0 001.526.447l1.471 1.47A3 3 0 1015 12h.01a.75.75 0 000-1.5H15a1.5 1.5 0 01-1.06-2.56l-1.47-1.47A3 3 0 0010 8z" clip-rule="evenodd" /></svg>
+                            <span>शेयर करें</span>
+                        </button>
+                        <button id="downloadButton" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center">
+                            <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M.001 10.5a.5.5 0 01.5-.5h18.998a.5.5 0 01.5.5v.5a.5.5 0 01-.5.5H.501a.5.5 0 01-.5-.5v-.5zM10 16a.5.5 0 01-.354-.146l-4-4a.5.5 0 01.708-.708L9.5 14.293V3.5a.5.5 0 011 0v10.793l3.146-3.147a.5.5 0 01.708.708l-4 4A.5.5 0 0110 16z" clip-rule="evenodd" /></svg>
+                            <span>डाउनलोड करें</span>
+                        </button>
+                    </div>
+                    <!-- Channel Info for Video Player -->
+                    <div class="flex items-center mt-4 pt-4 border-t border-gray-700">
+                        <div class="channel-logo">AV</div>
+                        <span class="channel-name">APNA VIDYALAYA</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video List/Suggestions Section -->
+            <aside class="lg:w-1/4 w-full bg-gray-900 rounded-lg shadow-lg p-4 video-list-scroll">
+                <h3 class="text-lg font-semibold mb-4 text-white">आगे देखें</h3>
+                <div id="videoList" class="space-y-4">
+                    <!-- Video items will be injected here by JavaScript -->
+                    <p id="relatedLoadingMessage" class="col-span-full text-center text-gray-500">संबंधित सामग्री लोड हो रही है...</p>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 p-4 text-center text-gray-400 text-sm shadow-inner mt-4">
+        <p>&copy; 2025 APNA VIDYALAYA. All rights reserved.</p>
     </footer>
 
-    <a href="#" class="scroll-to-top" id="scrollToTopBtn">
-        <i class="ri-arrow-up-line"></i>
-    </a>
-
-    <!-- Modal Message Box HTML -->
-    <div class="message-box-overlay" id="messageBoxOverlay">
-        <div class="message-box">
-            <h4 id="messageBoxTitle"></h4>
-            <p id="messageBoxContent"></p>
-            <button id="messageBoxCloseBtn">Close</button>
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal-overlay hidden">
+        <div class="image-modal-content">
+            <img id="modalImage" src="" alt="Full size image">
+            <span id="modalCloseButton" class="image-modal-close">&times;</span>
         </div>
     </div>
 
-    <!-- Lightbox Overlay HTML -->
-    <div class="lightbox-overlay" id="lightboxOverlay">
-        <div class="lightbox-content">
-            <button class="lightbox-close" id="lightboxClose">&times;</button>
-            <img src="" alt="Gallery Image" class="lightbox-image" id="lightboxImage">
-            <div class="lightbox-title" id="lightboxTitle"></div>
-            <button class="lightbox-nav prev" id="lightboxPrev"><i class="ri-arrow-left-s-line"></i></button>
-            <button class="lightbox-nav next" id="lightboxNext"><i class="ri-arrow-right-s-line"></i></button>
+    <!-- Custom Message Box Modal (Removed for this version as per user request to remove pop-ups) -->
+    <!-- <div id="messageBoxModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full text-center border border-gray-700">
+            <p id="messageBoxContent" class="text-white text-lg mb-4"></p>
+            <button id="messageBoxCloseBtn" class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500">OK</button>
         </div>
-    </div>
+    </div> -->
+
 
     <script>
-        // Existing Header & Modal JavaScript
-        const mobileMenuToggle = document.getElementById('mobile-menu');
-        const navMenu = document.querySelector('.nav-menu');
-        const dropdownParent = document.querySelector('.nav-item-has-dropdown');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
-        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+        // Google Drive API Configuration
+        // IMPORTANT: Replace FOLDER_ID and API_KEY with your actual Google Drive Folder ID and API Key.
+        // If you are seeing "Error loading media...", it's likely due to incorrect configuration or permissions.
 
-        // Function to close the mobile menu
-        function closeMobileMenu() {
-            mobileMenuToggle.classList.remove('open');
-            navMenu.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-            // Also close dropdown if open
-            if (dropdownParent) {
-                dropdownParent.classList.remove('open');
-            }
-            if (dropdownMenu) {
-                dropdownMenu.classList.remove('active-mobile');
-            }
+        // How to get a Google Drive API Key:
+        // 1. Go to Google Cloud Console: https://console.cloud.google.com/
+        // 2. Create a new project or select an existing one.
+        // 3. Navigate to "APIs & Services" > "Credentials".
+        // 4. Click "Create Credentials" > "API Key".
+        // 5. Copy the generated API Key.
+        // 6. Go to "APIs & Services" > "Enabled APIs & services".
+        // 7. Search for and enable "Google Drive API".
+
+        // How to make your Google Drive Folder and Files Publicly Accessible:
+        // 1. In Google Drive, right-click on the folder you want to use.
+        // 2. Select "Share".
+        // 3. Under "General access", change "Restricted" to "Anyone with the link".
+        // 4. Ensure the role is "Viewer".
+        // 5. Copy the Folder ID from the URL (it's the string after /folders/ in the URL).
+        //    Example URL: https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE
+        // 6. Make sure all files inside this folder are also publicly accessible. If you upload new files,
+        //    you might need to adjust their sharing settings individually or ensure they inherit permissions.
+
+        const FOLDER_ID = "1LXYRya4OETFcyjdPpoPE9_UR34C-JkYy"; // Replace with your actual folder ID
+        const API_KEY = "AIzaSyBiJ001rSt1s-oYX7iG7sD_7JWP2xDzNK0"; // Replace with your actual API Key
+
+        // Declare variables globally
+        let allMediaFiles = []; // To store all fetched media for filtering
+
+        let homePage, videoPlayerPage, homeLink, searchInput, searchResultsContainer, filterButtonsContainer;
+        let mainVideoPlayer, imagePlayer, mainMediaPlayerContainer, loadingSpinner, playOverlay, controls;
+        let playPauseBtn, progressBar, progressBarFill, volumeSlider, muteBtn, currentTimeSpan, durationSpan, fullscreenBtn;
+        let videoTitle, videoDescription, videoViewsCount, videoUploadDate, likeButton, shareButton, downloadButton;
+        let videoList, homeVideoGrid, homeLoadingMessage, relatedLoadingMessage;
+        let imageModal, modalImage, modalCloseButton;
+        // Removed messageBoxModal, messageBoxContent, messageBoxCloseBtn as per user request to remove pop-ups
+
+
+        let isDraggingProgressBar = false;
+        let lastVolume = 1; // Store last volume before muting
+        let controlsTimeout; // For hiding controls after inactivity
+        let currentPlayingMediaId = null;
+        let currentPlayingMediaUrl = null; // Store current media URL for download/share
+
+        // Initialize likes and views from localStorage
+        let videoLikes = JSON.parse(localStorage.getItem('videoLikes')) || {};
+        let videoViews = JSON.parse(localStorage.getItem('videoViews')) || {};
+        let deviceLikedVideos = JSON.parse(localStorage.getItem('deviceLikedVideos')) || {};
+
+
+        // --- Utility Functions ---
+
+        // Function to format time (e.g., 00:00)
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return "00:00";
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
         }
 
-        mobileMenuToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            mobileMenuToggle.classList.toggle('open');
-            navMenu.classList.toggle('active');
-            if (navMenu.classList.contains('active')) {
-                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+        // Helper function to format date as "X days/weeks/months/years ago"
+        function formatDateAgo(dateString) {
+            const uploadDate = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now.getTime() - uploadDate.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 1) {
+                return "आज"; // Today
+            } else if (diffDays === 1) {
+                return "कल"; // Yesterday
+            } else if (diffDays < 7) {
+                return `${diffDays} दिन पहले`; // X days ago
+            } else if (diffDays < 30) {
+                const diffWeeks = Math.floor(diffDays / 7);
+                return `${diffWeeks} सप्ताह पहले`; // X weeks ago
+            } else if (diffDays < 365) {
+                const diffMonths = Math.floor(diffDays / 30);
+                return `${diffMonths} महीने पहले`; // X months ago
             } else {
-                document.body.style.overflow = 'auto';
-                // Close dropdown when main menu closes
-                if (dropdownParent) {
-                    dropdownParent.classList.remove('open');
-                }
-                if (dropdownMenu) {
-                    dropdownMenu.classList.remove('active-mobile');
-                }
+                const diffYears = Math.floor(diffDays / 365);
+                return `${diffYears} साल पहले`; // X years ago
             }
-        });
-
-        // Toggle dropdown on mobile click (for About Us)
-        if (dropdownParent) {
-            dropdownParent.addEventListener('click', function (e) {
-                // Only toggle if in mobile view AND the main menu is active
-                if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
-                    // Prevent default behavior only if the click is on the parent link itself, not a submenu item
-                    if (e.target.closest('a') === this.querySelector('a')) {
-                        e.preventDefault();
-                    }
-                    dropdownParent.classList.toggle('open');
-                    dropdownMenu.classList.toggle('active-mobile');
-                }
-            });
         }
 
-        // Close mobile menu when a navigation link is clicked
-        navMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // If it's a direct link within a dropdown menu, close the whole menu
-                if (link.closest('.dropdown-menu')) {
-                    closeMobileMenu();
-                } 
-                // If it's a main nav link and not the dropdown toggle itself on mobile
-                else if (window.innerWidth <= 768 && !link.closest('.nav-item-has-dropdown')) {
-                     closeMobileMenu();
-                } 
-                // For desktop links or other cases, let default behavior or smooth scroll handle
-            });
-        });
+        // Function to save to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('videoLikes', JSON.stringify(videoLikes));
+            localStorage.setItem('videoViews', JSON.stringify(videoViews));
+            localStorage.setItem('deviceLikedVideos', JSON.stringify(deviceLikedVideos));
+        }
 
-        // Scroll-to-top button logic
-        window.onscroll = function () {
-            // Check if element exists before accessing its classList
-            if (scrollToTopBtn) {
-                if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-                    scrollToTopBtn.classList.add("show");
+        // --- Page Navigation Functions ---
+
+        // Function to show/hide pages
+        function showPage(pageName) {
+            homePage.classList.add('hidden');
+            videoPlayerPage.classList.add('hidden');
+
+            if (pageName === 'homePage') {
+                homePage.classList.remove('hidden');
+                // Reset player state when navigating away from player page
+                mainVideoPlayer.pause();
+                mainVideoPlayer.src = "";
+                mainVideoPlayer.load();
+                // When returning to home, set a generic poster and clear title
+                mainVideoPlayer.poster = "https://placehold.co/1280x720/1a1a1a/ffffff?text=Select+a+video";
+                imagePlayer.src = ""; // Clear image source
+                imagePlayer.classList.add('hidden'); // Ensure image player is hidden
+                mainVideoPlayer.classList.remove('hidden'); // Ensure video player is visible (with poster)
+
+                videoTitle.textContent = "गैलरी से मीडिया का चयन करें"; // Select media from gallery
+                videoDescription.textContent = ""; // Clear description
+                videoUploadDate.textContent = "कोई तारीख नहीं"; // No date
+                videoViewsCount.textContent = "0 व्यूज"; // 0 views
+                videoLikesCount.textContent = "0";
+
+                // Hide video controls
+                controls.classList.add('hidden');
+                playOverlay.classList.add('hidden');
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                progressBar.value = 0;
+                progressBarFill.style.width = '0%';
+
+                renderHomePageVideos(); // Reload media for the homepage
+            } else if (pageName === 'videoPlayerPage') {
+                videoPlayerPage.classList.remove('hidden');
+                videoPlayerPage.classList.add('flex'); // Ensure flex display for player layout
+            }
+        }
+
+        // --- Main Media Player Functions ---
+
+        // Toggle Play/Pause for the main player (Video-specific)
+        function togglePlayPause() {
+            if (imagePlayer.classList.contains('hidden')) { // Only act if video player is visible
+                if (!mainVideoPlayer.src) {
+                    return;
+                }
+                if (mainVideoPlayer.paused || mainVideoPlayer.ended) {
+                    mainVideoPlayer.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; // Set to pause icon immediately on play
+                    playOverlay.style.opacity = '0'; // Hide overlay on play
                 } else {
-                    scrollToTopBtn.classList.remove("show");
+                    mainVideoPlayer.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playOverlay.style.opacity = '1'; // Show overlay on pause
                 }
             }
-        };
+        }
 
-        // Check if element exists before adding event listener
-        if (scrollToTopBtn) {
-            scrollToTopBtn.addEventListener("click", function (e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
+        // Update volume icon based on current volume level (Video-specific)
+        function updateVolumeIcon() {
+            if (mainVideoPlayer.volume === 0) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else if (mainVideoPlayer.volume < 0.5) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        }
+
+        // Function to load a video/image into the main player and switch to player page
+        function loadMedia(mediaItem) {
+            showPage('videoPlayerPage'); // Always go to player page
+
+            // Reset player area state
+            loadingSpinner.classList.remove('hidden'); // Show spinner initially
+            mainVideoPlayer.pause(); // Always pause any playing video
+            mainVideoPlayer.src = ""; // Clear video source
+            mainVideoPlayer.load(); // Ensure video player state is reset
+            imagePlayer.src = ""; // Clear image source
+
+            // Hide video-specific controls by default
+            controls.classList.add('hidden');
+            playOverlay.classList.add('hidden'); // Hide play overlay for images
+            // Hide all video controls initially
+            playPauseBtn.classList.add('hidden');
+            progressBarContainer.classList.add('hidden');
+            volumeSlider.classList.add('hidden');
+            muteBtn.classList.add('hidden');
+            currentTimeSpan.classList.add('hidden');
+            durationSpan.classList.add('hidden');
+            fullscreenBtn.classList.add('hidden');
+
+
+            currentPlayingMediaId = mediaItem.id;
+            currentPlayingMediaUrl = `https://www.googleapis.com/drive/v3/files/${mediaItem.id}?alt=media&key=${API_KEY}`;
+
+            if (mediaItem.type === 'video') {
+                mainVideoPlayer.classList.remove('hidden');
+                imagePlayer.classList.add('hidden');
+
+                // Set video poster to its thumbnail while loading
+                mainVideoPlayer.poster = mediaItem.thumbnail || 'https://placehold.co/1280x720/1a1a1a/ffffff?text=Loading+Video';
+
+                // Show video-specific controls
+                controls.classList.remove('hidden');
+                playOverlay.classList.remove('hidden');
+                playPauseBtn.classList.remove('hidden');
+                progressBarContainer.classList.remove('hidden');
+                volumeSlider.classList.remove('hidden');
+                muteBtn.classList.remove('hidden');
+                currentTimeSpan.classList.remove('hidden');
+                durationSpan.classList.remove('hidden');
+                fullscreenBtn.classList.remove('hidden');
+
+
+                mainVideoPlayer.src = currentPlayingMediaUrl;
+                mainVideoPlayer.load();
+                mainVideoPlayer.play(); // Automatically play the video
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; // Set to pause icon immediately on play
+                playOverlay.style.opacity = '0'; // Hide overlay when video starts playing
+                videoTitle.textContent = mediaItem.title;
+                videoDescription.textContent = ''; // Clear description
+                videoUploadDate.textContent = formatDateAgo(mediaItem.uploadDate);
+
+                // Increment views
+                videoViews[mediaItem.id] = (videoViews[mediaItem.id] || 0) + 1;
+                saveToLocalStorage();
+                videoViewsCount.textContent = `${videoViews[mediaItem.id]} व्यूज`; // Views
+                videoLikesCount.textContent = `${videoLikes[mediaItem.id]}`; // Likes
+
+                // Update likes display and button state for the main player
+                likeButton.dataset.mediaId = mediaItem.id; // Set data-media-id for the button
+                if (deviceLikedVideos[mediaItem.id]) {
+                    likeButton.classList.add('text-red-500');
+                } else {
+                    likeButton.classList.remove('text-red-500');
+                }
+
+                // Filter related videos: exclude current video, show only videos
+                const relatedVideos = allMediaFiles.filter(m => m.id !== mediaItem.id && m.type === 'video');
+                console.log(`[loadMedia] Rendering ${relatedVideos.length} related videos for ${mediaItem.title}`);
+                renderMediaItems(relatedVideos, videoList, false);
+            } else if (mediaItem.type === 'image') {
+                mainVideoPlayer.classList.add('hidden');
+                imagePlayer.classList.remove('hidden');
+
+                imagePlayer.src = currentPlayingMediaUrl;
+                loadingSpinner.classList.add('hidden'); // Images load faster, hide spinner
+                videoTitle.textContent = mediaItem.title;
+                videoDescription.textContent = ''; // Clear description
+                videoUploadDate.textContent = formatDateAgo(mediaItem.uploadDate);
+                videoViewsCount.textContent = "लागू नहीं"; // Views not applicable for images
+                videoLikesCount.textContent = "लागू नहीं"; // Likes not applicable for images
+
+                // Update likes display and button state for the main player (for images, just reset)
+                likeButton.dataset.mediaId = mediaItem.id; // Set data-media-id for the button
+                likeButton.classList.remove('text-red-500'); // Images cannot be liked in this app
+
+                // Filter related images: exclude current image, show only images
+                const relatedImages = allMediaFiles.filter(m => m.id !== mediaItem.id && m.type === 'image');
+                console.log(`[loadMedia] Rendering ${relatedImages.length} related images for ${mediaItem.title}`);
+                renderMediaItems(relatedImages, videoList, false);
+            }
+            searchInput.value = ''; // Clear search input
+            searchResultsContainer.classList.add('hidden'); // Hide suggestions
+        }
+
+
+        // Add like functionality
+        function handleLikeClick(mediaId) {
+            console.log(`[handleLikeClick] Like button clicked for mediaId: ${mediaId}`);
+            if (mediaId && !deviceLikedVideos[mediaId]) { // Ensure mediaId is valid and not already liked
+                videoLikes[mediaId] = (videoLikes[mediaId] || 0) + 1;
+                deviceLikedVideos[mediaId] = true;
+                saveToLocalStorage();
+                // Update UI for the main player if it's the current media
+                if (currentPlayingMediaId === mediaId) {
+                    videoLikesCount.textContent = `${videoLikes[mediaId]}`;
+                    likeButton.classList.add('text-red-500');
+                }
+                // Re-render home page videos to update like counts there too
+                renderHomePageVideos(searchInput.value);
+                console.log(`[handleLikeClick] Media ${mediaId} liked. New likes: ${videoLikes[mediaId]}`);
+            } else if (mediaId && deviceLikedVideos[mediaId]) {
+                console.log(`[handleLikeClick] Media ${mediaId} already liked on this device.`);
+            } else {
+                console.log('[handleLikeClick] No valid media selected to like.');
+            }
+        }
+
+        // Share functionality
+        async function handleShareClick() {
+            if (currentPlayingMediaUrl) {
+                const mediaTitleText = videoTitle.textContent;
+                const shareData = {
+                    title: mediaTitleText,
+                    text: `देखिए "${mediaTitleText}" MyTube पर!`,
+                    url: window.location.href.split('?')[0] + '?media=' + currentPlayingMediaId, // A conceptual share link
+                };
+
+                // Use Web Share API if available
+                if (navigator.share) {
+                    try {
+                        await navigator.share(shareData);
+                        console.log('[handleShareClick] Media shared via Web Share API.');
+                    } catch (err) {
+                        if (err.name === 'AbortError') {
+                            console.log('[handleShareClick] Share operation cancelled.');
+                        } else {
+                            console.error('[handleShareClick] Error sharing:', err);
+                        }
+                    }
+                } else {
+                    // Fallback to copying URL to clipboard
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = shareData.url; // Use the shareable URL
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    try {
+                        document.execCommand('copy');
+                        console.log('[handleShareClick] Media link copied to clipboard.');
+                    } catch (err) {
+                        console.error('[handleShareClick] Failed to copy text:', err);
+                    }
+                    document.body.removeChild(tempInput);
+                }
+            } else {
+                console.log('[handleShareClick] No media currently playing to share.');
+            }
+        }
+
+        // Download functionality
+        function handleDownloadClick() {
+            if (currentPlayingMediaUrl) {
+                const link = document.createElement('a');
+                link.href = currentPlayingMediaUrl;
+                // Sanitize title for filename, replacing non-alphanumeric with underscores
+                link.download = videoTitle.textContent.replace(/[^a-z0-9\s]/gi, '').replace(/\s+/g, '_').toLowerCase() + (currentPlayingMediaUrl.includes('mimeType=video') ? '.mp4' : '.jpg'); // Guess extension
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                console.log('[handleDownloadClick] Download initiated.');
+            } else {
+                console.log('[handleDownloadClick] No media currently playing to download.');
+            }
+        }
+
+
+        // Function to render media items in the gallery (for homepage and "Up Next" sidebar)
+        function renderMediaItems(filesToRender, targetGalleryElement, isHomePage = true) {
+            targetGalleryElement.innerHTML = ""; // Clear existing content
+            console.log(`[renderMediaItems] Rendering ${filesToRender.length} items for ${isHomePage ? 'home page' : 'related content'}.`);
+
+            if (filesToRender.length === 0) {
+                targetGalleryElement.innerHTML = `<p class='col-span-full text-center text-gray-500'>${isHomePage ? 'कोई मीडिया नहीं मिला.' : 'कोई संबंधित सामग्री नहीं मिली.'}</p>`;
+                return;
+            }
+
+            filesToRender.forEach(file => {
+                const isVideo = file.type === 'video'; // Use file.type now
+                const isImage = file.type === 'image'; // Use file.type now
+
+                const displayDate = formatDateAgo(file.uploadDate);
+                const thumbnailUrl = file.thumbnail || (isVideo ? 'https://placehold.co/160x96/4B5563/D1D5DB?text=Video' : 'https://placehold.co/160x96/4B5563/D1D5DB?text=Image');
+
+                const mediaItem = document.createElement("div");
+                mediaItem.className = isHomePage ? "bg-gray-800 rounded-lg shadow-xl overflow-hidden cursor-pointer transform hover:scale-105 transition-transform duration-200" : "flex items-start gap-3 cursor-pointer hover:bg-gray-700 p-2 rounded-lg transition-colors duration-200";
+
+                if (isHomePage) {
+                    const currentLikes = videoLikes[file.id] || 0;
+                    const currentViews = videoViews[file.id] || 0;
+
+                    mediaItem.innerHTML = `
+                        <div class="relative w-full aspect-video">
+                            <img src="${thumbnailUrl}" alt="${file.title}" class="w-full h-full object-cover rounded-t-lg" loading="lazy">
+                            ${isVideo ? `<span class="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded">0:00</span>` : ''}
+                            ${isImage ? `<i class="fas fa-image absolute top-2 left-2 text-white text-lg bg-black bg-opacity-50 p-1 rounded"></i>` : ''}
+                        </div>
+                        <div class="p-3">
+                            <h4 class="text-white font-medium text-base line-clamp-2">${file.title}</h4>
+                            <p class="text-gray-400 text-sm">${isVideo ? `${currentViews} व्यूज` : 'लागू नहीं'} • ${displayDate}</p>
+                            <div class="flex items-center mt-2">
+                                <div class="channel-logo">AV</div>
+                                <span class="channel-name">APNA VIDYALAYA</span>
+                            </div>
+                        </div>
+                    `;
+                } else { // For related content gallery
+                    const currentLikes = videoLikes[file.id] || 0;
+                    const currentViews = videoViews[file.id] || 0;
+
+                    mediaItem.innerHTML = `
+                        <div class="flex-shrink-0 w-40 h-24 rounded-lg overflow-hidden relative">
+                            <img src="${thumbnailUrl}" alt="${file.title}" class="w-full h-full object-cover" loading="lazy">
+                            ${isVideo ? `<span class="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded">0:00</span>` : ''}
+                            ${isImage ? `<i class="fas fa-image absolute top-2 left-2 text-white text-lg bg-black bg-opacity-50 p-1 rounded"></i>` : ''}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xs font-semibold text-white line-clamp-2">${file.title}</h4>
+                            <p class="text-xs text-gray-400">${isVideo ? `${currentViews} व्यूज` : 'लागू नहीं'} • ${displayDate}</p>
+                            <div class="flex items-center mt-1">
+                                <div class="channel-logo w-5 h-5 text-xs">AV</div>
+                                <span class="channel-name text-xs">APNA VIDYALAYA</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                mediaItem.addEventListener('click', () => {
+                    // If it's an image on the homepage, open the modal
+                    if (isHomePage && isImage) {
+                        modalImage.src = file.url;
+                        imageModal.classList.remove('hidden');
+                    } else {
+                        // Otherwise, load media into the player
+                        loadMedia(file);
+                    }
                 });
+                targetGalleryElement.appendChild(mediaItem);
             });
         }
 
-        // Smooth scroll for navigation links (excluding the "LOG - IN" button to allow its custom handler)
-        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-            if (!anchor.classList.contains('header-cta-button')) {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
 
-                    // Check if targetSection exists before scrolling
-                    if (targetSection) {
-                        targetSection.scrollIntoView({
-                            behavior: 'smooth'
-                        });
+        // Function to filter media based on type and search term
+        function getFilteredMedia(filterType, searchTerm = '') {
+            console.log(`[getFilteredMedia] Applying filter: ${filterType}, search term: "${searchTerm}"`);
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
+            const sevenDaysAgo = new Date(now);
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            const thirtyDaysAgo = new Date(now);
+            thirtyDaysAgo.setDate(now.getDate() - 30);
+
+            let filtered = allMediaFiles;
+
+            // Apply search term first if present
+            if (searchTerm) {
+                filtered = filtered.filter(media =>
+                    media.title.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            // Apply time-based filter
+            if (filterType === 'today') {
+                filtered = filtered.filter(media => {
+                    const uploadDate = new Date(media.uploadDate);
+                    return uploadDate.toDateString() === today.toDateString();
+                });
+            } else if (filterType === 'thisWeek') {
+                filtered = filtered.filter(media => {
+                    const uploadDate = new Date(media.uploadDate);
+                    return uploadDate >= sevenDaysAgo;
+                });
+            } else if (filterType === 'thisMonth') {
+                filtered = filtered.filter(media => {
+                    const uploadDate = new Date(media.uploadDate);
+                    return uploadDate >= thirtyDaysAgo;
+                });
+            }
+            // 'all' filter doesn't require further filtering
+            console.log(`[getFilteredMedia] Found ${filtered.length} items after filtering.`);
+            return filtered;
+        }
+
+        // Function to render home page video grid with filters and images
+        let currentFilter = 'all'; // Default filter
+
+        function renderHomePageVideos(searchTerm = '') {
+            console.log(`[renderHomePageVideos] Re-rendering home page with filter: ${currentFilter}, search term: "${searchTerm}"`);
+            const filteredContent = getFilteredMedia(currentFilter, searchTerm);
+            homeVideoGrid.innerHTML = ''; // Clear existing grid
+
+            const homePageTitle = document.querySelector('#homePage h2');
+            if (searchTerm) {
+                homePageTitle.textContent = `"${searchTerm}" के लिए खोज परिणाम`; // Search results for "X"
+            } else {
+                homePageTitle.textContent = "अनुशंसित वीडियो"; // Recommended Videos
+            }
+
+            if (filteredContent.length === 0) {
+                homeVideoGrid.innerHTML = '<p class="text-gray-400 text-center col-span-full">कोई वीडियो या इमेज नहीं मिला.</p>';
+                return;
+            }
+
+            // Render combined content (videos and images)
+            renderMediaItems(filteredContent, homeVideoGrid, true);
+        }
+
+        // Function to render search suggestions
+        function renderSearchSuggestions(searchTerm) {
+            searchResultsContainer.innerHTML = ''; // Clear previous suggestions
+            if (searchTerm.length === 0) {
+                searchResultsContainer.classList.add('hidden');
+                return;
+            }
+            console.log(`[renderSearchSuggestions] Generating suggestions for "${searchTerm}"`);
+
+            const filteredSuggestions = allMediaFiles.filter(media =>
+                media.title.toLowerCase().includes(searchTerm.toLowerCase())
+            ).slice(0, 5); // Limit to 5 suggestions
+
+            if (filteredSuggestions.length > 0) {
+                filteredSuggestions.forEach(media => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'suggestion-item';
+                    // Add a search icon before the text
+                    suggestionItem.innerHTML = `<i class="fas fa-search text-gray-400 mr-2"></i><span>${media.title}</span>`;
+                    suggestionItem.addEventListener('click', () => {
+                        const selectedTitle = media.title;
+                        searchInput.value = selectedTitle; // Set search input to selected suggestion
+                        searchResultsContainer.classList.add('hidden'); // Hide suggestions
+
+                        // Instead of loading the single media, render the home page with this search term
+                        showPage('homePage'); // Ensure we are on the home page
+                        renderHomePageVideos(selectedTitle); // Filter home page by the selected suggestion
+                    });
+                    searchResultsContainer.appendChild(suggestionItem);
+                });
+                searchResultsContainer.classList.remove('hidden');
+            } else {
+                searchResultsContainer.classList.add('hidden');
+            }
+        }
+
+
+        // Google Drive API से मीडिया फ़ेच करने के लिए एक async फ़ंक्शन
+        async function fetchMediaFromDriveAPI() {
+            homeLoadingMessage.textContent = "मीडिया लोड हो रहा है...";
+            relatedLoadingMessage.textContent = "संबंधित सामग्री लोड हो रही है...";
+            console.log('[fetchMediaFromDriveAPI] Attempting to fetch media from Google Drive...');
+            console.log(`[fetchMediaFromDriveAPI] FOLDER_ID: ${FOLDER_ID}`);
+            console.log(`[fetchMediaFromDriveAPI] API_KEY: ${API_KEY ? 'Provided' : 'Not Provided'}`);
+
+
+            const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents+and+(mimeType+contains+'video'+or+mimeType+contains+'image')&key=${API_KEY}&fields=files(id,name,mimeType,thumbnailLink,webContentLink,createdTime)`;
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('[fetchMediaFromDriveAPI] Failed to fetch from Google Drive API:', response.status, errorText);
+                    // Provide a more specific error message to the user
+                    let userErrorMessage = 'वीडियो/इमेज लोड करने में असमर्थ। ';
+                    if (response.status === 403) {
+                        userErrorMessage += 'पहुँच अस्वीकृत। कृपया अपनी Google Drive API कुंजी और फ़ोल्डर अनुमतियाँ जांचें।';
+                    } else if (response.status === 404) {
+                        userErrorMessage += 'फ़ोल्डर या फ़ाइलें नहीं मिलीं। कृपया अपनी Google Drive फ़ोल्डर ID जांचें।';
                     } else {
-                        console.warn(`Attempted to scroll to non-existent section: ${targetId}`);
+                        userErrorMessage += `त्रुटि कोड: ${response.status}`;
+                    }
+                    homeVideoGrid.innerHTML = `<p class="text-red-400 text-center col-span-full">${userErrorMessage}</p>`;
+                    videoList.innerHTML = `<p class="text-red-400 text-center col-span-full">${userErrorMessage}</p>`;
+                    throw new Error(`Google Drive API response was not ok: ${response.statusText}. Details: ${errorText}`);
+                }
+                const data = await response.json();
+                console.log('[fetchMediaFromDriveAPI] Google Drive API response received:', data);
+
+                allMediaFiles = []; // Clear previous data
+
+                if (!data.files || !Array.isArray(data.files) || data.files.length === 0) {
+                    const noContentMessage = "<p class='col-span-full text-center text-gray-500'>इस फ़ोल्डर में कोई मीडिया नहीं मिला या एक्सेस अस्वीकृत है।</p>";
+                    homeVideoGrid.innerHTML = noContentMessage;
+                    videoList.innerHTML = noContentMessage;
+                    console.warn('[fetchMediaFromDriveAPI] No files found in Google Drive folder or access denied.');
+                    return;
+                }
+
+                data.files.forEach(file => {
+                    const isVideo = file.mimeType.startsWith('video/');
+                    const isImage = file.mimeType.startsWith('image/');
+
+                    if (isVideo || isImage) {
+                        allMediaFiles.push({
+                            id: file.id,
+                            type: isVideo ? 'video' : 'image',
+                            title: file.name,
+                            url: `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`, // Direct media content URL
+                            uploadDate: file.createdTime ? new Date(file.createdTime).toISOString().split('T')[0] : 'N/A',
+                            thumbnail: file.thumbnailLink || (isVideo ? 'https://placehold.co/320x180/333333/ffffff?text=Video+Thumbnail' : 'https://placehold.co/320x180/333333/ffffff?text=Image+Thumbnail'),
+                            mimeType: file.mimeType // Keep mimeType for filtering
+                        });
+                    }
+                });
+                console.log(`[fetchMediaFromDriveAPI] Successfully fetched ${allMediaFiles.length} media items.`);
+
+                // Initialize likes and views for newly fetched videos if not already in localStorage
+                allMediaFiles.filter(item => item.type === 'video').forEach(video => {
+                    if (videoLikes[video.id] === undefined) {
+                        videoLikes[video.id] = 0;
+                    }
+                    if (videoViews[video.id] === undefined) {
+                        videoViews[video.id] = 0;
+                    }
+                });
+                saveToLocalStorage(); // Save initial state
+
+                // Render content after data is fetched
+                renderHomePageVideos();
+                showPage('homePage');
+
+            } catch (error) {
+                console.error('[fetchMediaFromDriveAPI] Caught error:', error);
+                // The user-facing error message is already set above in the try block
+                // if the error was from a non-ok response. If it's another type of error,
+                // we'll show a generic message.
+                if (!homeVideoGrid.innerHTML.includes('वीडियो/इमेज लोड करने में असमर्थ')) {
+                    const errorMessage = '<p class="text-red-400 text-center col-span-full">वीडियो/इमेज लोड करने में असमर्थ. कृपया Google Drive API कुंजी, फ़ोल्डर ID, या फ़ाइल अनुमतियाँ जांचें.</p>';
+                    homeVideoGrid.innerHTML = errorMessage;
+                    videoList.innerHTML = errorMessage;
+                }
+            }
+        }
+
+
+        // --- Event Listeners ---
+
+        // Initialize the app on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Assign elements
+            homePage = document.getElementById('homePage');
+            videoPlayerPage = document.getElementById('videoPlayerPage');
+            homeLink = document.getElementById('homeLink');
+            searchInput = document.getElementById('searchInput');
+            searchResultsContainer = document.getElementById('searchResultsContainer');
+            filterButtonsContainer = document.getElementById('filterButtons');
+
+            mainVideoPlayer = document.getElementById('mainVideoPlayer');
+            imagePlayer = document.getElementById('imagePlayer');
+            mainMediaPlayerContainer = document.getElementById('mainMediaPlayerContainer');
+            loadingSpinner = document.getElementById('loadingSpinner');
+            playOverlay = document.getElementById('playOverlay');
+            controls = document.getElementById('controls');
+
+            playPauseBtn = document.getElementById('playPauseBtn');
+            progressBar = document.getElementById('progressBar');
+            progressBarFill = document.getElementById('progressBarFill');
+            volumeSlider = document.getElementById('volumeSlider');
+            muteBtn = document.getElementById('muteBtn');
+            currentTimeSpan = document.getElementById('currentTime');
+            durationSpan = document.getElementById('duration');
+            fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            videoTitle = document.getElementById('videoTitle');
+            videoDescription = document.getElementById('videoDescription');
+            videoViewsCount = document.getElementById('videoViewsCount');
+            videoUploadDate = document.getElementById('videoUploadDate');
+            likeButton = document.getElementById('likeButton');
+            shareButton = document.getElementById('shareButton');
+            downloadButton = document.getElementById('downloadButton');
+
+            videoList = document.getElementById('videoList');
+            homeVideoGrid = document.getElementById('homeVideoGrid');
+            homeLoadingMessage = document.getElementById('homeLoadingMessage');
+            relatedLoadingMessage = document.getElementById('relatedLoadingMessage');
+
+            imageModal = document.getElementById('imageModal');
+            modalImage = document.getElementById('modalImage');
+            modalCloseButton = document.getElementById('modalCloseButton');
+
+
+            // Main Player Controls (Video-specific)
+            if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
+            if (playOverlay) playOverlay.addEventListener('click', togglePlayPause);
+            if (mainVideoPlayer) mainVideoPlayer.addEventListener('click', togglePlayPause); // Click video to play/pause
+
+            if (mainVideoPlayer) {
+                mainVideoPlayer.addEventListener('timeupdate', () => {
+                    if (!isDraggingProgressBar) { // Only update if not dragging the slider
+                        const progress = (mainVideoPlayer.currentTime / mainVideoPlayer.duration) * 100;
+                        progressBar.value = progress;
+                        progressBarFill.style.width = `${progress}%`;
+                    }
+                    currentTimeSpan.textContent = formatTime(mainVideoPlayer.currentTime);
+                });
+
+                mainVideoPlayer.addEventListener('loadedmetadata', () => {
+                    durationSpan.textContent = formatTime(mainVideoPlayer.duration);
+                    // playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; // This line is now handled by loadMedia for immediate feedback
+                });
+
+                mainVideoPlayer.addEventListener('ended', () => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playOverlay.style.opacity = '1';
+                    mainVideoPlayer.currentTime = 0; // Reset to beginning
+                    progressBar.value = 0;
+                    progressBarFill.style.width = '0%';
+                });
+
+                mainVideoPlayer.addEventListener('pause', () => {
+                    controls.style.opacity = '1';
+                    clearTimeout(controlsTimeout);
+                    playOverlay.style.opacity = '1'; // Show overlay when paused
+                });
+                mainVideoPlayer.addEventListener('play', () => {
+                    playOverlay.style.opacity = '0'; // Hide overlay when video starts playing
+                    controlsTimeout = setTimeout(() => {
+                        controls.style.opacity = '0';
+                    }, 3000); // Start timeout to hide controls
+                });
+
+                mainVideoPlayer.addEventListener('canplay', () => {
+                    loadingSpinner.classList.add('hidden'); // Hide spinner
+                });
+
+                mainVideoPlayer.addEventListener('waiting', () => {
+                    loadingSpinner.classList.remove('hidden'); // Show spinner when buffering
+                });
+
+                mainVideoPlayer.addEventListener('playing', () => {
+                    loadingSpinner.classList.add('hidden'); // Hide spinner when playing resumes
+                });
+
+                mainVideoPlayer.addEventListener('error', () => {
+                    loadingSpinner.classList.add('hidden');
+                    playOverlay.style.opacity = '1';
+                    // Removed the red warning triangle icon as per user request
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; // Revert to play icon on error
+                    console.error('[mainVideoPlayer error] An error occurred during video playback. Check media URL and permissions.');
+                });
+            }
+
+
+            if (progressBar) {
+                progressBar.addEventListener('input', (e) => {
+                    const seekTime = (e.target.value / 100) * mainVideoPlayer.duration;
+                    mainVideoPlayer.currentTime = seekTime;
+                    progressBarFill.style.width = `${e.target.value}%`; // Update fill immediately
+                });
+
+                progressBar.addEventListener('mousedown', () => {
+                    isDraggingProgressBar = true;
+                });
+                progressBar.addEventListener('mouseup', () => {
+                    isDraggingProgressBar = false;
+                });
+            }
+
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', (e) => {
+                    mainVideoPlayer.volume = e.target.value;
+                    updateVolumeIcon();
+                });
+            }
+
+            if (muteBtn) muteBtn.addEventListener('click', () => {
+                if (mainVideoPlayer.volume === 0) {
+                    mainVideoPlayer.volume = lastVolume; // Restore last volume
+                    volumeSlider.value = lastVolume;
+                } else {
+                    lastVolume = mainVideoPlayer.volume; // Save current volume
+                    mainVideoPlayer.volume = 0;
+                    volumeSlider.value = 0;
+                }
+                updateVolumeIcon();
+            });
+
+            if (fullscreenBtn) fullscreenBtn.addEventListener('click', () => {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    // Request fullscreen for the media player container
+                    if (mainMediaPlayerContainer.requestFullscreen) {
+                        mainMediaPlayerContainer.requestFullscreen();
+                    } else if (mainMediaPlayerContainer.mozRequestFullScreen) { /* Firefox */
+                        mainMediaPlayerContainer.mozRequestFullScreen();
+                    } else if (mainMediaPlayerContainer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        mainMediaPlayerContainer.webkitRequestFullscreen();
+                    } else if (mainMediaPlayerContainer.msRequestFullscreen) { /* IE/Edge */
+                        mainMediaPlayerContainer.msRequestFullscreen();
+                    }
+                }
+            });
+
+            document.addEventListener('fullscreenchange', () => {
+                if (document.fullscreenElement) {
+                    fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                } else {
+                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            });
+
+            if (mainMediaPlayerContainer) {
+                mainMediaPlayerContainer.addEventListener('mouseenter', () => {
+                    if (imagePlayer.classList.contains('hidden')) { // Only show controls if video is active
+                        clearTimeout(controlsTimeout);
+                        controls.style.opacity = '1';
+                    }
+                });
+
+                mainMediaPlayerContainer.addEventListener('mouseleave', () => {
+                    if (imagePlayer.classList.contains('hidden') && !mainVideoPlayer.paused) { // Only hide if video is playing
+                        controlsTimeout = setTimeout(() => {
+                            controls.style.opacity = '0';
+                        }, 3000); // Hide after 3 seconds of inactivity
                     }
                 });
             }
-        });
 
-        // Handle the "LOG - IN" button in the header nav
-        document.querySelector('a.header-cta-button').addEventListener('click', function (e) {
-            e.preventDefault();
-            showMessageBox('Login Feature', 'Login functionality is under development.', false);
-        });
+            if (imagePlayer) {
+                imagePlayer.addEventListener('load', () => {
+                    loadingSpinner.classList.add('hidden'); // Hide spinner
+                });
 
-        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
-        const messageBoxTitle = document.getElementById('messageBoxTitle');
-        const messageBoxContent = document.getElementById('messageBoxContent');
-        const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
-
-        // Function to display the custom message box
-        function showMessageBox(title, content, isSuccess) {
-            messageBoxTitle.textContent = title;
-            messageBoxContent.textContent = content;
-            
-            // Apply success/error styling if needed
-            if (isSuccess) {
-                messageBoxTitle.style.color = 'var(--accent)';
-            } else {
-                messageBoxTitle.style.color = 'var(--primary-dark)';
+                imagePlayer.addEventListener('error', () => {
+                    loadingSpinner.classList.add('hidden');
+                    console.error('[imagePlayer error] An error occurred loading the image. Check image URL and permissions.');
+                });
             }
 
-            messageBoxOverlay.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-        }
 
-        // Function to hide the custom message box
-        function hideMessageBox() {
-            messageBoxOverlay.classList.remove('show');
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-        }
-
-        // Event listener for closing the message box
-        messageBoxCloseBtn.addEventListener('click', hideMessageBox);
-        messageBoxOverlay.addEventListener('click', function(e) {
-            if (e.target === messageBoxOverlay) { // Close only if clicking on the overlay itself
-                hideMessageBox();
-            }
-        });
-
-
-        // --- Lightbox Gallery JavaScript ---
-        const galleryItems = document.querySelectorAll('.gallery-item img');
-        const lightboxOverlay = document.getElementById('lightboxOverlay');
-        const lightboxImage = document.getElementById('lightboxImage');
-        const lightboxTitle = document.getElementById('lightboxTitle');
-        const lightboxClose = document.getElementById('lightboxClose');
-        const lightboxPrev = document.getElementById('lightboxPrev');
-        const lightboxNext = document.getElementById('lightboxNext');
-
-        let currentImageIndex = 0;
-        const imageUrls = [];
-        const imageAlts = [];
-
-        // Populate image data arrays
-        galleryItems.forEach((img, index) => {
-            imageUrls.push(img.src);
-            imageAlts.push(img.alt);
-            // Add click listener to each image
-            img.addEventListener('click', () => openLightbox(index));
-        });
-
-        function openLightbox(index) {
-            currentImageIndex = index;
-            updateLightboxContent();
-            lightboxOverlay.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when lightbox is open
-        }
-
-        function closeLightbox() {
-            lightboxOverlay.classList.remove('show');
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-        }
-
-        function updateLightboxContent() {
-            lightboxImage.src = imageUrls[currentImageIndex];
-            lightboxImage.alt = imageAlts[currentImageIndex];
-            lightboxTitle.textContent = imageAlts[currentImageIndex] || ''; // Display alt text as title, or empty string if no alt
-        }
-
-        function showNextImage() {
-            currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
-            updateLightboxContent();
-        }
-
-        function showPrevImage() {
-            currentImageIndex = (currentImageIndex - 1 + imageUrls.length) % imageUrls.length;
-            updateLightboxContent();
-        }
-
-        // Event Listeners for Lightbox Controls
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightboxPrev.addEventListener('click', showPrevImage);
-        lightboxNext.addEventListener('click', showNextImage);
-
-        // Close lightbox when clicking on the overlay itself (not the image/buttons)
-        lightboxOverlay.addEventListener('click', function(e) {
-            if (e.target === lightboxOverlay) {
-                closeLightbox();
-            }
-        });
-
-        // Keyboard navigation for lightbox
-        document.addEventListener('keydown', function(e) {
-            if (lightboxOverlay.classList.contains('show')) {
-                if (e.key === 'ArrowLeft') {
-                    showPrevImage();
-                } else if (e.key === 'ArrowRight') {
-                    showNextImage();
-                } else if (e.key === 'Escape') {
-                    closeLightbox();
+            // Event listener for filter buttons
+            filterButtonsContainer.addEventListener('click', (event) => {
+                const target = event.target;
+                if (target.classList.contains('filter-button')) {
+                    console.log(`[Filter Button Click] Filter selected: ${target.dataset.filter}`);
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.filter-button').forEach(button => {
+                        button.classList.remove('active');
+                    });
+                    // Add active class to clicked button
+                    target.classList.add('active');
+                    currentFilter = target.dataset.filter; // Update current filter
+                    renderHomePageVideos(searchInput.value); // Re-render videos with new filter and current search term
                 }
-            }
+            });
+
+            // Search functionality for live suggestions and filtering
+            searchInput.addEventListener('input', (event) => {
+                const searchTerm = event.target.value;
+                console.log(`[Search Input] Current search term: "${searchTerm}"`);
+                renderSearchSuggestions(searchTerm);
+                // Also filter main grid if on home page
+                if (!homePage.classList.contains('hidden')) {
+                    renderHomePageVideos(searchTerm);
+                }
+            });
+
+            // Hide suggestions when search input loses focus, with a small delay
+            searchInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    searchResultsContainer.classList.add('hidden');
+                }, 100); // Small delay to allow click on suggestions to register
+            });
+
+            // Show suggestions when search input gains focus if there's text
+            searchInput.addEventListener('focus', (event) => {
+                const searchTerm = event.target.value;
+                if (searchTerm.length > 0) {
+                    renderSearchSuggestions(searchTerm);
+                }
+            });
+
+            // Event listener for MyTube title to go back to home page
+            homeLink.addEventListener('click', () => {
+                console.log('[Home Link Click] Navigating to home page.');
+                showPage('homePage');
+                currentFilter = 'all'; // Reset filter to 'all'
+                // Reset active button
+                document.querySelectorAll('.filter-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+                document.querySelector('.filter-button[data-filter="all"]').classList.add('active');
+
+                renderHomePageVideos(); // Re-render home page videos with 'all' filter
+                searchInput.value = ''; // Clear search input
+                searchResultsContainer.classList.add('hidden'); // Hide suggestions
+            });
+
+            // Event listener for the main player's like button
+            likeButton.addEventListener('click', (event) => {
+                const mediaId = event.currentTarget.dataset.mediaId;
+                handleLikeClick(mediaId);
+            });
+
+            // Event listener for the main player's share button
+            shareButton.addEventListener('click', handleShareClick);
+
+            // Event listener for the main player's download button
+            downloadButton.addEventListener('click', handleDownloadClick);
+
+            // Event listeners for image modal
+            modalCloseButton.addEventListener('click', () => {
+                imageModal.classList.add('hidden');
+            });
+
+            imageModal.addEventListener('click', (event) => {
+                // Close modal if clicked outside the image content
+                if (event.target === imageModal) {
+                    imageModal.classList.add('hidden');
+                }
+            });
+
+            // Initial load: Fetch videos from Google Drive API
+            fetchMediaFromDriveAPI();
+            updateVolumeIcon(); // Set initial volume icon
         });
     </script>
 </body>
-
 </html>
