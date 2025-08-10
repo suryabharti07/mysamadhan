@@ -4,15 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>आरामदायक और मॉडर्न डेटा एंट्री फॉर्म</title>
-    <!-- Tailwind CSS and Poppins font -->
+    <!-- Tailwind CSS and Poppins font from Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #e2e8f0; /* Fallback color */
-            background: linear-gradient(to bottom right, #f8faff 0%, #dbeafe 100%);
-        }
         /* Custom styling for the select arrow, making it consistent with Tailwind */
         select {
             -webkit-appearance: none;
@@ -23,6 +18,19 @@
             background-position: right 1rem center;
             background-size: 1rem;
         }
+
+        /* The body is set to a minimum height of the full screen viewport, which ensures the content is always centered vertically and prevents horizontal scrolling on most devices. */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #e2e8f0; /* Fallback color */
+            background: linear-gradient(to bottom right, #f8faff 0%, #dbeafe 100%);
+            min-height: 100vh; /* This ensures the body takes up at least the full height of the viewport */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem; /* Add some padding to the body for all screen sizes */
+        }
+        
         /* Custom dropdown styling */
         .custom-dropdown-container {
             position: relative;
@@ -69,9 +77,10 @@
         }
     </style>
 </head>
+<!-- The body class uses flexbox to center the form both horizontally and vertically -->
 <body class="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
 
-    <!-- Main Container -->
+    <!-- The main container has a responsive max-width to look good on large screens and a full width on smaller screens -->
     <div class="w-full max-w-5xl p-6 sm:p-8 lg:p-12 bg-white rounded-[3rem] shadow-[0_20px_50px_rgba(8,_112,_184,_0.3)] border border-slate-100">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-800 text-center mb-10 tracking-tight leading-tight">बच्चों का डेटा एंट्री फॉर्म</h1>
         
@@ -86,6 +95,7 @@
                     </svg>
                     Students Details
                 </h2>
+                <!-- The grid layout is responsive, changing from 1 to 3 columns based on screen size -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                     <div>
                         <label for="childName" class="block text-slate-600 font-semibold mb-2">बच्चे का नाम</label>
@@ -93,7 +103,6 @@
                     </div>
                     <div>
                         <label for="childDOB" class="block text-slate-600 font-semibold mb-2">जन्म तिथि</label>
-                        <!-- Removed 'required' attribute -->
                         <input type="date" id="childDOB" name="childDOB" class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 shadow-sm">
                     </div>
                     <div>
@@ -142,7 +151,6 @@
                     </div>
                     <div>
                         <label for="motherDOB" class="block text-slate-600 font-semibold mb-2">माता की जन्म तिथि</label>
-                        <!-- Removed 'required' attribute -->
                         <input type="date" id="motherDOB" name="motherDOB" class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 shadow-sm">
                     </div>
                     <div>
@@ -202,7 +210,6 @@
                         <label for="fatherName" class="block text-slate-600 font-semibold mb-2">बच्चे के पिता का नाम</label>
                         <input type="text" id="fatherName" name="fatherName" placeholder="पिता का पूरा नाम" required class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 shadow-sm">
                     </div>
-                    <!-- NEW FIELD: Father's Aadhar -->
                     <div>
                         <label for="fatherAadhar" class="block text-slate-600 font-semibold mb-2">पिता का आधार नंबर</label>
                         <input type="text" id="fatherAadhar" name="fatherAadhar" placeholder="12 अंकों का आधार नंबर" pattern="\d{12}" maxlength="12" required class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 shadow-sm">
@@ -213,7 +220,6 @@
                     </div>
                     <div>
                         <label for="fatherDOB" class="block text-slate-600 font-semibold mb-2">पिता की जन्म तिथि</label>
-                        <!-- Removed 'required' attribute -->
                         <input type="date" id="fatherDOB" name="fatherDOB" class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 shadow-sm">
                     </div>
                     <div>
@@ -247,7 +253,6 @@
                     </div>
                     <div>
                         <label for="userName" class="block text-slate-600 font-semibold mb-2">USER NAME</label>
-                        <!-- Removed 'required' attribute -->
                         <input type="text" id="userName" name="userName" placeholder="अपना यूजर नाम डालें" class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 shadow-sm">
                     </div>
                 </div>
