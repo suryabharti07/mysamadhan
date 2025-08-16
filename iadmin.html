@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter for modern typography -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Base styles for dark theme */
+        /* Base styles for dark theme and typography */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #1a202c; /* Dark background */
@@ -79,6 +76,13 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deeper shadow for dark theme */
         }
 
+        .modal-content.edit-form-modal {
+            width: 90%;
+            max-width: 600px;
+            height: auto;
+            max-height: 90vh;
+        }
+
         .modal-header {
             padding: 1rem;
             display: flex;
@@ -87,7 +91,7 @@
             background-color: #2d3748;
         }
 
-        .modal-header #closeModalBtn { /* Specificity for the button */
+        .modal-header #closeModalBtn, .modal-header #closeEditModalBtn { /* Specificity for the button */
             position: relative; /* Ensure z-index works */
             z-index: 1001; /* Make sure it's on top within the modal, higher than iframe */
             outline: 2px solid transparent; /* Default transparent outline */
@@ -97,7 +101,7 @@
             pointer-events: auto; /* Ensure clicks are registered */
         }
 
-        .modal-header #closeModalBtn:focus {
+        .modal-header #closeModalBtn:focus, .modal-header #closeEditModalBtn:focus {
             outline-color: #63b3ed; /* blue-300 for focus ring */
         }
 
@@ -207,13 +211,19 @@
         .dark-table-divide {
             border-color: #4a5568; /* Darker divider */
         }
+        /* Style for clickable links in the table */
+        td a {
+            color: inherit;
+            text-decoration: none;
+        }
+        td a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="selection:bg-blue-600 selection:text-white">
 
-    <!-- Main Content Area (Now full width) -->
     <div class="main-content flex flex-col">
-        <!-- Dashboard Header (Simplified) -->
         <header class="bg-gray-800 rounded-xl shadow-md py-4 px-6 mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-extrabold text-white">Admin Dashboard</h1>
             <div class="flex items-center space-x-4">
@@ -221,57 +231,49 @@
             </div>
         </header>
 
-        <!-- Block-wise User Distribution Section -->
         <section class="bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8 mb-8">
             <h3 class="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-3">Block-wise User Distribution</h3>
             <div id="blockDistribution" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <!-- Block statistics will be populated here by JavaScript -->
-            </div>
+                </div>
         </section>
 
-        <!-- Main Data Table Section -->
         <div class="bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8">
             <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-4">Manage User Data</h2>
 
-            <!-- Search and Filter Section -->
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <input type="text" id="searchInput" placeholder="Search by User Name, Teacher, Father, or Contact No..."
                         class="w-full sm:w-auto flex-grow px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out dark-theme-element placeholder-gray-400 text-gray-200">
                 <select id="blockFilter"
                         class="w-full sm:w-auto px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out dark-theme-element text-gray-200">
                     <option value="">All Blocks</option>
-                    <!-- Block options will be populated here by JavaScript -->
-                </select>
+                    </select>
             </div>
 
-            <!-- Table Container for Horizontal Scrolling -->
             <div class="overflow-x-auto rounded-lg shadow-md table-container border border-gray-700">
-                <table class="min-w-full divide-y divide-gray-700">
+                <table class="min-w-full table-auto divide-y divide-gray-700">
                     <thead class="dark-table-header">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="userName">
+                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="userName">
                                 User Name <i class="fas fa-sort ml-1 text-gray-500"></i>
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="teacherName">
+                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="teacherName">
                                 Teacher Name <i class="fas fa-sort ml-1 text-gray-500"></i>
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Father/Husband Name</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Contact No</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="block">
+                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Father/Husband Name</th>
+                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Contact No</th>
+                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="block">
                                 Block <i class="fas fa-sort ml-1 text-gray-500"></i>
                             </th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Action</th>
+                            <th scope="col" class="px-2 py-3 text-center text-xs font-semibold uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
                     <tbody id="dataTableBody" class="divide-y dark-table-divide">
-                        <!-- Data will be populated here by JavaScript -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Full-screen Modal for Sheet Link -->
     <div id="sheetModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -287,13 +289,57 @@
         </div>
     </div>
 
-    <!-- Custom Message Box -->
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-content edit-form-modal">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-white flex-grow">Edit User Data</h3>
+                <button id="closeEditModalBtn" class="text-gray-400 hover:text-white focus:outline-none p-1 rounded-full hover:bg-gray-700 transition duration-150 ease-in-out">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body p-6 overflow-y-auto">
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="editRowIndex">
+
+                    <div>
+                        <label for="editUserName" class="block text-sm font-medium text-gray-300">User Name</label>
+                        <input type="text" id="editUserName" class="mt-1 block w-full rounded-md dark-theme-element p-2">
+                    </div>
+                    <div>
+                        <label for="editTeacherName" class="block text-sm font-medium text-gray-300">Teacher Name</label>
+                        <input type="text" id="editTeacherName" class="mt-1 block w-full rounded-md dark-theme-element p-2">
+                    </div>
+                    <div>
+                        <label for="editFatherName" class="block text-sm font-medium text-gray-300">Father/Husband Name</label>
+                        <input type="text" id="editFatherName" class="mt-1 block w-full rounded-md dark-theme-element p-2">
+                    </div>
+                    <div>
+                        <label for="editContactNo" class="block text-sm font-medium text-gray-300">Contact No</label>
+                        <input type="tel" id="editContactNo" class="mt-1 block w-full rounded-md dark-theme-element p-2">
+                    </div>
+                    <div>
+                        <label for="editBlock" class="block text-sm font-medium text-gray-300">Block</label>
+                        <input type="text" id="editBlock" class="mt-1 block w-full rounded-md dark-theme-element p-2">
+                    </div>
+                    
+                    <div class="flex justify-end pt-4 border-t border-gray-700 mt-4">
+                        <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <div id="messageBox" class="message-box">
         <span id="messageText"></span>
         <button class="close-btn" onclick="hideMessageBox()">&times;</button>
     </div>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
     </div>
@@ -304,6 +350,9 @@
         const sheetModal = document.getElementById('sheetModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const sheetIframe = document.getElementById('sheetIframe');
+        const editModal = document.getElementById('editModal');
+        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+        const editForm = document.getElementById('editForm');
         const searchInput = document.getElementById('searchInput');
         const blockFilter = document.getElementById('blockFilter');
         const messageBox = document.getElementById('messageBox');
@@ -316,13 +365,15 @@
         let currentSortColumn = null;
         let currentSortDirection = 'asc'; // 'asc' or 'desc'
 
-        // This URL is your deployed Google Apps Script web app link.
-        // It will fetch the data from your Google Sheet.
-        const GOOGLE_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbxP5bi_dBPn5WgNdNEACcNu-w-arxpJIyFdS10RHvRCqOg6vlZNeiq9cFRBolWvV4N5gw/exec';
+        // ! IMPORTANT: Replace this URL with your deployed Google Apps Script web app URL.
+        const GOOGLE_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyXgeYiVT2a9axst_Z9ZciR5U77aSXvVBWwZPG9_FdDVEHCUCz8g8VntLFjmiNISGKewg/exec';
+        const EDIT_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyXgeYiVT2a9axst_Z9ZciR5U77aSXvVBWwZPG9_FdDVEHCUCz8g8VntLFjmiNISGKewg/exec';
 
         // --- Dummy Data (This will only be used if fetching from the Google Sheet URL fails) ---
+        // Note: I have added a 'rowIndex' to each dummy data item to simulate what the Apps Script will return.
         const dummyData = [
             {
+                "rowIndex": 2, // Corresponds to row 2 in the sheet
                 "User Name": "Amit Kumar",
                 "Teacher Name": "Mr. Sharma",
                 "FATHER/HUSBAND NAME": "Rajesh Kumar",
@@ -332,6 +383,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_amit/edit?usp=sharing"
             },
             {
+                "rowIndex": 3,
                 "User Name": "Bhavna Devi",
                 "Teacher Name": "Ms. Verma",
                 "FATHER/HUSBAND NAME": "Suresh Singh",
@@ -341,6 +393,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_bhavna/edit?usp=sharing"
             },
             {
+                "rowIndex": 4,
                 "User Name": "Chandan Gupta",
                 "Teacher Name": "Mrs. Mishra",
                 "FATHER/HUSBAND NAME": "Vijay Gupta",
@@ -350,6 +403,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_chandan/edit?usp=sharing"
             },
             {
+                "rowIndex": 5,
                 "User Name": "Divya Singh",
                 "Teacher Name": "Mr. Yadav",
                 "FATHER/HUSBAND NAME": "Ajay Singh",
@@ -359,6 +413,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_divya/edit?usp=sharing"
             },
             {
+                "rowIndex": 6,
                 "User Name": "Ishan Sharma",
                 "Teacher Name": "Ms. Kapoor",
                 "FATHER/HUSBAND NAME": "Naveen Sharma",
@@ -368,6 +423,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_ishan/edit?usp=sharing"
             },
             {
+                "rowIndex": 7,
                 "User Name": "Fatima Khan",
                 "Teacher Name": "Mr. Singh",
                 "FATHER/HUSBAND NAME": "Abbas Khan",
@@ -377,6 +433,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_fatima/edit?usp=sharing"
             },
             {
+                "rowIndex": 8,
                 "User Name": "Gaurav Jain",
                 "Teacher Name": "Ms. Gupta",
                 "FATHER/HUSBAND NAME": "Prakash Jain",
@@ -386,6 +443,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_gaurav/edit?usp=sharing"
             },
             {
+                "rowIndex": 9,
                 "User Name": "Harmanpreet Kaur",
                 "Teacher Name": "Mr. Dhawan",
                 "FATHER/HUSBAND NAME": "Jaspal Kaur",
@@ -395,6 +453,7 @@
                 "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_harman/edit?usp=sharing"
             },
             {
+                "rowIndex": 10,
                 "User Name": "Imran Hashmi",
                 "Teacher Name": "Mr. Khan",
                 "FATHER/HUSBAND NAME": "Anwar Hashmi",
@@ -449,6 +508,7 @@
         async function fetchData() {
             showLoading(); // Show loading indicator
             try {
+                // The Apps Script now returns the row index, so we get that back.
                 const response = await fetch(GOOGLE_SHEET_DATA_URL);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}. Please check your Google Apps Script deployment and permissions.`);
@@ -472,7 +532,7 @@
             dataTableBody.innerHTML = ''; // Clear existing rows
             if (data.length === 0) {
                 const noDataRow = document.createElement('tr');
-                noDataRow.innerHTML = `<td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400 italic">No matching data found.</td>`;
+                noDataRow.innerHTML = `<td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400 italic">No matching data found.</td>`;
                 dataTableBody.appendChild(noDataRow);
                 return;
             }
@@ -480,25 +540,37 @@
             data.forEach(rowData => {
                 const row = document.createElement('tr');
                 row.classList.add('dark-table-row'); // Apply dark theme row class
+                // Store the unique row index for editing later
+                row.dataset.rowIndex = rowData.rowIndex;
 
                 // Create table cells for each column
-                const userNameCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'font-medium'], rowData["User Name"] || '');
-                const teacherNameCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["Teacher Name"] || '');
-                const fatherHusbandNameCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["FATHER/HUSBAND NAME"] || '');
-                const contactNoCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["CONTACT NO"] || '');
-                const blockCell = newElement('td', ['px-6', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["BLOCK"] || '');
+                const userNameCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm', 'font-medium'], rowData["User Name"] || '');
+                const teacherNameCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["Teacher Name"] || '');
+                const fatherHusbandNameCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["FATHER/HUSBAND NAME"] || '');
+
+                // MODIFIED: Create a clickable link for the contact number
+                const contactNoCell = document.createElement('td');
+                contactNoCell.classList.add('px-2', 'py-4', 'whitespace-nowrap', 'text-sm');
+                if (rowData["CONTACT NO"]) {
+                    const contactLink = document.createElement('a');
+                    contactLink.href = `tel:${rowData["CONTACT NO"]}`;
+                    contactLink.textContent = rowData["CONTACT NO"];
+                    contactNoCell.appendChild(contactLink);
+                }
+
+                const blockCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["BLOCK"] || '');
 
                 // Action buttons cell
                 const actionCell = document.createElement('td');
-                actionCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-center', 'text-sm', 'font-medium');
+                actionCell.classList.add('px-2', 'py-4', 'whitespace-nowrap', 'text-center', 'text-sm', 'font-medium');
 
                 const webButton = document.createElement('button');
                 webButton.textContent = 'Web';
                 webButton.classList.add(
-                    'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
+                    'inline-flex', 'items-center', 'px-3', 'py-1.5', 'border', 'border-transparent', 'text-xs', 'font-medium',
                     'rounded-md', 'shadow-sm', 'text-white', 'bg-green-600', 'hover:bg-green-700', 'focus:outline-none',
                     'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500', 'transition', 'duration-150', 'ease-in-out',
-                    'mr-2', 'rounded-lg'
+                    'mr-1', 'rounded-lg'
                 );
                 webButton.onclick = () => {
                     if (rowData["WEB LINK"]) {
@@ -511,10 +583,10 @@
                 const sheetButton = document.createElement('button');
                 sheetButton.textContent = 'Sheet';
                 sheetButton.classList.add(
-                    'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
+                    'inline-flex', 'items-center', 'px-3', 'py-1.5', 'border', 'border-transparent', 'text-xs', 'font-medium',
                     'rounded-md', 'shadow-sm', 'text-white', 'bg-indigo-600', 'hover:bg-indigo-700', 'focus:outline-none',
                     'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-indigo-500', 'transition', 'duration-150', 'ease-in-out',
-                    'rounded-lg'
+                    'rounded-lg', 'mr-1'
                 );
                 sheetButton.onclick = () => {
                     if (rowData["SHEET LINK"]) {
@@ -525,8 +597,21 @@
                     }
                 };
 
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.classList.add(
+                    'inline-flex', 'items-center', 'px-3', 'py-1.5', 'border', 'border-transparent', 'text-xs', 'font-medium',
+                    'rounded-md', 'shadow-sm', 'text-white', 'bg-yellow-600', 'hover:bg-yellow-700', 'focus:outline-none',
+                    'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-yellow-500', 'transition', 'duration-150', 'ease-in-out',
+                    'rounded-lg'
+                );
+                editButton.onclick = () => {
+                    openEditModal(rowData);
+                };
+
                 actionCell.appendChild(webButton);
                 actionCell.appendChild(sheetButton);
+                actionCell.appendChild(editButton);
 
                 // Append all cells to the row
                 row.appendChild(userNameCell);
@@ -547,6 +632,76 @@
             element.textContent = textContent;
             return element;
         }
+
+        /**
+         * Opens the edit modal and populates the form with the selected row's data.
+         * @param {Object} rowData - The data object for the selected row.
+         */
+        function openEditModal(rowData) {
+            document.getElementById('editRowIndex').value = rowData.rowIndex;
+            document.getElementById('editUserName').value = rowData["User Name"] || '';
+            document.getElementById('editTeacherName').value = rowData["Teacher Name"] || '';
+            document.getElementById('editFatherName').value = rowData["FATHER/HUSBAND NAME"] || '';
+            document.getElementById('editContactNo').value = rowData["CONTACT NO"] || '';
+            document.getElementById('editBlock').value = rowData["BLOCK"] || '';
+            editModal.classList.add('active');
+        }
+
+        /**
+         * Submits the edited data to the Google Apps Script.
+         * @param {Event} event - The form submission event.
+         */
+        async function submitEditForm(event) {
+            event.preventDefault();
+            showLoading();
+
+            const rowIndex = document.getElementById('editRowIndex').value;
+            const updatedData = {
+                'User Name': document.getElementById('editUserName').value,
+                'Teacher Name': document.getElementById('editTeacherName').value,
+                'FATHER/HUSBAND NAME': document.getElementById('editFatherName').value,
+                'CONTACT NO': document.getElementById('editContactNo').value,
+                'BLOCK': document.getElementById('editBlock').value,
+            };
+
+            const payload = {
+                rowIndex: parseInt(rowIndex, 10),
+                data: updatedData
+            };
+
+            try {
+                const response = await fetch(EDIT_SHEET_DATA_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Use 'no-cors' for Google Apps Script to avoid pre-flight issues
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    redirect: 'follow',
+                    body: JSON.stringify(payload)
+                });
+
+                // Since we're using no-cors, we can't inspect the response, but the call will be made.
+                // We'll optimistically update the UI and re-fetch for confirmation.
+                editModal.classList.remove('active');
+                showMessageBox("Data submitted for update. Refreshing...", 'success');
+                // Re-fetch data to reflect the changes after a short delay
+                setTimeout(async () => {
+                    const freshData = await fetchData();
+                    allData = freshData;
+                    populateBlockFilter(allData);
+                    populateBlockStatistics(allData);
+                    filterAndSortData();
+                    hideLoading();
+                    showMessageBox("Dashboard updated successfully!", 'success');
+                }, 2000); // 2-second delay to allow the Apps Script to finish
+            } catch (error) {
+                console.error('Error updating data:', error);
+                showMessageBox('Failed to save data. Please try again.', 'error');
+                hideLoading();
+            }
+        }
+
 
         /**
          * Populates the block filter dropdown with unique block names.
@@ -694,7 +849,6 @@
 
             // Modal Event Listeners
             closeModalBtn.addEventListener('click', () => {
-                console.log("Close button clicked!"); // Added for debugging
                 sheetModal.classList.remove('active'); // Hide modal
                 sheetIframe.src = ''; // Clear iframe src to stop any loaded content
             });
@@ -710,6 +864,18 @@
             document.querySelectorAll('th[data-sort]').forEach(th => {
                 th.addEventListener('click', handleColumnSort);
             });
+
+            // New Modal and Form Event Listeners
+            closeEditModalBtn.addEventListener('click', () => {
+                editModal.classList.remove('active');
+            });
+            editModal.addEventListener('click', (event) => {
+                if (event.target === editModal) {
+                    editModal.classList.remove('active');
+                }
+            });
+
+            editForm.addEventListener('submit', submitEditForm);
         });
     </script>
 </body>
