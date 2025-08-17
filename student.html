@@ -3,169 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>स्थान चयन पॉपअप</title>
-    <!-- Google Fonts से Poppins फ़ॉन्ट आयात करें -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>छात्र डेटा खोजें</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* बॉडी के लिए सामान्य स्टाइलिंग */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f2f5; /* पॉपअप के पीछे के पेज के लिए हल्का बैकग्राउंड */
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* GitHub dark mode background */
         }
-
-        /* पॉपअप ओवरले के लिए स्टाइलिंग */
-        #popupOverlay {
-            display: none; /* डिफ़ॉल्ट रूप से छिपा हुआ */
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6); /* अर्ध-पारदर्शी काला ओवरले */
-            z-index: 1000; /* सुनिश्चित करें कि यह शीर्ष पर है */
-            backdrop-filter: blur(5px); /* आधुनिक ब्लर प्रभाव */
-            display: flex; /* सामग्री को केंद्र में रखने के लिए फ्लेक्सबॉक्स का उपयोग करें */
-            justify-content: center;
-            align-items: center;
+        .container-bg {
+            background-color: #0d1117;
         }
-
-        /* पॉपअप कंटेनर के लिए स्टाइलिंग */
-        #popupContainer {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px; /* चिकने गोल कोने */
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* गहरा, नरम छाया */
-            text-align: center;
-            max-width: 450px; /* बड़ी स्क्रीन के लिए अधिकतम चौड़ाई */
-            width: 90%; /* प्रतिक्रियाशील चौड़ाई */
-            position: relative; /* बंद बटन की स्थिति के लिए */
-            opacity: 0; /* फेड-इन के लिए अदृश्य से शुरू करें */
-            transform: scale(0.9); /* स्केल-इन के लिए थोड़ा छोटा से शुरू करें */
-            transition: all 0.3s ease-out; /* फेड और स्केल के लिए एनीमेशन */
+        .card-bg {
+            background-color: #161b22; /* Slightly lighter card background */
         }
-
-        /* जब पॉपअप सक्रिय हो */
-        #popupContainer.active {
-            opacity: 1;
-            transform: scale(1);
+        .accent-color {
+            background-color: #238636; /* GitHub green accent */
+            color: #ffffff;
         }
-
-        /* शीर्षक (H2) के लिए स्टाइलिंग */
-        #popupContainer h2 {
-            color: #333;
-            margin-top: 0;
-            font-size: 1.8em;
-            font-weight: 600;
+        .border-accent {
+            border-color: #238636;
         }
-
-        /* पैराग्राफ (P) के लिए स्टाइलिंग */
-        #popupContainer p {
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.6;
+        #resultsContainer, #noResults, #loading {
+            animation: fadeIn 0.5s ease-in-out;
         }
-
-        /* विकल्प बटन के लिए स्टाइलिंग */
-        .option-button {
-            display: block; /* बटन को पूरी चौड़ाई लेने के लिए */
-            background-color: #007bff; /* प्राथमिक नीला रंग */
-            color: white;
-            padding: 12px 25px;
-            margin: 15px auto; /* ऊर्ध्वाधर रिक्ति के साथ केंद्रित */
-            border-radius: 8px; /* गोल बटन */
-            text-decoration: none; /* लिंक से अंडरलाइन हटाएँ */
-            font-weight: 600;
-            font-size: 1.1em;
-            transition: background-color 0.2s ease, transform 0.1s ease; /* चिकने होवर प्रभाव */
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* सूक्ष्म बटन छाया */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        /* होवर पर विकल्प बटन के लिए स्टाइलिंग */
-        .option-button:hover {
-            background-color: #0056b3; /* होवर पर गहरा नीला */
-            transform: translateY(-2px); /* हल्का लिफ्ट प्रभाव */
+        /* Style the scrollbar */
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 8px;
         }
-
-        /* बंद बटन के लिए स्टाइलिंग */
-        #closePopup {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 28px; /* बड़ा 'X' */
-            color: #aaa; /* हल्का ग्रे रंग */
-            cursor: pointer;
-            transition: color 0.2s ease;
-            line-height: 1; /* 'X' के बेहतर ऊर्ध्वाधर संरेखण के लिए */
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: #161b22;
         }
-
-        /* होवर पर बंद बटन के लिए स्टाइलिंग */
-        #closePopup:hover {
-            color: #666; /* होवर पर गहरा ग्रे */
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background-color: #238636;
+            border-radius: 4px;
+            border: 2px solid #161b22;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background-color: #2ea043;
         }
     </style>
 </head>
-<body>
+<body class="container-bg min-h-screen flex flex-col items-center">
 
-    <!-- पॉपअप ओवरले - जब पॉपअप खुला हो तो पृष्ठभूमि को कवर करता है -->
-    <div id="popupOverlay">
-        <!-- पॉपअप कंटेनर - वास्तविक पॉपअप सामग्री को रखता है -->
-        <div id="popupContainer">
-            <!-- पॉपअप बंद करने के लिए बटन -->
-            <button id="closePopup">&times;</button>
-            <h2>अपना स्थान चुनें</h2>
-            <p>आगे बढ़ने के लिए कृपया अपना पसंदीदा स्थान चुनें।</p>
-            <!-- राघोपुर के लिए लिंक बटन -->
-            <a href="https://script.google.com/macros/s/AKfycby4xRip_Nfe3I8L_i0AGKHsgARgCU-8QudQwLbLD6em1iAu1bMc6dTtWXLv-Jw8RG8l9A/exec" class="option-button">राघोपुर</a>
-            <!-- बिदुपुर के लिए लिंक बटन -->
-            <a href="https://script.google.com/macros/s/AKfycbzmG8ChhWSFdKfxHQ8o3EJteIlPidPZPnATw9t8xJ2zQbzmnPcKd_zfyuiaEfmNW9wWWw/exec" class="option-button">बिदुपुर</a>
+    <!-- Fixed Header with Search Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-gray-900 bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-gray-700 p-4 shadow-xl flex items-center justify-center">
+        <div class="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#" class="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-0 mr-auto hover:text-gray-400 transition-colors duration-200">
+                छात्र खोज
+            </a>
+            <div class="relative w-full">
+                <input type="text" id="searchInput" placeholder="छात्र का नाम या पिता का नाम दर्ज करें..." class="w-full p-3 rounded-full border border-gray-600 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 pr-10">
+                <button id="searchButton" class="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full text-white bg-green-500 hover:bg-green-600 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="w-full max-w-5xl px-4 py-8 mt-24">
+        <!-- Initial Message / Loading Indicator -->
+        <div id="loading" class="text-center text-lg text-gray-400 mt-20">Google Sheet से डेटा लोड हो रहा है...</div>
+        <div id="initialMessage" class="text-center text-gray-400 mt-20">
+            <p class="text-2xl mb-4">खोज शुरू करने के लिए ऊपर खोजें।</p>
+            <p class="text-sm">यहां आपके परिणाम दिखाई देंगे।</p>
+        </div>
+
+        <!-- Results container -->
+        <div id="resultsContainer" class="w-full text-white p-4 hidden">
+            <!-- Results will be dynamically inserted here -->
+        </div>
+
+        <!-- No Results Found Message -->
+        <div id="noResults" class="text-center text-red-400 mt-20 hidden">
+            <p class="text-3xl font-bold mb-2">कोई परिणाम नहीं मिला!</p>
+            <p class="text-lg">क्षमा करें, आपके खोज से कोई डेटा मेल नहीं खाता।</p>
+        </div>
+    </main>
+    
+    <!-- Full-screen modal for detailed view -->
+    <div id="detailModal" class="fixed inset-0 bg-gray-900 bg-opacity-95 backdrop-filter backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
+        <div class="card-bg p-8 rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] overflow-y-auto text-white relative">
+            <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-6 text-center">पूर्ण जानकारी</h2>
+            <div id="detailTableContainer" class="overflow-x-auto">
+                <!-- Detailed table will be inserted here -->
+            </div>
         </div>
     </div>
 
     <script>
-        // HTML तत्वों का संदर्भ प्राप्त करें
-        const popupOverlay = document.getElementById('popupOverlay');
-        const popupContainer = document.getElementById('popupContainer');
-        const closePopupButton = document.getElementById('closePopup'); // वेरिएबल का नाम बदला गया
+        // Data array to store student information
+        let studentData = [];
+        let allHeaders = []; // To store the headers from the CSV
 
-        // पॉपअप खोलने के लिए फ़ंक्शन
-        function openPopup() {
-            popupOverlay.style.display = 'flex'; // ओवरले को दृश्यमान करें
-            // 'active' क्लास जोड़ने से पहले डिस्प्ले प्रॉपर्टी को प्रभावी होने देने के लिए एक छोटा विलंब का उपयोग करें
-            setTimeout(() => {
-                popupContainer.classList.add('active');
-            }, 10);
+        // Google Sheet URLs - यहां आप अपनी शीट्स के URL जोड़ सकते हैं
+        const csvUrls = [
+            { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRS9PVawrzeHMglLcKrSTQdFOyVQ-r61wWYPw3UBUEUkTsehKdvCFwMei40OYwqDscvgUIpXTD3fGLU/pub?gid=1522639976&single=true&output=csv', location: 'Raghopur' },
+            { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT1XARn_P5GtXmAmKig50Vs3YVJky-J9Jq6PneViwllrhCj3mhj0JZz671uLDdfKn4WSQnq5Gqy0Ysm/pub?gid=2007015600&single=true&output=csv', location: 'Bidupur' }
+        ];
+
+        // Define groups for data based on column index ranges (A=0, B=1, etc.)
+        const DATA_GROUPS = [
+            { name: 'Student Details', range: [0, 3] },
+            { name: 'HINDI', range: [4, 44] },
+            { name: 'English', range: [45, 87] },
+            { name: 'Kamal book', range: [88, 129] },
+            { name: 'Counting', range: [130, 139] },
+            { name: 'Table', range: [140, 158] },
+            { name: 'Math', range: [159, 162] },
+            { name: 'Percentage', range: [169, 169] },
+            { name: 'Teacher', range: [170, 170] }
+        ];
+
+        // Get HTML elements
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const loadingIndicator = document.getElementById('loading');
+        const initialMessage = document.getElementById('initialMessage');
+        const noResultsMessage = document.getElementById('noResults');
+        const detailModal = document.getElementById('detailModal');
+        const closeModalButton = document.getElementById('closeModal');
+        const detailTableContainer = document.getElementById('detailTableContainer');
+        
+        // Function to fetch data from all Google Sheets
+        async function fetchStudentData() {
+            let combinedData = [];
+            let headersLoaded = false;
+
+            try {
+                for (const sheet of csvUrls) {
+                    const response = await fetch(sheet.url);
+                    const csvText = await response.text();
+                    const rows = csvText.trim().split('\n').filter(row => row.trim() !== '');
+
+                    // Get headers from the first sheet only
+                    if (!headersLoaded) {
+                        allHeaders = rows[0].split(',').map(header => header.trim());
+                        headersLoaded = true;
+                    }
+                    
+                    // Convert data into an array of objects
+                    const data = rows.slice(1).map(row => {
+                        const values = row.split(',').map(value => value ? value.trim() : '');
+                        const student = {};
+                        allHeaders.forEach((header, index) => {
+                            student[header] = values[index] ? values[index] : '';
+                        });
+                        student.sourceLocation = sheet.location; // Add the location to the student object
+                        return student;
+                    });
+                    combinedData = combinedData.concat(data);
+                }
+                return combinedData;
+            } catch (error) {
+                console.error("डेटा लाने में त्रुटि:", error);
+                loadingIndicator.innerHTML = `<p class="text-center text-red-400 mt-4">डेटा लोड करने में कोई समस्या है। कृपया URL की जाँच करें या फिर से कोशिश करें।</p>`;
+                return [];
+            }
         }
+        
+        // Load data on page load
+        window.onload = async () => {
+            studentData = await fetchStudentData();
+            loadingIndicator.classList.add('hidden'); // Hide loading message
+            initialMessage.classList.remove('hidden'); // Show initial message
+        };
 
-        // पॉपअप बंद करने के लिए फ़ंक्शन (नाम बदला गया)
-        function handleClosePopup() {
-            popupContainer.classList.remove('active');
-            // ओवरले को छिपाने से पहले एनीमेशन के समाप्त होने की प्रतीक्षा करें
-            setTimeout(() => {
-                popupOverlay.style.display = 'none';
-            }, 300); // CSS ट्रांज़िशन अवधि से मेल खाना चाहिए
-        }
-
-        // बंद बटन पर क्लिक करने पर पॉपअप बंद करें (नए फ़ंक्शन नाम का उपयोग करें)
-        closePopupButton.addEventListener('click', handleClosePopup);
-
-        // पॉपअप कंटेनर के बाहर (ओवरले पर) क्लिक करने पर पॉपअप बंद करें (नए फ़ंक्शन नाम का उपयोग करें)
-        popupOverlay.addEventListener('click', (e) => {
-            if (e.target === popupOverlay) {
-                handleClosePopup();
+        // Event listener for search button click
+        searchButton.addEventListener('click', () => {
+            performSearch(searchInput.value.trim());
+        });
+        
+        // Event listener for 'Enter' key press in search input
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                performSearch(this.value.trim());
             }
         });
 
-        // पेज लोड होने पर स्वचालित रूप से पॉपअप खोलें
-        // एक वास्तविक एप्लिकेशन में, आप इसे एक बटन क्लिक या विशिष्ट घटना पर ट्रिगर करना चाह सकते हैं।
-        document.addEventListener('DOMContentLoaded', openPopup);
-    </script>
+        // Main search function
+        function performSearch(searchTerm) {
+            // Hide all sections first
+            resultsContainer.classList.add('hidden');
+            noResultsMessage.classList.add('hidden');
+            initialMessage.classList.add('hidden');
+            detailModal.classList.add('hidden'); // Also hide the modal if it's open
 
+            if (searchTerm === '') {
+                initialMessage.classList.remove('hidden');
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            resultsContainer.innerHTML = '';
+            
+            setTimeout(() => {
+                const foundStudents = studentData.filter(student =>
+                    (student['Student Name'] && student['Student Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (student['Father Name'] && student['Father Name'].toLowerCase().includes(searchTerm.toLowerCase()))
+                );
+
+                loadingIndicator.classList.add('hidden');
+
+                if (foundStudents.length > 0) {
+                    const resultCards = foundStudents.map((student, index) => {
+                        return `
+                            <div data-index="${index}" class="result-card relative p-6 bg-gray-800 rounded-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 cursor-pointer overflow-hidden">
+                                <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-br-lg z-10">
+                                    ${student.sourceLocation}
+                                </div>
+                                <h3 class="text-xl font-semibold text-green-400 mb-2 mt-4">${student['Student Name']}</h3>
+                                <p class="text-sm text-gray-300"><span class="font-bold">पिता का नाम:</span> ${student['Father Name']}</p>
+                                <p class="text-sm text-gray-300"><span class="font-bold">संपर्क:</span> ${student['Contact']}</p>
+                            </div>
+                        `;
+                    }).join('');
+
+                    const resultsHTML = `
+                        <p class="text-md text-gray-400 mb-4">${foundStudents.length} परिणाम मिले।</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                            ${resultCards}
+                        </div>
+                    `;
+                    resultsContainer.innerHTML = resultsHTML;
+                    resultsContainer.classList.remove('hidden');
+
+                    // Add click event listeners to the new cards
+                    document.querySelectorAll('.result-card').forEach(card => {
+                        card.addEventListener('click', (event) => {
+                            const index = event.currentTarget.dataset.index;
+                            showDetails(foundStudents[index]);
+                        });
+                    });
+
+                } else {
+                    noResultsMessage.classList.remove('hidden');
+                }
+            }, 500);
+        }
+
+        // Function to show full details in a modal
+        function showDetails(student) {
+            let detailHTML = '';
+            
+            DATA_GROUPS.forEach(group => {
+                const [startIndex, endIndex] = group.range;
+                
+                // Create a section for the group if it has any data
+                detailHTML += `
+                    <h3 class="text-xl font-semibold text-green-400 mt-6 mb-3">${group.name}</h3>
+                    <div class="overflow-x-auto rounded-lg shadow-xl mb-4">
+                        <table class="w-full text-left text-sm text-gray-400 border-collapse">
+                            <tbody class="divide-y divide-gray-700">
+                `;
+
+                // Iterate through the columns for the current group using the correct headers
+                for (let i = startIndex; i <= endIndex; i++) {
+                    const key = allHeaders[i];
+                    if (Object.hasOwnProperty.call(student, key)) {
+                        detailHTML += `
+                            <tr class="bg-gray-800 hover:bg-gray-700 transition-colors duration-200">
+                                <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">${key}</td>
+                                <td class="px-6 py-4">${student[key]}</td>
+                            </tr>
+                        `;
+                    }
+                }
+
+                detailHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            // Add a row for the source location
+            detailHTML += `
+                <h3 class="text-xl font-semibold text-green-400 mt-6 mb-3">अन्य विवरण</h3>
+                <div class="overflow-x-auto rounded-lg shadow-xl mb-4">
+                    <table class="w-full text-left text-sm text-gray-400 border-collapse">
+                        <tbody class="divide-y divide-gray-700">
+                            <tr class="bg-gray-800 hover:bg-gray-700 transition-colors duration-200">
+                                <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">स्थान</td>
+                                <td class="px-6 py-4">${student.sourceLocation}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            detailTableContainer.innerHTML = detailHTML;
+            detailModal.classList.remove('hidden');
+        }
+
+        // Event listener to close the modal
+        closeModalButton.addEventListener('click', () => {
+            detailModal.classList.add('hidden');
+        });
+        
+    </script>
 </body>
 </html>
