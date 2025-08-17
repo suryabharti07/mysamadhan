@@ -3,63 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>छात्र डेटा खोजें</title>
+    <title>Student Data Search</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d1117; /* GitHub dark mode background */
+            background-color: #0c0a09; /* Stone-950 for a deep dark background */
         }
         .container-bg {
-            background-color: #0d1117;
+            background-color: #0c0a09;
         }
         .card-bg {
-            background-color: #161b22; /* Slightly lighter card background */
+            background-color: #1c1917; /* Stone-900 for card background */
         }
         .accent-color {
-            background-color: #238636; /* GitHub green accent */
+            background-color: #ef4444; /* A vibrant red accent */
             color: #ffffff;
         }
         .border-accent {
-            border-color: #238636;
+            border-color: #dc2626;
         }
-        #resultsContainer, #noResults, #loading {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        /* Custom animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        #resultsContainer, #noResults, #loading, #initialMessage {
+            animation: fadeIn 0.5s ease-in-out;
         }
         /* Style the scrollbar */
         .overflow-y-auto::-webkit-scrollbar {
             width: 8px;
         }
         .overflow-y-auto::-webkit-scrollbar-track {
-            background: #161b22;
+            background: #1c1917;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb {
-            background-color: #238636;
+            background-color: #ef4444;
             border-radius: 4px;
-            border: 2px solid #161b22;
+            border: 2px solid #1c1917;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-            background-color: #2ea043;
+            background-color: #dc2626;
+        }
+        /* New result card hover effect */
+        .google-result:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body class="container-bg min-h-screen flex flex-col items-center">
 
     <!-- Fixed Header with Search Bar -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-gray-900 bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-gray-700 p-4 shadow-xl flex items-center justify-center">
+    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-stone-900 bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-stone-700 p-4 shadow-xl flex items-center justify-center">
         <div class="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#" class="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-0 mr-auto hover:text-gray-400 transition-colors duration-200">
-                छात्र खोज
+                Student Search
             </a>
             <div class="relative w-full">
-                <input type="text" id="searchInput" placeholder="छात्र का नाम या पिता का नाम दर्ज करें..." class="w-full p-3 rounded-full border border-gray-600 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 pr-10">
-                <button id="searchButton" class="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full text-white bg-green-500 hover:bg-green-600 transition-colors duration-200">
+                <input type="text" id="searchInput" placeholder="Enter student or father's name..." class="w-full p-3 rounded-full border border-stone-600 bg-stone-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 pr-10">
+                <button id="searchButton" class="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full text-white bg-red-500 hover:bg-red-600 transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                     </svg>
@@ -70,11 +76,32 @@
 
     <!-- Main Content Area -->
     <main class="w-full max-w-5xl px-4 py-8 mt-24">
+        <!-- Section for data summary with animated numbers -->
+        <div id="dataSummary" class="w-full text-white mb-8 hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center">
+                <!-- Total Students Box -->
+                <div class="card-bg p-6 rounded-xl shadow-lg border border-stone-700 hover:scale-105 transition-transform duration-200">
+                    <h3 class="text-lg text-gray-400 font-semibold uppercase">Total Students</h3>
+                    <p id="totalCountDisplay" class="text-4xl sm:text-5xl font-bold mt-2 text-white">0</p>
+                </div>
+                <!-- Raghopur Students Box -->
+                <div class="card-bg p-6 rounded-xl shadow-lg border border-stone-700 hover:scale-105 transition-transform duration-200">
+                    <h3 class="text-lg text-gray-400 font-semibold uppercase">Raghopur</h3>
+                    <p id="raghopurCountDisplay" class="text-4xl sm:text-5xl font-bold mt-2 text-red-400">0</p>
+                </div>
+                <!-- Bidupur Students Box -->
+                <div class="card-bg p-6 rounded-xl shadow-lg border border-stone-700 hover:scale-105 transition-transform duration-200">
+                    <h3 class="text-lg text-gray-400 font-semibold uppercase">Bidupur</h3>
+                    <p id="bidupurCountDisplay" class="text-4xl sm:text-5xl font-bold mt-2 text-blue-400">0</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Initial Message / Loading Indicator -->
-        <div id="loading" class="text-center text-lg text-gray-400 mt-20">Google Sheet से डेटा लोड हो रहा है...</div>
-        <div id="initialMessage" class="text-center text-gray-400 mt-20">
-            <p class="text-2xl mb-4">खोज शुरू करने के लिए ऊपर खोजें।</p>
-            <p class="text-sm">यहां आपके परिणाम दिखाई देंगे।</p>
+        <div id="loading" class="text-center text-lg text-gray-400 mt-20">Loading data from Google Sheet...</div>
+        <div id="initialMessage" class="text-center text-gray-400 mt-20 hidden">
+            <p class="text-2xl mb-4">Use the bar above to start your search.</p>
+            <p class="text-sm">Your results will appear here.</p>
         </div>
 
         <!-- Results container -->
@@ -84,20 +111,20 @@
 
         <!-- No Results Found Message -->
         <div id="noResults" class="text-center text-red-400 mt-20 hidden">
-            <p class="text-3xl font-bold mb-2">कोई परिणाम नहीं मिला!</p>
-            <p class="text-lg">क्षमा करें, आपके खोज से कोई डेटा मेल नहीं खाता।</p>
+            <p class="text-3xl font-bold mb-2">No Results Found!</p>
+            <p class="text-lg">Sorry, no data matches your search query.</p>
         </div>
     </main>
     
     <!-- Full-screen modal for detailed view -->
-    <div id="detailModal" class="fixed inset-0 bg-gray-900 bg-opacity-95 backdrop-filter backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
+    <div id="detailModal" class="fixed inset-0 bg-stone-950 bg-opacity-95 backdrop-filter backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
         <div class="card-bg p-8 rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] overflow-y-auto text-white relative">
-            <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200">
+            <button id="closeModal" class="absolute top-4 right-4 text-stone-400 hover:text-white transition-colors duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                    </svg>
             </button>
-            <h2 class="text-2xl font-bold mb-6 text-center">पूर्ण जानकारी</h2>
+            <h2 class="text-2xl font-bold mb-6 text-center">Full Details</h2>
             <div id="detailTableContainer" class="overflow-x-auto">
                 <!-- Detailed table will be inserted here -->
             </div>
@@ -109,7 +136,7 @@
         let studentData = [];
         let allHeaders = []; // To store the headers from the CSV
 
-        // Google Sheet URLs - यहां आप अपनी शीट्स के URL जोड़ सकते हैं
+        // Google Sheet URLs
         const csvUrls = [
             { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRS9PVawrzeHMglLcKrSTQdFOyVQ-r61wWYPw3UBUEUkTsehKdvCFwMei40OYwqDscvgUIpXTD3fGLU/pub?gid=1522639976&single=true&output=csv', location: 'Raghopur' },
             { url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT1XARn_P5GtXmAmKig50Vs3YVJky-J9Jq6PneViwllrhCj3mhj0JZz671uLDdfKn4WSQnq5Gqy0Ysm/pub?gid=2007015600&single=true&output=csv', location: 'Bidupur' }
@@ -118,12 +145,13 @@
         // Define groups for data based on column index ranges (A=0, B=1, etc.)
         const DATA_GROUPS = [
             { name: 'Student Details', range: [0, 3] },
-            { name: 'HINDI', range: [4, 44] },
+            { name: 'Hindi', range: [4, 44] },
             { name: 'English', range: [45, 87] },
-            { name: 'Kamal book', range: [88, 129] },
+            { name: 'Kamal Book', range: [88, 129] },
             { name: 'Counting', range: [130, 139] },
             { name: 'Table', range: [140, 158] },
             { name: 'Math', range: [159, 162] },
+            { name: 'FO', range: [163, 168] },
             { name: 'Percentage', range: [169, 169] },
             { name: 'Teacher', range: [170, 170] }
         ];
@@ -138,7 +166,26 @@
         const detailModal = document.getElementById('detailModal');
         const closeModalButton = document.getElementById('closeModal');
         const detailTableContainer = document.getElementById('detailTableContainer');
+        const dataSummary = document.getElementById('dataSummary');
         
+        // Function to animate numbers
+        function animateCount(element, target, duration = 1000) {
+            let start = 0;
+            const startTime = performance.now();
+            
+            function updateCount(timestamp) {
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentValue = Math.floor(progress * (target - start) + start);
+                element.textContent = currentValue;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCount);
+                }
+            }
+            requestAnimationFrame(updateCount);
+        }
+
         // Function to fetch data from all Google Sheets
         async function fetchStudentData() {
             let combinedData = [];
@@ -170,8 +217,8 @@
                 }
                 return combinedData;
             } catch (error) {
-                console.error("डेटा लाने में त्रुटि:", error);
-                loadingIndicator.innerHTML = `<p class="text-center text-red-400 mt-4">डेटा लोड करने में कोई समस्या है। कृपया URL की जाँच करें या फिर से कोशिश करें।</p>`;
+                console.error("Error fetching data:", error);
+                loadingIndicator.innerHTML = `<p class="text-center text-red-400 mt-4">There was an issue loading data. Please check the URLs or try again.</p>`;
                 return [];
             }
         }
@@ -180,7 +227,20 @@
         window.onload = async () => {
             studentData = await fetchStudentData();
             loadingIndicator.classList.add('hidden'); // Hide loading message
-            initialMessage.classList.remove('hidden'); // Show initial message
+            
+            // Show the data summary section immediately
+            dataSummary.classList.remove('hidden');
+
+            // Calculate counts and start the animations
+            if (studentData.length > 0) {
+                const totalCount = studentData.length;
+                const raghopurCount = studentData.filter(s => s.sourceLocation === 'Raghopur').length;
+                const bidupurCount = studentData.filter(s => s.sourceLocation === 'Bidupur').length;
+                
+                animateCount(document.getElementById('totalCountDisplay'), totalCount, 1500);
+                animateCount(document.getElementById('raghopurCountDisplay'), raghopurCount, 1500);
+                animateCount(document.getElementById('bidupurCountDisplay'), bidupurCount, 1500);
+            }
         };
 
         // Event listener for search button click
@@ -214,28 +274,47 @@
             setTimeout(() => {
                 const foundStudents = studentData.filter(student =>
                     (student['Student Name'] && student['Student Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (student['Father Name'] && student['Father Name'].toLowerCase().includes(searchTerm.toLowerCase()))
+                    (student['Father Name'] && student['Father Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (student['FO'] && student['FO'].toLowerCase().includes(searchTerm.toLowerCase())) // Search by teacher's name as well
                 );
 
                 loadingIndicator.classList.add('hidden');
 
                 if (foundStudents.length > 0) {
                     const resultCards = foundStudents.map((student, index) => {
+                        // Determine the percentage value and its color
+                        const percentage = student['प्रतिशत'] ? parseFloat(student['प्रतिशत']) : null;
+                        const percentageBgColor = (percentage !== null && percentage >= 60) ? 'bg-green-600' : 'bg-red-600';
+                        const percentageText = percentage !== null ? `
+                            <span class="ml-2 font-extrabold text-white text-xl p-1 rounded-md ${percentageBgColor} shadow-sm">${percentage}%</span>
+                        ` : '';
+
+                        // Determine badge color based on location
+                        const badgeColor = student.sourceLocation === 'Raghopur' ? 'bg-red-500' : 'bg-blue-500';
+
                         return `
-                            <div data-index="${index}" class="result-card relative p-6 bg-gray-800 rounded-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 cursor-pointer overflow-hidden">
-                                <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-br-lg z-10">
-                                    ${student.sourceLocation}
+                            <div data-index="${index}" class="google-result cursor-pointer card-bg rounded-xl shadow-lg p-6 relative flex items-center justify-between space-x-4 transition-all duration-300">
+                                <!-- Location badge at top-left -->
+                                <span class="absolute top-3 left-3 ${badgeColor} text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">${student.sourceLocation}</span>
+                                
+                                <div class="flex-1 mt-6">
+                                    <!-- Student Name and Father's Name on one line in white -->
+                                    <h3 class="text-2xl font-bold text-white">${student['Student Name']} | ${student['Father Name']}</h3>
+                                    <!-- Teacher's Name and Percentage -->
+                                    <p class="text-xl font-bold text-gray-200 mt-1">Teacher's Name: <span class="font-normal text-white">${student['FO']}</span>
+                                        ${percentageText}
+                                    </p>
+                                    
+                                    <!-- Contact details -->
+                                    <p class="text-sm text-gray-400 mt-2">Contact: <span class="text-white">${student['Contact']}</span></p>
                                 </div>
-                                <h3 class="text-xl font-semibold text-green-400 mb-2 mt-4">${student['Student Name']}</h3>
-                                <p class="text-sm text-gray-300"><span class="font-bold">पिता का नाम:</span> ${student['Father Name']}</p>
-                                <p class="text-sm text-gray-300"><span class="font-bold">संपर्क:</span> ${student['Contact']}</p>
                             </div>
                         `;
                     }).join('');
 
                     const resultsHTML = `
-                        <p class="text-md text-gray-400 mb-4">${foundStudents.length} परिणाम मिले।</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <p class="text-md text-gray-400 mb-4">${foundStudents.length} results found.</p>
+                        <div class="flex flex-col gap-4">
                             ${resultCards}
                         </div>
                     `;
@@ -243,10 +322,12 @@
                     resultsContainer.classList.remove('hidden');
 
                     // Add click event listeners to the new cards
-                    document.querySelectorAll('.result-card').forEach(card => {
+                    document.querySelectorAll('.google-result').forEach(card => {
                         card.addEventListener('click', (event) => {
                             const index = event.currentTarget.dataset.index;
-                            showDetails(foundStudents[index]);
+                            // The click event needs to find the student object from the original filtered array
+                            const clickedStudent = foundStudents[index];
+                            showDetails(clickedStudent);
                         });
                     });
 
@@ -265,10 +346,10 @@
                 
                 // Create a section for the group if it has any data
                 detailHTML += `
-                    <h3 class="text-xl font-semibold text-green-400 mt-6 mb-3">${group.name}</h3>
+                    <h3 class="text-xl font-semibold text-red-400 mt-6 mb-3">${group.name}</h3>
                     <div class="overflow-x-auto rounded-lg shadow-xl mb-4">
                         <table class="w-full text-left text-sm text-gray-400 border-collapse">
-                            <tbody class="divide-y divide-gray-700">
+                            <tbody class="divide-y divide-stone-700">
                 `;
 
                 // Iterate through the columns for the current group using the correct headers
@@ -276,7 +357,7 @@
                     const key = allHeaders[i];
                     if (Object.hasOwnProperty.call(student, key)) {
                         detailHTML += `
-                            <tr class="bg-gray-800 hover:bg-gray-700 transition-colors duration-200">
+                            <tr class="bg-stone-800 hover:bg-stone-700 transition-colors duration-200">
                                 <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">${key}</td>
                                 <td class="px-6 py-4">${student[key]}</td>
                             </tr>
@@ -293,12 +374,12 @@
 
             // Add a row for the source location
             detailHTML += `
-                <h3 class="text-xl font-semibold text-green-400 mt-6 mb-3">अन्य विवरण</h3>
+                <h3 class="text-xl font-semibold text-red-400 mt-6 mb-3">Other Details</h3>
                 <div class="overflow-x-auto rounded-lg shadow-xl mb-4">
                     <table class="w-full text-left text-sm text-gray-400 border-collapse">
-                        <tbody class="divide-y divide-gray-700">
-                            <tr class="bg-gray-800 hover:bg-gray-700 transition-colors duration-200">
-                                <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">स्थान</td>
+                        <tbody class="divide-y divide-stone-700">
+                            <tr class="bg-stone-800 hover:bg-stone-700 transition-colors duration-200">
+                                <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">Location</td>
                                 <td class="px-6 py-4">${student.sourceLocation}</td>
                             </tr>
                         </tbody>
