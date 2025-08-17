@@ -6,24 +6,27 @@
     <title>Student Data Search</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <!-- Heroicons for better visuals -->
+    <script src="https://cdn.jsdelivr.net/npm/@heroicons/2.1.3/dist/heroicons.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0c0a09; /* Stone-950 for a deep dark background */
+            background-color: #121212; /* Darker, more modern background */
         }
         .container-bg {
-            background-color: #0c0a09;
+            background-color: #121212;
         }
         .card-bg {
-            background-color: #1c1917; /* Stone-900 for card background */
+            background-color: #1e1e1e; /* Slightly lighter than the background for contrast */
         }
         .accent-color {
-            background-color: #ef4444; /* A vibrant red accent */
+            background-color: #4CAF50; /* A vibrant green accent for a fresh look */
             color: #ffffff;
         }
         .border-accent {
-            border-color: #dc2626;
+            border-color: #4CAF50;
         }
         /* Custom animations */
         @keyframes fadeIn {
@@ -38,36 +41,49 @@
             width: 8px;
         }
         .overflow-y-auto::-webkit-scrollbar-track {
-            background: #1c1917;
+            background: #1e1e1e;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb {
-            background-color: #ef4444;
+            background-color: #4CAF50;
             border-radius: 4px;
-            border: 2px solid #1c1917;
+            border: 2px solid #1e1e1e;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-            background-color: #dc2626;
+            background-color: #388E3C;
         }
         /* New result card hover effect */
         .google-result:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        /* New loading spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="container-bg min-h-screen flex flex-col items-center">
+<body class="container-bg min-h-screen flex flex-col items-center p-4">
 
     <!-- Fixed Header with Search Bar -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-stone-900 bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-stone-700 p-4 shadow-xl flex items-center justify-center">
+    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-[#1e1e1e] bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-[#2e2e2e] p-4 shadow-2xl flex items-center justify-center">
         <div class="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#" class="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-0 mr-auto hover:text-gray-400 transition-colors duration-200">
+            <a href="#" class="text-3xl sm:text-4xl font-extrabold text-white mb-2 sm:mb-0 mr-auto hover:text-gray-400 transition-colors duration-200">
                 Student Search
             </a>
-            <div class="relative w-full">
-                <input type="text" id="searchInput" placeholder="Enter student or father's name..." class="w-full p-3 rounded-full border border-stone-600 bg-stone-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 pr-10">
-                <button id="searchButton" class="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full text-white bg-red-500 hover:bg-red-600 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            <div class="relative w-full group">
+                <input type="text" id="searchInput" placeholder="Enter student or father's name..." class="w-full p-4 rounded-full border-2 border-[#2e2e2e] bg-[#2a2a2a] text-gray-200 focus:outline-none focus:ring-4 focus:ring-[#4CAF50] transition-all duration-300 pr-12 text-lg">
+                <button id="searchButton" class="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-full text-white bg-[#4CAF50] hover:bg-[#388E3C] transition-colors duration-200 shadow-lg group-focus-within:bg-[#388E3C]">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+                        <path d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 4.906l3.712 3.713a.75.75 0 0 1-1.06 1.06l-3.713-3.712A8.25 8.25 0 0 1 2.25 10.5Z" />
                     </svg>
                 </button>
             </div>
@@ -75,33 +91,36 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="w-full max-w-5xl px-4 py-8 mt-24">
+    <main class="w-full max-w-6xl px-4 py-8 mt-28">
         <!-- Section for data summary with animated numbers -->
-        <div id="dataSummary" class="w-full text-white mb-8 hidden">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center">
+        <div id="dataSummary" class="w-full text-white mb-10 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
                 <!-- Total Students Box -->
-                <div class="card-bg p-6 rounded-xl shadow-lg border border-stone-700 hover:scale-105 transition-transform duration-200">
-                    <h3 class="text-lg text-gray-400 font-semibold uppercase">Total Students</h3>
-                    <p id="totalCountDisplay" class="text-4xl sm:text-5xl font-bold mt-2 text-white">0</p>
+                <div class="card-bg p-8 rounded-2xl shadow-xl border-2 border-[#2e2e2e] hover:scale-[1.03] transition-transform duration-300 transform-gpu">
+                    <h3 class="text-xl text-gray-400 font-semibold uppercase tracking-wider">Total Students</h3>
+                    <p id="totalCountDisplay" class="text-5xl md:text-6xl font-extrabold mt-3 text-[#4CAF50]">0</p>
                 </div>
                 <!-- Raghopur Students Box -->
-                <div class="card-bg p-6 rounded-xl shadow-lg border border-stone-700 hover:scale-105 transition-transform duration-200">
-                    <h3 class="text-lg text-gray-400 font-semibold uppercase">Raghopur</h3>
-                    <p id="raghopurCountDisplay" class="text-4xl sm:text-5xl font-bold mt-2 text-red-400">0</p>
+                <div class="card-bg p-8 rounded-2xl shadow-xl border-2 border-[#2e2e2e] hover:scale-[1.03] transition-transform duration-300 transform-gpu">
+                    <h3 class="text-xl text-gray-400 font-semibold uppercase tracking-wider">Raghopur</h3>
+                    <p id="raghopurCountDisplay" class="text-5xl md:text-6xl font-extrabold mt-3 text-red-500">0</p>
                 </div>
                 <!-- Bidupur Students Box -->
-                <div class="card-bg p-6 rounded-xl shadow-lg border border-stone-700 hover:scale-105 transition-transform duration-200">
-                    <h3 class="text-lg text-gray-400 font-semibold uppercase">Bidupur</h3>
-                    <p id="bidupurCountDisplay" class="text-4xl sm:text-5xl font-bold mt-2 text-blue-400">0</p>
+                <div class="card-bg p-8 rounded-2xl shadow-xl border-2 border-[#2e2e2e] hover:scale-[1.03] transition-transform duration-300 transform-gpu">
+                    <h3 class="text-xl text-gray-400 font-semibold uppercase tracking-wider">Bidupur</h3>
+                    <p id="bidupurCountDisplay" class="text-5xl md:text-6xl font-extrabold mt-3 text-blue-500">0</p>
                 </div>
             </div>
         </div>
 
         <!-- Initial Message / Loading Indicator -->
-        <div id="loading" class="text-center text-lg text-gray-400 mt-20">Loading data from Google Sheet...</div>
+        <div id="loading" class="flex flex-col items-center justify-center text-lg text-gray-400 mt-20">
+            <div class="spinner mb-4"></div>
+            <span>Loading data from Google Sheet...</span>
+        </div>
         <div id="initialMessage" class="text-center text-gray-400 mt-20 hidden">
-            <p class="text-2xl mb-4">Use the bar above to start your search.</p>
-            <p class="text-sm">Your results will appear here.</p>
+            <p class="text-3xl mb-4 font-bold text-white">Start your search.</p>
+            <p class="text-md">Your results will appear here.</p>
         </div>
 
         <!-- Results container -->
@@ -111,20 +130,20 @@
 
         <!-- No Results Found Message -->
         <div id="noResults" class="text-center text-red-400 mt-20 hidden">
-            <p class="text-3xl font-bold mb-2">No Results Found!</p>
-            <p class="text-lg">Sorry, no data matches your search query.</p>
+            <p class="text-4xl font-bold mb-4">No Results Found.</p>
+            <p class="text-xl">Sorry, no data matches your search.</p>
         </div>
     </main>
     
     <!-- Full-screen modal for detailed view -->
-    <div id="detailModal" class="fixed inset-0 bg-stone-950 bg-opacity-95 backdrop-filter backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
-        <div class="card-bg p-8 rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] overflow-y-auto text-white relative">
-            <button id="closeModal" class="absolute top-4 right-4 text-stone-400 hover:text-white transition-colors duration-200">
+    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
+        <div class="card-bg p-8 rounded-3xl shadow-2xl w-full max-w-7xl h-[90vh] overflow-y-auto text-white relative border border-[#2e2e2e] transform-gpu transition-all duration-300">
+            <button id="closeModal" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors duration-200 p-2 rounded-full bg-[#2a2a2a] hover:bg-[#3e3e3e]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                </svg>
             </button>
-            <h2 class="text-2xl font-bold mb-6 text-center">Full Details</h2>
+            <h2 id="modalStudentName" class="text-3xl font-bold mb-6 text-center text-[#4CAF50]"></h2>
             <div id="detailTableContainer" class="overflow-x-auto">
                 <!-- Detailed table will be inserted here -->
             </div>
@@ -149,11 +168,11 @@
             { name: 'English', range: [45, 87] },
             { name: 'Kamal Book', range: [88, 129] },
             { name: 'Counting', range: [130, 139] },
-            { name: 'Table', range: [140, 158] },
+            { name: 'Tables', range: [140, 158] },
             { name: 'Math', range: [159, 162] },
-            { name: 'FO', range: [163, 168] },
             { name: 'Percentage', range: [169, 169] },
-            { name: 'Teacher', range: [170, 170] }
+            { name: 'FO', range: [170, 170] },
+            { name: 'Extra Information', range: [171, 171] }
         ];
 
         // Get HTML elements
@@ -167,6 +186,7 @@
         const closeModalButton = document.getElementById('closeModal');
         const detailTableContainer = document.getElementById('detailTableContainer');
         const dataSummary = document.getElementById('dataSummary');
+        const modalStudentName = document.getElementById('modalStudentName');
         
         // Function to animate numbers
         function animateCount(element, target, duration = 1000) {
@@ -218,7 +238,7 @@
                 return combinedData;
             } catch (error) {
                 console.error("Error fetching data:", error);
-                loadingIndicator.innerHTML = `<p class="text-center text-red-400 mt-4">There was an issue loading data. Please check the URLs or try again.</p>`;
+                loadingIndicator.innerHTML = `<p class="text-center text-red-400 mt-4">There was an issue loading the data. Please check the URLs or try again.</p>`;
                 return [];
             }
         }
@@ -262,9 +282,11 @@
             noResultsMessage.classList.add('hidden');
             initialMessage.classList.add('hidden');
             detailModal.classList.add('hidden'); // Also hide the modal if it's open
+            dataSummary.classList.add('hidden'); // Hide the summary on search
 
             if (searchTerm === '') {
                 initialMessage.classList.remove('hidden');
+                dataSummary.classList.remove('hidden'); // Show summary again if search is cleared
                 return;
             }
 
@@ -275,46 +297,46 @@
                 const foundStudents = studentData.filter(student =>
                     (student['Student Name'] && student['Student Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (student['Father Name'] && student['Father Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (student['FO'] && student['FO'].toLowerCase().includes(searchTerm.toLowerCase())) // Search by teacher's name as well
+                    (student['Extra_Info'] && student['Extra_Info'].toLowerCase().includes(searchTerm.toLowerCase()))
                 );
 
                 loadingIndicator.classList.add('hidden');
 
                 if (foundStudents.length > 0) {
                     const resultCards = foundStudents.map((student, index) => {
-                        // Determine the percentage value and its color
-                        const percentage = student['प्रतिशत'] ? parseFloat(student['प्रतिशत']) : null;
-                        const percentageBgColor = (percentage !== null && percentage >= 60) ? 'bg-green-600' : 'bg-red-600';
-                        const percentageText = percentage !== null ? `
-                            <span class="ml-2 font-extrabold text-white text-xl p-1 rounded-md ${percentageBgColor} shadow-sm">${percentage}%</span>
-                        ` : '';
-
                         // Determine badge color based on location
                         const badgeColor = student.sourceLocation === 'Raghopur' ? 'bg-red-500' : 'bg-blue-500';
 
                         return `
-                            <div data-index="${index}" class="google-result cursor-pointer card-bg rounded-xl shadow-lg p-6 relative flex items-center justify-between space-x-4 transition-all duration-300">
-                                <!-- Location badge at top-left -->
-                                <span class="absolute top-3 left-3 ${badgeColor} text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">${student.sourceLocation}</span>
+                            <div data-index="${index}" class="google-result cursor-pointer card-bg rounded-2xl shadow-lg p-6 relative flex flex-col items-start md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-6 transition-all duration-300 transform-gpu border border-[#2e2e2e]">
+                                <!-- Location badge at the very top -->
+                                <span class="${badgeColor} text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10 mb-2">${student.sourceLocation}</span>
                                 
-                                <div class="flex-1 mt-6">
+                                <!-- Content below the badge, no mt-10 needed -->
+                                <div class="w-full flex-1"> 
                                     <!-- Student Name and Father's Name on one line in white -->
-                                    <h3 class="text-2xl font-bold text-white">${student['Student Name']} | ${student['Father Name']}</h3>
-                                    <!-- Teacher's Name and Percentage -->
-                                    <p class="text-xl font-bold text-gray-200 mt-1">Teacher's Name: <span class="font-normal text-white">${student['FO']}</span>
-                                        ${percentageText}
+                                    <h3 class="text-xl md:text-2xl font-bold text-[#4CAF50]">${student['Student Name']}</h3>
+                                    <p class="text-md md:text-lg font-semibold text-gray-300 mt-1">
+                                        <span class="font-normal text-gray-400">Father:</span> ${student['Father Name']}
                                     </p>
-                                    
-                                    <!-- Contact details -->
-                                    <p class="text-sm text-gray-400 mt-2">Contact: <span class="text-white">${student['Contact']}</span></p>
+                                    <!-- Extra Info -->
+                                    <p class="text-md md:text-lg font-semibold text-gray-300 mt-2">
+                                        <span class="font-normal text-gray-400">Teacher:</span> ${student['Extra_Info']}
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 text-right">
+                                    <span class="text-sm font-semibold text-gray-400">More Details</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6 text-[#4CAF50] ml-2 inline-block">
+                                        <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.94l-3.22-3.22a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" />
+                                    </svg>
                                 </div>
                             </div>
                         `;
                     }).join('');
 
                     const resultsHTML = `
-                        <p class="text-md text-gray-400 mb-4">${foundStudents.length} results found.</p>
-                        <div class="flex flex-col gap-4">
+                        <p class="text-lg text-gray-400 mb-6">${foundStudents.length} results found.</p>
+                        <div class="flex flex-col gap-6">
                             ${resultCards}
                         </div>
                     `;
@@ -340,16 +362,17 @@
         // Function to show full details in a modal
         function showDetails(student) {
             let detailHTML = '';
+            modalStudentName.textContent = student['Student Name'] || 'Details';
             
             DATA_GROUPS.forEach(group => {
                 const [startIndex, endIndex] = group.range;
                 
                 // Create a section for the group if it has any data
                 detailHTML += `
-                    <h3 class="text-xl font-semibold text-red-400 mt-6 mb-3">${group.name}</h3>
-                    <div class="overflow-x-auto rounded-lg shadow-xl mb-4">
+                    <h3 class="text-xl font-semibold text-[#4CAF50] mt-6 mb-3">${group.name}</h3>
+                    <div class="overflow-x-auto rounded-xl shadow-xl mb-4">
                         <table class="w-full text-left text-sm text-gray-400 border-collapse">
-                            <tbody class="divide-y divide-stone-700">
+                            <tbody class="divide-y divide-[#2e2e2e]">
                 `;
 
                 // Iterate through the columns for the current group using the correct headers
@@ -357,7 +380,7 @@
                     const key = allHeaders[i];
                     if (Object.hasOwnProperty.call(student, key)) {
                         detailHTML += `
-                            <tr class="bg-stone-800 hover:bg-stone-700 transition-colors duration-200">
+                            <tr class="bg-[#2a2a2a] hover:bg-[#3e3e3e] transition-colors duration-200">
                                 <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">${key}</td>
                                 <td class="px-6 py-4">${student[key]}</td>
                             </tr>
@@ -374,11 +397,11 @@
 
             // Add a row for the source location
             detailHTML += `
-                <h3 class="text-xl font-semibold text-red-400 mt-6 mb-3">Other Details</h3>
-                <div class="overflow-x-auto rounded-lg shadow-xl mb-4">
+                <h3 class="text-xl font-semibold text-[#4CAF50] mt-6 mb-3">Other Details</h3>
+                <div class="overflow-x-auto rounded-xl shadow-xl mb-4">
                     <table class="w-full text-left text-sm text-gray-400 border-collapse">
-                        <tbody class="divide-y divide-stone-700">
-                            <tr class="bg-stone-800 hover:bg-stone-700 transition-colors duration-200">
+                        <tbody class="divide-y divide-[#2e2e2e]">
+                            <tr class="bg-[#2a2a2a] hover:bg-[#3e3e3e] transition-colors duration-200">
                                 <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">Location</td>
                                 <td class="px-6 py-4">${student.sourceLocation}</td>
                             </tr>
