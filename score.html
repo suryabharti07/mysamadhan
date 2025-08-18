@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,32 +26,36 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-8 flex justify-center items-start min-h-screen">
-    <div class="container mx-auto max-w-7xl bg-white rounded-xl shadow-2xl p-6 sm:p-10">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-blue-600 mb-8">Student Scoreboard</h1>
-        
-        <!-- Performance filter buttons -->
-        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
-            <button id="best-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-600">
-                BEST Performance
-            </button>
-            <button id="average-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-400">
-                Average Performance
-            </button>
-            <button id="bad-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-200 text-blue-800">
-                Bad Performance
-            </button>
+<body class="p-4 sm:p-8 flex flex-col items-center min-h-screen">
+    <div class="container mx-auto max-w-7xl">
+        <!-- Sticky Header -->
+        <div class="sticky top-0 z-10 bg-white shadow-lg py-4 px-6 sm:px-10 rounded-b-xl">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-blue-600 mb-4">Student Scoreboard</h1>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="best-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-600">
+                    BEST Performance
+                </button>
+                <button id="average-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-400">
+                    Average Performance
+                </button>
+                <button id="bad-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-200 text-blue-800">
+                    Bad Performance
+                </button>
+            </div>
         </div>
 
-        <!-- Message Box -->
-        <div id="message-box" class="hidden p-4 mb-6 rounded-lg font-semibold text-center transition-all duration-300"></div>
+        <!-- Main Content Container -->
+        <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-10 mt-8">
+            <!-- Message Box -->
+            <div id="message-box" class="hidden p-4 mb-6 rounded-lg font-semibold text-center transition-all duration-300"></div>
 
-        <!-- Loader -->
-        <div id="loader" class="loader hidden mx-auto w-16 h-16 border-8 border-gray-200 rounded-full"></div>
+            <!-- Loader -->
+            <div id="loader" class="loader hidden mx-auto w-16 h-16 border-8 border-gray-200 rounded-full"></div>
 
-        <!-- Scoreboard Container -->
-        <div id="scoreboard-container" class="space-y-8">
-            <!-- Scoreboard cards will be rendered here dynamically -->
+            <!-- Scoreboard Container -->
+            <div id="scoreboard-container" class="space-y-8">
+                <!-- Scoreboard cards will be rendered here dynamically -->
+            </div>
         </div>
     </div>
 
@@ -97,13 +99,11 @@
 
         /**
          * Creates an HTML card for a single student.
-         * @param {object} studentData - The student's data object.
-         * @param {number|string} rank - The student's rank or a display string.
-         * @param {string[]} headers - Array of header names.
+         * @param {object} studentData - The student's data object, which now includes a 'rank' property.
+         * @param {boolean} isRankedSection - Whether to show the rank for this section.
          * @returns {string} The HTML string for the student card.
          */
-        function createStudentCard(studentData, rank, headers) {
-            // Find the indices of the required data
+        function createStudentCard(studentData, isRankedSection) {
             const studentName = studentData.data[headers.indexOf('Student Name')] || 'N/A';
             const fatherName = studentData.data[headers.indexOf('Father Name')] || 'N/A';
             const contactNumber = studentData.data[headers.indexOf('Contact Number')] || 'N/A';
@@ -111,14 +111,15 @@
             const extraInfo = studentData.data[headers.indexOf('Extra Info')] || 'N/A';
             const source = studentData.source;
             const color = studentData.color;
+            const rank = studentData.rank;
             
             // Determine the rank display style and color
-            const isRanked = rank !== '-';
             let rankColorClass = `bg-blue-600`;
-            if (isRanked && rank === 1) {
+            if (isRankedSection && rank === 1) {
                 rankColorClass = `bg-red-600`;
             }
-            const rankStyle = isRanked ? 
+            
+            const rankStyle = isRankedSection ? 
                 `${rankColorClass} text-white rounded-r-lg p-2 sm:p-4 text-3xl sm:text-4xl font-extrabold w-16 flex items-center justify-center` :
                 `bg-slate-200 text-slate-500 rounded-r-lg p-2 sm:p-4 text-sm sm:text-base font-medium flex items-center justify-center`;
 
@@ -141,7 +142,7 @@
                     </div>
                     <!-- Rank container - no "रैंक" title -->
                     <div class="${rankStyle}">
-                        ${isRanked ? `${rank}` : 'Other Student'}
+                        ${isRankedSection ? `${rank}` : 'Other Student'}
                     </div>
                 </div>
             `;
@@ -151,38 +152,14 @@
          * Renders a group of students as a scoreboard.
          * @param {string} title - The title for the scoreboard section.
          * @param {object[]} data - The array of student data.
-         * @param {string[]} headers - The array of header names.
-         * @param {boolean} isRankedSection - Whether this section is for ranked students.
-         * @param {number} startRank - The starting rank for this section.
+         * @param {boolean} isRankedSection - Whether this section should display ranks.
          */
-        function renderScoreboardSection(title, data, headers, isRankedSection = false, startRank = 1) {
+        function renderScoreboardSection(title, data, isRankedSection = false) {
             if (data.length === 0) {
                 return `<div class="bg-gray-100 rounded-lg p-6 text-center text-slate-500 shadow-md">No data available.</div>`;
             }
 
-            let cardsHtml = '';
-            let currentRank = startRank - 1;
-            let lastPercentage = -1;
-            let samePercentageCount = 0;
-            const percentageIndex = headers.indexOf('Percentage');
-
-            data.forEach((rowData, index) => {
-                const percentage = parseFloat(rowData.data[percentageIndex]) || 0;
-                
-                let rankDisplay = '-';
-                if (isRankedSection) {
-                    if (percentage === lastPercentage) {
-                        samePercentageCount++;
-                    } else {
-                        currentRank += samePercentageCount + 1;
-                        samePercentageCount = 0;
-                    }
-                    lastPercentage = percentage;
-                    rankDisplay = currentRank;
-                }
-
-                cardsHtml += createStudentCard(rowData, rankDisplay, headers);
-            });
+            let cardsHtml = data.map(student => createStudentCard(student, isRankedSection)).join('');
 
             return `
                 <div class="bg-blue-50 rounded-lg p-6 shadow-md">
@@ -203,8 +180,7 @@
             scoreboardContainer.innerHTML = '';
             let filteredData = [];
             let title = '';
-            let isRanked = false;
-            let startRank = 1;
+            let isRanked = true;
 
             if (combinedSortedData.length === 0) {
                 showMessage('Data has not been loaded. Please wait a moment.');
@@ -216,21 +192,13 @@
             switch(category) {
                 case 'best':
                     title = 'BEST Performance (100% to 75%)';
-                    isRanked = true;
-                    // First, filter for 100% students to get the correct starting rank for the rest
-                    const perfectScoreStudents = combinedSortedData.filter(student => (parseFloat(student.data[percentageIndex]) || 0) === 100);
-                    // Then, get the rest of the 'best' students
-                    const otherBestStudents = combinedSortedData.filter(student => {
+                    filteredData = combinedSortedData.filter(student => {
                         const perc = parseFloat(student.data[percentageIndex]) || 0;
-                        return perc < 100 && perc >= 75;
+                        return perc >= 75;
                     });
-                    // Combine them and render
-                    filteredData = perfectScoreStudents.concat(otherBestStudents);
-                    startRank = 1;
                     break;
                 case 'average':
                     title = 'Average Performance (75% to 40%)';
-                    isRanked = false;
                     filteredData = combinedSortedData.filter(student => {
                         const perc = parseFloat(student.data[percentageIndex]) || 0;
                         return perc < 75 && perc >= 40;
@@ -238,15 +206,15 @@
                     break;
                 case 'bad':
                     title = 'Bad Performance (40% to 0%)';
-                    isRanked = false;
                     filteredData = combinedSortedData.filter(student => {
                         const perc = parseFloat(student.data[percentageIndex]) || 0;
                         return perc < 40;
                     });
+                    isRanked = false; // Do not show ranks for this section
                     break;
             }
 
-            const scoreboardHtml = renderScoreboardSection(title, filteredData, headers, isRanked, startRank);
+            const scoreboardHtml = renderScoreboardSection(title, filteredData, isRanked);
             scoreboardContainer.innerHTML = scoreboardHtml;
         }
 
@@ -307,6 +275,40 @@
                     return percentageB - percentageA;
                 });
                 
+                // **Corrected Dense Ranking Logic:**
+                // All students with the same percentage get the same rank.
+                // The rank increments only when the percentage drops.
+                let rank = 1;
+                let lastPercentage = null;
+                const percentageColIndex = headers.indexOf('Percentage');
+
+                for (let i = 0; i < combinedSortedData.length; i++) {
+                    const currentPercentage = parseFloat(combinedSortedData[i].data[percentageColIndex]) || 0;
+                    
+                    if (i > 0 && currentPercentage < lastPercentage) {
+                        // If the percentage is lower than the previous one,
+                        // it's a new unique score, so we increment the rank.
+                        rank = i + 1;
+                    }
+                    
+                    combinedSortedData[i].rank = rank;
+                    lastPercentage = currentPercentage;
+                }
+                
+                // Final check to handle rank ties correctly (1, 1, 2, 3...)
+                // A better approach for dense ranking
+                let denseRank = 1;
+                let lastScore = -1;
+                for (let i = 0; i < combinedSortedData.length; i++) {
+                    const currentScore = parseFloat(combinedSortedData[i].data[percentageColIndex]) || 0;
+                    if (currentScore < lastScore) {
+                        denseRank++;
+                    }
+                    combinedSortedData[i].rank = denseRank;
+                    lastScore = currentScore;
+                }
+                
+
                 // Initial render with BEST Performance data
                 filterAndRenderData('best');
 
