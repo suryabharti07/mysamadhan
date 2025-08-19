@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEACHER RANKING</title>
+    <!-- Tailwind CSS को लोड करें ताकि आधुनिक स्टाइलिंग का उपयोग किया जा सके -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts से 'Inter' फॉन्ट लोड करें -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for a simple, modern light theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Lighter background */
+            color: #334155; /* Darker text for contrast */
+            padding: 3rem; /* Increased padding */
+        }
+
+        /* Container with a clean, card-like appearance */
+        .table-container {
+            background-color: #ffffff;
+            max-width: 1300px; /* Increased max width */
+            margin: 0 auto;
+            border-radius: 1.5rem; /* Slightly more rounded corners */
+            padding: 3rem; /* Increased padding */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* Stronger shadow */
+        }
+
+        /* Input field styling */
+        #searchInput {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            transition: all 0.3s ease-in-out;
+        }
+        #searchInput::placeholder {
+            color: #94a3b8;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #64748b;
+            box-shadow: 0 0 0 2px #cbd5e1;
+        }
+
+        /* Loading spinner style */
+        .spinner {
+            border: 5px solid #e2e8f0;
+            border-top: 5px solid #0ea5e9;
+            border-radius: 50%;
+            width: 50px; /* Bigger spinner */
+            height: 50px; /* Bigger spinner */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Make table scrollable on small screens */
+        .responsive-table {
+            overflow-x: auto;
+        }
+        
+        /* Header cursor */
+        th {
+            cursor: pointer;
+        }
+
+        /* Header gradient and hover effect */
+        thead th {
+            background: #0ea5e9; /* Light blue header */
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+        thead th:hover {
+            background-color: #0c91cc;
+        }
+        
+        /* Row hover effect */
+        tbody tr {
+            transition: background-color 0.3s ease;
+        }
+        tbody tr:hover {
+            background-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="table-container">
+        <h1 class="text-4xl font-extrabold mb-10 text-center text-gray-800">TEACHER RANKING</h1>
+        
+        <!-- Total Rows count display -->
+        <div class="mb-8 p-6 bg-sky-50 border border-sky-200 rounded-xl shadow-inner flex items-center justify-between">
+            <span class="text-xl font-semibold text-gray-700">Total Teachers:</span>
+            <span id="totalRows" class="text-4xl font-extrabold text-sky-600 animate-pulse">0</span>
+        </div>
+
+        <!-- Search input field -->
+        <div class="mb-8 relative">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="24" height="24">
+                <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.095l3.968 3.969a.75.75 0 11-1.06 1.06l-3.969-3.968A7 7 0 012 9z" clip-rule="evenodd" />
+            </svg>
+            <input type="text" id="searchInput" placeholder="डेटा खोजें..." class="w-full pl-14 pr-6 py-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all duration-300">
+        </div>
+
+        <!-- Loading message and spinner -->
+        <div id="loading" class="flex flex-col justify-center items-center my-12">
+            <div class="spinner mb-4"></div>
+            <span class="text-xl text-gray-500">डेटा लोड हो रहा है...</span>
+        </div>
+
+        <!-- Table will be displayed here -->
+        <div id="table-wrapper" class="hidden responsive-table rounded-xl overflow-hidden border border-gray-200 shadow">
+            <table id="data-table" class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <!-- Headers will be inserted here -->
+                </thead>
+                <tbody>
+                    <!-- Data rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Container for the error message -->
+        <div id="error-message" class="hidden text-center text-red-500 font-semibold my-10">
+            डेटा लोड करने में कोई त्रुटि हुई। कृपया URL की जाँच करें और पुनः प्रयास करें।
+        </div>
+    </div>
+
+    <script>
+        // URL from which to fetch CSV data
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9VWdSJn3Vshjh7cEdBjkpDIZ2hoj-7lAJ8omwv2nDp6uIQjiGO_qt5dKHHx77mTyiYvgjDY-cisWY/pub?gid=532780556&single=true&output=csv';
+
+        // Get HTML elements
+        const loadingElement = document.getElementById('loading');
+        const tableWrapper = document.getElementById('table-wrapper');
+        const tableElement = document.getElementById('data-table');
+        const errorMessage = document.getElementById('error-message');
+        const searchInput = document.getElementById('searchInput');
+        const totalRowsElement = document.getElementById('totalRows');
+
+        // Global variables to store original data and sorting state
+        let originalData = [];
+        let currentSortColumn = null;
+        let isAscending = true;
+
+        /**
+         * Async function to load and parse CSV data.
+         * Handles loading, error, and data rendering.
+         */
+        async function loadAndRenderTable() {
+            try {
+                // Show loading message
+                loadingElement.classList.remove('hidden');
+                tableWrapper.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+
+                // Fetch data
+                const response = await fetch(csvUrl);
+                
+                // If response is not successful, throw an error
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const csvText = await response.text();
+                
+                // Split CSV data into rows and columns
+                const rows = csvText.split('\n').filter(row => row.trim() !== '');
+                const headers = rows[0].split(',').map(header => header.trim());
+                const dataRows = rows.slice(1);
+
+                // Save original data
+                originalData = dataRows.map(row => row.split(',').map(cell => cell.trim()));
+
+                // Update the total row count
+                updateRowCount(originalData);
+
+                // Create the table
+                renderTable(headers, originalData);
+
+            } catch (error) {
+                // Hide loading message and show error message on failure
+                console.error('Fetching CSV failed:', error);
+                loadingElement.classList.add('hidden');
+                errorMessage.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Function to calculate and display the total number of rows.
+         * @param {string[][]} data - Array of table data.
+         */
+        function updateRowCount(data) {
+            totalRowsElement.textContent = data.length;
+        }
+
+        /**
+         * Function to render the table with the given data.
+         * @param {string[]} headers - Array of table headers.
+         * @param {string[][]} data - Array of table data.
+         */
+        function renderTable(headers, data) {
+            // Hide loading message and show table
+            loadingElement.classList.add('hidden');
+            tableWrapper.classList.remove('hidden');
+
+            // Create table header (<thead>)
+            const thead = tableElement.querySelector('thead');
+            thead.innerHTML = ''; // Ensure it's empty
+            const headerRow = document.createElement('tr');
+            headers.forEach((headerText, index) => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                // Set data index for sorting
+                th.setAttribute('data-index', index);
+                th.className = 'px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider transition-all duration-300'; /* Increased py-4 */
+
+                // Add sorting indicator (emoji)
+                const sortIcon = document.createElement('span');
+                sortIcon.className = 'ml-2 text-white opacity-60 transition-opacity duration-300';
+                sortIcon.innerHTML = '↕️';
+                th.appendChild(sortIcon);
+                
+                // Make header clickable for sorting
+                th.addEventListener('click', () => sortTable(index));
+
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            // Create table body (<tbody>)
+            const tbody = tableElement.querySelector('tbody');
+            tbody.innerHTML = ''; // Ensure it's empty
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                
+                // Zebra striping for odd and even rows
+                tr.className = `transition-all duration-300 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`;
+                
+                row.forEach((cellText, cellIndex) => {
+                    const td = document.createElement('td');
+                    td.textContent = cellText;
+                    // Conditionally apply font-bold to the 'Rank' column
+                    const isRankColumn = headers[cellIndex].toLowerCase() === 'rank';
+                    td.className = `px-6 py-4 text-gray-700 whitespace-nowrap text-base ${isRankColumn ? 'font-extrabold' : ''}`; /* Increased py-4 and text-base */
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        /**
+         * Function to sort the table.
+         * @param {number} columnIndex - The index of the column to sort.
+         */
+        function sortTable(columnIndex) {
+            // Check if it's the same column clicked before
+            if (currentSortColumn === columnIndex) {
+                isAscending = !isAscending; // Toggle the order
+            } else {
+                currentSortColumn = columnIndex;
+                isAscending = true; // New column, start with ascending order
+            }
+
+            // Sorting logic
+            const sortedData = [...originalData].sort((a, b) => {
+                const cellA = a[columnIndex];
+                const cellB = b[columnIndex];
+                // For numeric values, convert them to numbers
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return isAscending ? parseFloat(cellA) - parseFloat(cellB) : parseFloat(cellB) - parseFloat(cellA);
+                }
+                // For string values, perform string comparison
+                const comparison = cellA.localeCompare(cellB);
+                return isAscending ? comparison : -comparison;
+            });
+
+            // Update sorting icons
+            document.querySelectorAll('th span').forEach(span => span.innerHTML = '↕️');
+            const currentHeader = document.querySelector(`th[data-index='${columnIndex}'] span`);
+            if (currentHeader) {
+                currentHeader.innerHTML = isAscending ? '⬆️' : '⬇️';
+                currentHeader.classList.remove('opacity-60');
+            }
+
+            // Re-render the table with sorted data
+            const headers = tableElement.querySelectorAll('th');
+            const headerTexts = Array.from(headers).map(th => th.textContent.replace('↕️', '').replace('⬆️', '').replace('⬇️', '').trim());
+            renderTable(headerTexts, sortedData);
+        }
+
+        // Search function
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredData = originalData.filter(row => {
+                return row.some(cell => cell.toLowerCase().includes(searchTerm));
+            });
+            
+            // Re-render the table with filtered data
+            const headers = tableElement.querySelectorAll('th');
+            const headerTexts = Array.from(headers).map(th => th.textContent.replace('↕️', '').replace('⬆️', '').replace('⬇️', '').trim());
+            renderTable(headerTexts, filteredData);
+        });
+
+        // Call the function when the window loads
+        window.addEventListener('DOMContentLoaded', loadAndRenderTable);
+
+    </script>
+</body>
+</html>
