@@ -31,6 +31,12 @@
         <!-- Sticky Header -->
         <div class="sticky top-0 z-10 bg-white shadow-lg py-4 px-6 sm:px-10 rounded-b-xl">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-blue-600 mb-4">Student Scoreboard</h1>
+            
+            <!-- Rank 1 Student Count Display -->
+            <div id="rank-one-count" class="hidden text-center text-2xl font-bold text-green-700 mb-4 p-2 bg-green-100 rounded-lg shadow-inner">
+                <!-- Rank 1 student count will be displayed here -->
+            </div>
+
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <button id="best-performance-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-blue-600">
                     BEST Performance
@@ -67,6 +73,7 @@
         const bestPerformanceBtn = document.getElementById('best-performance-btn');
         const averagePerformanceBtn = document.getElementById('average-performance-btn');
         const badPerformanceBtn = document.getElementById('bad-performance-btn');
+        const rankOneCountElement = document.getElementById('rank-one-count'); // New element for Rank 1 count
 
         // CSV URLs for the data
         const csvUrls = [
@@ -171,6 +178,20 @@
             `;
         }
 
+        /**
+         * Function to update the display for Rank 1 count.
+         * @param {number} count - The number of students with Rank 1.
+         */
+        function updateRankOneCountDisplay(count) {
+            if (rankOneCountElement) {
+                rankOneCountElement.textContent = `Rank 1 में छात्र: ${count}`;
+                if (count > 0) {
+                    rankOneCountElement.classList.remove('hidden');
+                } else {
+                    rankOneCountElement.classList.add('hidden'); // Hide if no Rank 1 students
+                }
+            }
+        }
 
         /**
          * Filters and renders the scoreboard based on a performance category.
@@ -181,9 +202,11 @@
             let filteredData = [];
             let title = '';
             let isRanked = true;
+            let rankOneStudentsCount = 0; // Initialize count for Rank 1 students
 
             if (combinedSortedData.length === 0) {
-                showMessage('Data has not been loaded. Please wait a moment.');
+                showMessage('डेटा लोड नहीं हुआ है। कृपया कुछ क्षण प्रतीक्षा करें।'); // Data not loaded. Please wait a moment.
+                updateRankOneCountDisplay(0); // Hide Rank 1 count if no data
                 return;
             }
 
@@ -191,26 +214,31 @@
 
             switch(category) {
                 case 'best':
-                    title = 'BEST Performance (100% to 75%)';
+                    title = 'सर्वश्रेष्ठ प्रदर्शन (100% से 75%)'; // BEST Performance (100% to 75%)
                     filteredData = combinedSortedData.filter(student => {
                         const perc = parseFloat(student.data[percentageIndex]) || 0;
                         return perc >= 75;
                     });
+                    // Count Rank 1 students in the BEST performance category
+                    rankOneStudentsCount = filteredData.filter(student => student.rank === 1).length;
+                    updateRankOneCountDisplay(rankOneStudentsCount);
                     break;
                 case 'average':
-                    title = 'Average Performance (75% to 40%)';
+                    title = 'औसत प्रदर्शन (75% से 40%)'; // Average Performance (75% to 40%)
                     filteredData = combinedSortedData.filter(student => {
                         const perc = parseFloat(student.data[percentageIndex]) || 0;
                         return perc < 75 && perc >= 40;
                     });
+                    updateRankOneCountDisplay(0); // Hide count for other categories
                     break;
                 case 'bad':
-                    title = 'Bad Performance (40% to 0%)';
+                    title = 'खराब प्रदर्शन (40% से 0%)'; // Bad Performance (40% to 0%)
                     filteredData = combinedSortedData.filter(student => {
                         const perc = parseFloat(student.data[percentageIndex]) || 0;
                         return perc < 40;
                     });
                     isRanked = false; // Do not show ranks for this section
+                    updateRankOneCountDisplay(0); // Hide count for other categories
                     break;
             }
 
@@ -223,6 +251,7 @@
             scoreboardContainer.innerHTML = '';
             loader.style.display = 'block';
             messageBox.style.display = 'none';
+            rankOneCountElement.classList.add('hidden'); // Hide until data is loaded and best performance is shown
 
             try {
                 // Fetch all CSV files concurrently
@@ -255,7 +284,7 @@
                 });
 
                 if (combinedData.length === 0) {
-                    showMessage('No data found.', true);
+                    showMessage('कोई डेटा नहीं मिला।', true); // No data found.
                     return;
                 }
                 
@@ -263,7 +292,7 @@
                 const percentageIndex = 169;
                 const extraInfoIndex = 170;
                 if (headers.length <= percentageIndex || headers.length <= extraInfoIndex) {
-                    throw new Error("Required columns not found at the expected indices.");
+                    throw new Error("आवश्यक कॉलम अपेक्षित सूचकांकों पर नहीं मिले।"); // Required columns not found at the expected indices.
                 }
                 headers[percentageIndex] = 'Percentage';
                 headers[extraInfoIndex] = 'Extra Info';
@@ -275,30 +304,13 @@
                     return percentageB - percentageA;
                 });
                 
-                // **Corrected Dense Ranking Logic:**
+                // Corrected Dense Ranking Logic:
                 // All students with the same percentage get the same rank.
                 // The rank increments only when the percentage drops.
-                let rank = 1;
-                let lastPercentage = null;
-                const percentageColIndex = headers.indexOf('Percentage');
-
-                for (let i = 0; i < combinedSortedData.length; i++) {
-                    const currentPercentage = parseFloat(combinedSortedData[i].data[percentageColIndex]) || 0;
-                    
-                    if (i > 0 && currentPercentage < lastPercentage) {
-                        // If the percentage is lower than the previous one,
-                        // it's a new unique score, so we increment the rank.
-                        rank = i + 1;
-                    }
-                    
-                    combinedSortedData[i].rank = rank;
-                    lastPercentage = currentPercentage;
-                }
-                
-                // Final check to handle rank ties correctly (1, 1, 2, 3...)
-                // A better approach for dense ranking
                 let denseRank = 1;
                 let lastScore = -1;
+                const percentageColIndex = headers.indexOf('Percentage');
+
                 for (let i = 0; i < combinedSortedData.length; i++) {
                     const currentScore = parseFloat(combinedSortedData[i].data[percentageColIndex]) || 0;
                     if (currentScore < lastScore) {
@@ -308,13 +320,12 @@
                     lastScore = currentScore;
                 }
                 
-
                 // Initial render with BEST Performance data
                 filterAndRenderData('best');
 
             } catch (error) {
-                console.error('Error fetching data:', error);
-                showMessage(`Could not load data. Error: ${error.message}`, true);
+                console.error('डेटा लाने में त्रुटि:', error); // Error fetching data:
+                showMessage(`डेटा लोड नहीं किया जा सका। त्रुटि: ${error.message}`, true); // Could not load data. Error:
             } finally {
                 loader.style.display = 'none';
             }
