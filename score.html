@@ -32,6 +32,13 @@
         <div class="sticky top-0 z-10 bg-white shadow-lg py-4 px-6 sm:px-10 rounded-b-xl">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-blue-600 mb-4">Student Scoreboard</h1>
             
+            <!-- New TEACHER Button -->
+            <div class="flex justify-center mb-4">
+                <button id="teacher-btn" class="px-6 py-3 rounded-full text-white font-semibold shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-purple-600">
+                    TEACHER
+                </button>
+            </div>
+
             <!-- Rank 1 Student Count Display -->
             <div id="rank-one-count" class="hidden text-center text-2xl font-bold text-green-700 mb-4 p-2 bg-green-100 rounded-lg shadow-inner">
                 <!-- Rank 1 student count will be displayed here -->
@@ -65,6 +72,14 @@
         </div>
     </div>
 
+    <!-- Pop-up container -->
+    <div id="popup" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="relative w-full h-full p-4">
+            <button id="close-popup-btn" class="absolute top-4 right-4 text-red-600 text-4xl font-bold p-2 z-50">&times;</button>
+            <iframe id="popup-iframe" src="https://mysamadhan.in/teacherscore" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
     <script>
         // DOM element selections
         const messageBox = document.getElementById('message-box');
@@ -73,7 +88,13 @@
         const bestPerformanceBtn = document.getElementById('best-performance-btn');
         const averagePerformanceBtn = document.getElementById('average-performance-btn');
         const badPerformanceBtn = document.getElementById('bad-performance-btn');
-        const rankOneCountElement = document.getElementById('rank-one-count'); // New element for Rank 1 count
+        const rankOneCountElement = document.getElementById('rank-one-count');
+        
+        // New DOM elements for the pop-up
+        const teacherBtn = document.getElementById('teacher-btn');
+        const popup = document.getElementById('popup');
+        const closePopupBtn = document.getElementById('close-popup-btn');
+        const popupIframe = document.getElementById('popup-iframe');
 
         // CSV URLs for the data
         const csvUrls = [
@@ -335,6 +356,16 @@
         bestPerformanceBtn.addEventListener('click', () => filterAndRenderData('best'));
         averagePerformanceBtn.addEventListener('click', () => filterAndRenderData('average'));
         badPerformanceBtn.addEventListener('click', () => filterAndRenderData('bad'));
+        
+        // Add event listeners for the new pop-up functionality
+        teacherBtn.addEventListener('click', () => {
+            popup.classList.remove('hidden');
+        });
+
+        closePopupBtn.addEventListener('click', () => {
+            popup.classList.add('hidden');
+        });
+
 
         // Call the main function on page load
         window.onload = fetchAndProcessData;
