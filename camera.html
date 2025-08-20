@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>कैमरा ऐप</title>
+    <!-- Tailwind CSS के लिए CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 'Inter' फ़ॉन्ट का उपयोग करें */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* कैमरा फ़ीड के लिए फ़्लिप करें */
+        #video-feed {
+            transform: scaleX(-1);
+        }
+        /* हिडन इनपुट को छुपाने के लिए */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- मुख्य ऐप कंटेनर -->
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-2xl text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800">फ़ाइल सीमा वाला कैमरा ऐप</h1>
+        
+        <!-- वीडियो फ़ीड और कैप्चर बटन -->
+        <div class="relative w-full aspect-video bg-gray-200 rounded-xl overflow-hidden mb-6">
+            <video id="video-feed" class="w-full h-full object-cover" autoplay playsinline></video>
+            <canvas id="photo-canvas" class="hidden"></canvas>
+            <div id="result-container" class="hidden absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4">
+                <!-- कैप्चर किया गया आउटपुट यहाँ प्रदर्शित होगा -->
+            </div>
+        </div>
+
+        <!-- नियंत्रण और स्थिति -->
+        <div class="flex flex-col md:flex-row gap-4 mb-4">
+            <button id="start-camera-btn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors">
+                कैमरा चालू करें
+            </button>
+            <button id="capture-photo-btn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden" disabled>
+                तस्वीर लें
+            </button>
+            <button id="record-video-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden" disabled>
+                वीडियो रिकॉर्ड करें
+            </button>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-4">
+            <button id="stop-btn" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden" disabled>
+                रिकॉर्डिंग बंद करें
+            </button>
+            <button id="reset-btn" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden">
+                रीसेट करें
+            </button>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 justify-center items-center mt-4">
+             <button id="switch-camera-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden">
+                कैमरा बदलें
+            </button>
+            <div class="flex-1 text-left hidden md:flex">
+                <label for="video-quality" class="text-gray-700 font-medium whitespace-nowrap hidden md:inline">वीडियो क्वालिटी:</label>
+                <select id="video-quality" class="ml-2 p-2 rounded-lg border-gray-300 border-2">
+                    <option value="normal">सामान्य</option>
+                    <option value="low">निम्न (छोटा फ़ाइल आकार)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="download-btn-container" class="flex justify-center mt-4">
+            <a id="download-link" href="#" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden">
+                डाउनलोड करें
+            </a>
+        </div>
+
+        <div id="status-message" class="mt-4 text-sm font-medium text-gray-700">
+            कैमरा चालू करने के लिए 'कैमरा चालू करें' पर क्लिक करें।
+        </div>
+        <div id="size-display" class="mt-2 text-xs text-gray-500"></div>
+
+    </div>
+
+    <script>
+        // DOM तत्वों का चयन करें
+        const videoFeed = document.getElementById('video-feed');
+        const photoCanvas = document.getElementById('photo-canvas');
+        const startCameraBtn = document.getElementById('start-camera-btn');
+        const capturePhotoBtn = document.getElementById('capture-photo-btn');
+        const recordVideoBtn = document.getElementById('record-video-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const switchCameraBtn = document.getElementById('switch-camera-btn');
+        const videoQualitySelect = document.getElementById('video-quality');
+        const downloadLink = document.getElementById('download-link');
+        const statusMessage = document.getElementById('status-message');
+        const sizeDisplay = document.getElementById('size-display');
+        const resultContainer = document.getElementById('result-container');
+
+        // फ़ाइल आकार की सीमा 30MB है
+        const MAX_FILE_SIZE_BYTES = 30 * 1024 * 1024;
+        let mediaStream = null;
+        let mediaRecorder = null;
+        let videoChunks = [];
+        let isRecording = false;
+        let currentFacingMode = 'user'; // 'user' (फ्रंट) या 'environment' (बैक)
+
+        // यूज़र के कैमरे तक पहुँचने का फ़ंक्शन
+        async function startCamera() {
+            try {
+                // चुने गए क्वालिटी के आधार पर रेज़ोल्यूशन सेट करें
+                const selectedQuality = videoQualitySelect.value;
+                const videoConstraints = {};
+
+                if (currentFacingMode) {
+                    videoConstraints.facingMode = currentFacingMode;
+                }
+
+                if (selectedQuality === 'low') {
+                    // कम रेज़ोल्यूशन (लो क्वालिटी)
+                    videoConstraints.width = { ideal: 640 };
+                    videoConstraints.height = { ideal: 480 };
+                } else {
+                    // सामान्य रेज़ोल्यूशन (हाइ क्वालिटी)
+                    videoConstraints.width = { ideal: 1280 };
+                    videoConstraints.height = { ideal: 720 };
+                }
+                
+                // ऑडियो के लिए नए कंस्ट्रेंट्स (बेहतर क्वालिटी और छोटे आवाज़ रिकॉर्ड करने के लिए)
+                const audioConstraints = {
+                    sampleRate: 48000, // हाई सैंपल रेट, जो बेहतर ऑडियो क्वालिटी देता है
+                    echoCancellation: false // इको कैंसलेशन बंद करें ताकि छोटे-छोटे आवाज़ भी रिकॉर्ड हो
+                };
+
+                // यूज़र से कैमरे का उपयोग करने की अनुमति मांगें
+                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints, video: videoConstraints });
+                videoFeed.srcObject = mediaStream;
+                videoFeed.play();
+                
+                // बटन की स्थिति अपडेट करें
+                startCameraBtn.classList.add('hidden');
+                capturePhotoBtn.classList.remove('hidden');
+                recordVideoBtn.classList.remove('hidden');
+                switchCameraBtn.classList.remove('hidden'); // कैमरा बदलने का बटन दिखाएं
+                statusMessage.textContent = 'कैमरा चालू है।';
+                capturePhotoBtn.disabled = false;
+                recordVideoBtn.disabled = false;
+            } catch (err) {
+                // अगर कैमरा एक्सेस करने में कोई त्रुटि हो
+                statusMessage.textContent = 'कैमरा एक्सेस करने में असमर्थ। कृपया अनुमति दें या सुनिश्चित करें कि आपके डिवाइस में कैमरा है।';
+                console.error('Error accessing camera:', err);
+            }
+        }
+
+        // कैमरा बदलने का फ़ंक्शन
+        async function switchCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
+
+            // वर्तमान फ़ेसिंग मोड को टॉगल करें
+            currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+
+            // कैमरा चालू करें
+            await startCamera();
+        }
+
+        // तस्वीर लेने का फ़ंक्शन
+        function capturePhoto() {
+            if (!mediaStream) return;
+            resetDownloadButton(); // नया कैप्चर करने से पहले डाउनलोड बटन रीसेट करें
+
+            // वीडियो फ़ीड से एक फ़्रेम कैनवास पर खींचें
+            photoCanvas.width = videoFeed.videoWidth;
+            photoCanvas.height = videoFeed.videoHeight;
+            photoCanvas.getContext('2d').drawImage(videoFeed, 0, 0, photoCanvas.width, photoCanvas.height);
+            
+            // कैनवास से एक छवि (blob) प्राप्त करें
+            photoCanvas.toBlob((blob) => {
+                const fileSize = blob.size;
+                const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+                sizeDisplay.textContent = `फ़ाइल आकार: ${fileSizeMB} MB`;
+
+                if (fileSize > MAX_FILE_SIZE_BYTES) {
+                    // अगर फ़ाइल बहुत बड़ी है, तो एक त्रुटि संदेश दिखाएँ
+                    statusMessage.textContent = 'त्रुटि: तस्वीर 30 MB से अधिक है!';
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.innerHTML = `<p class="text-red-400 text-lg md:text-xl font-bold">तस्वीर बहुत बड़ी है!</p>`;
+                } else {
+                    // फ़ाइल स्वीकार्य है, इसे दिखाएँ और डाउनलोड लिंक तैयार करें
+                    statusMessage.textContent = 'तस्वीर सफलतापूर्वक ली गई।';
+                    const imgUrl = URL.createObjectURL(blob);
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.innerHTML = `<img src="${imgUrl}" alt="Captured Image" class="max-h-full max-w-full rounded-lg shadow-lg">`;
+                    
+                    // डाउनलोड बटन दिखाएं और लिंक सेट करें
+                    downloadLink.href = imgUrl;
+                    downloadLink.download = 'captured_image.jpeg';
+                    downloadLink.classList.remove('hidden');
+                }
+                resetBtn.classList.remove('hidden');
+            }, 'image/jpeg', 0.8); // JPEG प्रारूप में 0.8 की गुणवत्ता के साथ
+        }
+
+        // वीडियो रिकॉर्डिंग शुरू करने का फ़ंक्शन
+        function startVideoRecording() {
+            if (!mediaStream) return;
+            resetDownloadButton(); // नया कैप्चर करने से पहले डाउनलोड बटन रीसेट करें
+
+            videoChunks = []; // पुराने डेटा को साफ़ करें
+            mediaRecorder = new MediaRecorder(mediaStream);
+            isRecording = true;
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    videoChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                isRecording = false;
+                const videoBlob = new Blob(videoChunks, { 'type': 'video/mp4' });
+                const fileSize = videoBlob.size;
+                const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+                sizeDisplay.textContent = `फ़ाइल आकार: ${fileSizeMB} MB`;
+
+                if (fileSize > MAX_FILE_SIZE_BYTES) {
+                    // अगर फ़ाइल बहुत बड़ी है, तो एक त्रुटि संदेश दिखाएँ
+                    statusMessage.textContent = 'त्रुटि: वीडियो 30 MB से अधिक है!';
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.innerHTML = `<p class="text-red-400 text-lg md:text-xl font-bold">वीडियो बहुत बड़ा है!</p>`;
+                } else {
+                    // फ़ाइल स्वीकार्य है, इसे दिखाएँ और डाउनलोड लिंक तैयार करें
+                    statusMessage.textContent = 'वीडियो सफलतापूर्वक रिकॉर्ड किया गया।';
+                    const videoUrl = URL.createObjectURL(videoBlob);
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.innerHTML = `<video controls src="${videoUrl}" class="max-h-full max-w-full rounded-lg shadow-lg"></video>`;
+                    
+                    // डाउनलोड बटन दिखाएं और लिंक सेट करें
+                    downloadLink.href = videoUrl;
+                    downloadLink.download = 'captured_video.mp4';
+                    downloadLink.classList.remove('hidden');
+                }
+                resetBtn.classList.remove('hidden');
+            };
+
+            mediaRecorder.start();
+            statusMessage.textContent = 'रिकॉर्डिंग चालू है...';
+            recordVideoBtn.disabled = true;
+            capturePhotoBtn.disabled = true;
+            stopBtn.disabled = false;
+            stopBtn.classList.remove('hidden');
+        }
+
+        // वीडियो रिकॉर्डिंग बंद करने का फ़ंक्शन
+        function stopVideoRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+            }
+            recordVideoBtn.disabled = false;
+            capturePhotoBtn.disabled = false;
+            stopBtn.disabled = true;
+            stopBtn.classList.add('hidden');
+        }
+
+        // ऐप को रीसेट करने का फ़ंक्शन
+        function resetApp() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            videoFeed.srcObject = null;
+            resultContainer.classList.add('hidden');
+            resultContainer.innerHTML = '';
+            sizeDisplay.textContent = '';
+            statusMessage.textContent = "कैमरा चालू करने के लिए 'कैमरा चालू करें' पर क्लिक करें।";
+            startCameraBtn.classList.remove('hidden');
+            capturePhotoBtn.classList.add('hidden');
+            recordVideoBtn.classList.add('hidden');
+            stopBtn.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            switchCameraBtn.classList.add('hidden'); // कैमरा बदलने का बटन छिपाएँ
+            downloadLink.classList.add('hidden'); // डाउनलोड बटन भी छिपाएँ
+            downloadLink.href = '#';
+            capturePhotoBtn.disabled = true;
+            recordVideoBtn.disabled = true;
+            stopBtn.disabled = true;
+        }
+
+        // डाउनलोड बटन को रीसेट करने का फ़ंक्शन
+        function resetDownloadButton() {
+            downloadLink.classList.add('hidden');
+            downloadLink.href = '#';
+            downloadLink.download = '';
+        }
+
+        // बटन क्लिक इवेंट
+        startCameraBtn.addEventListener('click', startCamera);
+        capturePhotoBtn.addEventListener('click', capturePhoto);
+        recordVideoBtn.addEventListener('click', startVideoRecording);
+        stopBtn.addEventListener('click', stopVideoRecording);
+        resetBtn.addEventListener('click', resetApp);
+        switchCameraBtn.addEventListener('click', switchCamera);
+
+    </script>
+</body>
+</html>
