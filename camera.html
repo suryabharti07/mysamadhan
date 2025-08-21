@@ -1,310 +1,394 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>कैमरा ऐप</title>
-    <!-- Tailwind CSS के लिए CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* 'Inter' फ़ॉन्ट का उपयोग करें */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* कैमरा फ़ीड के लिए फ़्लिप करें */
-        #video-feed {
-            transform: scaleX(-1);
-        }
-        /* हिडन इनपुट को छुपाने के लिए */
-        .hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pure HTML/CSS/JS Video Call (WebRTC, No Server)</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #161a22;
+      --text: #eef2ff;
+      --muted: #a3b1cf;
+      --accent: #6aa6ff;
+      --accent-2: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      background: radial-gradient(1200px 600px at 10% 10%, #131826, transparent 60%), var(--bg);
+      color: var(--text);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+    }
+
+    header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { font-size: 18px; margin: 0; font-weight: 700; letter-spacing: 0.2px; }
+    header .sub { color: var(--muted); font-size: 13px; }
+
+    main {
+      padding: 0 16px 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      padding: 14px;
+    }
+
+    .videos {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 720px) {
+      .videos { grid-template-columns: 1fr 1fr; }
+    }
+
+    .video-wrap { position: relative; background: #000; border-radius: 14px; overflow: hidden; }
+    video { width: 100%; height: 100%; display: block; aspect-ratio: 16/9; background: #000; }
+    .badge {
+      position: absolute; left: 10px; top: 10px; padding: 6px 10px; font-size: 12px; border-radius: 999px;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+    button, .btn {
+      appearance: none; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+      color: var(--text); padding: 10px 14px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 14px;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+    }
+    button:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.24); }
+    .primary { background: linear-gradient(180deg, var(--accent), #3b82f6); border-color: transparent; color: white; }
+    .success { background: linear-gradient(180deg, var(--accent-2), #16a34a); border-color: transparent; color: white; }
+    .danger { background: linear-gradient(180deg, var(--danger), #dc2626); border-color: transparent; color: white; }
+    .ghost  { background: rgba(255,255,255,0.06); }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      outline: none;
+      font-family: ui-monospace, Menlo, Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    textarea { min-height: 130px; resize: vertical; }
+
+    label { font-size: 12px; color: var(--muted); display: block; margin: 8px 2px; }
+    .small { font-size: 12px; color: var(--muted); }
+    footer { text-align: center; padding: 12px; color: var(--muted); font-size: 12px; }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-
-    <!-- मुख्य ऐप कंटेनर -->
-    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-2xl text-center">
-        <h1 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800">फ़ाइल सीमा वाला कैमरा ऐप</h1>
-        
-        <!-- वीडियो फ़ीड और कैप्चर बटन -->
-        <div class="relative w-full aspect-video bg-gray-200 rounded-xl overflow-hidden mb-6">
-            <video id="video-feed" class="w-full h-full object-cover" autoplay playsinline></video>
-            <canvas id="photo-canvas" class="hidden"></canvas>
-            <div id="result-container" class="hidden absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4">
-                <!-- कैप्चर किया गया आउटपुट यहाँ प्रदर्शित होगा -->
-            </div>
-        </div>
-
-        <!-- नियंत्रण और स्थिति -->
-        <div class="flex flex-col md:flex-row gap-4 mb-4">
-            <button id="start-camera-btn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors">
-                कैमरा चालू करें
-            </button>
-            <button id="capture-photo-btn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden" disabled>
-                तस्वीर लें
-            </button>
-            <button id="record-video-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden" disabled>
-                वीडियो रिकॉर्ड करें
-            </button>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-4 mb-4">
-            <button id="stop-btn" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden" disabled>
-                रिकॉर्डिंग बंद करें
-            </button>
-            <button id="reset-btn" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden">
-                रीसेट करें
-            </button>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-4 justify-center items-center mt-4">
-             <button id="switch-camera-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden">
-                कैमरा बदलें
-            </button>
-            <div class="flex-1 text-left hidden md:flex">
-                <label for="video-quality" class="text-gray-700 font-medium whitespace-nowrap hidden md:inline">वीडियो क्वालिटी:</label>
-                <select id="video-quality" class="ml-2 p-2 rounded-lg border-gray-300 border-2">
-                    <option value="normal">सामान्य</option>
-                    <option value="low">निम्न (छोटा फ़ाइल आकार)</option>
-                </select>
-            </div>
-        </div>
-        
-        <div id="download-btn-container" class="flex justify-center mt-4">
-            <a id="download-link" href="#" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors hidden">
-                डाउनलोड करें
-            </a>
-        </div>
-
-        <div id="status-message" class="mt-4 text-sm font-medium text-gray-700">
-            कैमरा चालू करने के लिए 'कैमरा चालू करें' पर क्लिक करें।
-        </div>
-        <div id="size-display" class="mt-2 text-xs text-gray-500"></div>
-
+<body>
+  <header>
+    <div>
+      <h1>📹 WebRTC Video Call — No Server</h1>
+      <div class="sub">Everything runs in your browser with copy/paste signaling.</div>
     </div>
+  </header>
 
-    <script>
-        // DOM तत्वों का चयन करें
-        const videoFeed = document.getElementById('video-feed');
-        const photoCanvas = document.getElementById('photo-canvas');
-        const startCameraBtn = document.getElementById('start-camera-btn');
-        const capturePhotoBtn = document.getElementById('capture-photo-btn');
-        const recordVideoBtn = document.getElementById('record-video-btn');
-        const stopBtn = document.getElementById('stop-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const switchCameraBtn = document.getElementById('switch-camera-btn');
-        const videoQualitySelect = document.getElementById('video-quality');
-        const downloadLink = document.getElementById('download-link');
-        const statusMessage = document.getElementById('status-message');
-        const sizeDisplay = document.getElementById('size-display');
-        const resultContainer = document.getElementById('result-container');
+  <main>
+    <!-- Video Area -->
+    <section class="panel videos">
+      <div class="video-wrap">
+        <video id="localVideo" autoplay playsinline muted></video>
+        <span class="badge">You</span>
+      </div>
+      <div class="video-wrap">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <span class="badge">Peer</span>
+      </div>
 
-        // फ़ाइल आकार की सीमा 30MB है
-        const MAX_FILE_SIZE_BYTES = 30 * 1024 * 1024;
-        let mediaStream = null;
-        let mediaRecorder = null;
-        let videoChunks = [];
-        let isRecording = false;
-        let currentFacingMode = 'user'; // 'user' (फ्रंट) या 'environment' (बैक)
+      <div class="controls">
+        <button id="btnStart" class="primary">Start Camera & Mic</button>
+        <button id="btnToggleCam" class="ghost">Toggle Camera</button>
+        <button id="btnToggleMic" class="ghost">Toggle Mic</button>
+        <button id="btnShare" class="ghost">Share Screen</button>
+        <button id="btnHangup" class="danger">Hang Up</button>
+      </div>
+      <div class="small">Tip: Open this page in two browsers/devices. One side uses the “Caller” flow, the other uses the “Callee” flow below.</div>
+    </section>
 
-        // यूज़र के कैमरे तक पहुँचने का फ़ंक्शन
-        async function startCamera() {
-            try {
-                // चुने गए क्वालिटी के आधार पर रेज़ोल्यूशन सेट करें
-                const selectedQuality = videoQualitySelect.value;
-                const videoConstraints = {};
+    <!-- Signaling Panels -->
+    <section class="grid-2">
+      <!-- Caller -->
+      <div class="panel">
+        <h3>👋 Caller (Create Offer)</h3>
+        <div class="controls">
+          <button id="btnCreateOffer" class="success">Create Offer</button>
+          <button id="btnCopyOffer" class="ghost">Copy Offer</button>
+        </div>
+        <label for="offerOut">Your Offer (send to peer)</label>
+        <textarea id="offerOut" placeholder="Click Create Offer, then Copy & send"></textarea>
 
-                if (currentFacingMode) {
-                    videoConstraints.facingMode = currentFacingMode;
-                }
+        <label for="answerIn">Peer Answer (paste here)</label>
+        <textarea id="answerIn" placeholder="Paste the answer you received"></textarea>
+        <div class="controls">
+          <button id="btnApplyAnswer" class="primary">Apply Answer</button>
+        </div>
+      </div>
 
-                if (selectedQuality === 'low') {
-                    // कम रेज़ोल्यूशन (लो क्वालिटी)
-                    videoConstraints.width = { ideal: 640 };
-                    videoConstraints.height = { ideal: 480 };
-                } else {
-                    // सामान्य रेज़ोल्यूशन (हाइ क्वालिटी)
-                    videoConstraints.width = { ideal: 1280 };
-                    videoConstraints.height = { ideal: 720 };
-                }
-                
-                // ऑडियो के लिए नए कंस्ट्रेंट्स (बेहतर क्वालिटी और छोटे आवाज़ रिकॉर्ड करने के लिए)
-                const audioConstraints = {
-                    sampleRate: 48000, // हाई सैंपल रेट, जो बेहतर ऑडियो क्वालिटी देता है
-                    echoCancellation: false // इको कैंसलेशन बंद करें ताकि छोटे-छोटे आवाज़ भी रिकॉर्ड हो
-                };
+      <!-- Callee -->
+      <div class="panel">
+        <h3>🙌 Callee (Answer Offer)</h3>
+        <label for="offerIn">Peer Offer (paste here)</label>
+        <textarea id="offerIn" placeholder="Paste the caller's offer"></textarea>
+        <div class="controls">
+          <button id="btnAcceptOffer" class="primary">Accept Offer</button>
+          <button id="btnCreateAnswer" class="success">Create Answer</button>
+          <button id="btnCopyAnswer" class="ghost">Copy Answer</button>
+        </div>
+        <label for="answerOut">Your Answer (send back)</label>
+        <textarea id="answerOut" placeholder="Click Create Answer, then Copy & send"></textarea>
+      </div>
+    </section>
+  </main>
 
-                // यूज़र से कैमरे का उपयोग करने की अनुमति मांगें
-                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints, video: videoConstraints });
-                videoFeed.srcObject = mediaStream;
-                videoFeed.play();
-                
-                // बटन की स्थिति अपडेट करें
-                startCameraBtn.classList.add('hidden');
-                capturePhotoBtn.classList.remove('hidden');
-                recordVideoBtn.classList.remove('hidden');
-                switchCameraBtn.classList.remove('hidden'); // कैमरा बदलने का बटन दिखाएं
-                statusMessage.textContent = 'कैमरा चालू है।';
-                capturePhotoBtn.disabled = false;
-                recordVideoBtn.disabled = false;
-            } catch (err) {
-                // अगर कैमरा एक्सेस करने में कोई त्रुटि हो
-                statusMessage.textContent = 'कैमरा एक्सेस करने में असमर्थ। कृपया अनुमति दें या सुनिश्चित करें कि आपके डिवाइस में कैमरा है।';
-                console.error('Error accessing camera:', err);
+  <footer>
+    Built with WebRTC (STUN only). To avoid copy/paste, add your own WebSocket signaling later.
+  </footer>
+
+  <script>
+    // --- Elements
+    const localVideo = document.getElementById('localVideo');
+    const remoteVideo = document.getElementById('remoteVideo');
+
+    const btnStart = document.getElementById('btnStart');
+    const btnToggleCam = document.getElementById('btnToggleCam');
+    const btnToggleMic = document.getElementById('btnToggleMic');
+    const btnShare = document.getElementById('btnShare');
+    const btnHangup = document.getElementById('btnHangup');
+
+    const btnCreateOffer = document.getElementById('btnCreateOffer');
+    const btnCopyOffer = document.getElementById('btnCopyOffer');
+    const btnApplyAnswer = document.getElementById('btnApplyAnswer');
+
+    const btnAcceptOffer = document.getElementById('btnAcceptOffer');
+    const btnCreateAnswer = document.getElementById('btnCreateAnswer');
+    const btnCopyAnswer = document.getElementById('btnCopyAnswer');
+
+    const offerOut = document.getElementById('offerOut');
+    const answerIn = document.getElementById('answerIn');
+
+    const offerIn = document.getElementById('offerIn');
+    const answerOut = document.getElementById('answerOut');
+
+    // --- State
+    let pc = null;            // RTCPeerConnection
+    let localStream = null;   // MediaStream from camera/mic
+    let screenTrack = null;   // Optional screen share track
+
+    // Use public STUN so peers behind NAT can discover candidates.
+    const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
+    // Utility: clipboard copy
+    async function copy(el) {
+      try {
+        await navigator.clipboard.writeText(el.value.trim());
+        el.select();
+      } catch (e) {
+        // Fallback if clipboard blocked
+        el.select();
+        document.execCommand('copy');
+      }
+    }
+
+    function ensurePC() {
+      if (pc) return pc;
+      pc = new RTCPeerConnection(rtcConfig);
+
+      // Remote tracks
+      pc.ontrack = (ev) => {
+        // Get the first stream for remote video
+        if (!remoteVideo.srcObject) {
+          remoteVideo.srcObject = ev.streams[0];
+        }
+      };
+
+      // Helpful logging
+      pc.oniceconnectionstatechange = () => {
+        console.log('ICE state:', pc.iceConnectionState);
+      };
+      pc.onconnectionstatechange = () => {
+        console.log('PC state:', pc.connectionState);
+      };
+
+      return pc;
+    }
+
+    async function startLocal() {
+      if (localStream) return localStream;
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
+        if (!pc) ensurePC();
+        localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+        return localStream;
+      } catch (err) {
+        alert('Failed to access camera/mic: ' + err.message);
+        throw err;
+      }
+    }
+
+    function stopAll() {
+      if (screenTrack) {
+        screenTrack.stop();
+        screenTrack = null;
+      }
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+        localStream = null;
+      }
+      if (pc) {
+        try { pc.getSenders().forEach(s => pc.removeTrack(s)); } catch {}
+        pc.ontrack = null;
+        pc.close();
+        pc = null;
+      }
+      remoteVideo.srcObject = null;
+      localVideo.srcObject = null;
+      offerOut.value = answerOut.value = offerIn.value = answerIn.value = '';
+    }
+
+    // Wait until ICE gathering completes so the SDP blob is self-contained (no trickle copy needed)
+    function waitForIceGatheringComplete(pc) {
+      return new Promise(resolve => {
+        if (pc.iceGatheringState === 'complete') {
+          resolve();
+        } else {
+          function check() {
+            if (pc.iceGatheringState === 'complete') {
+              pc.removeEventListener('icegatheringstatechange', check);
+              resolve();
             }
+          }
+          pc.addEventListener('icegatheringstatechange', check);
+          // Also set a 2.5s timeout as a fallback to not hang forever on some networks
+          setTimeout(() => resolve(), 2500);
         }
+      });
+    }
 
-        // कैमरा बदलने का फ़ंक्शन
-        async function switchCamera() {
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
-            }
+    // --- Event wiring
+    btnStart.addEventListener('click', startLocal);
 
-            // वर्तमान फ़ेसिंग मोड को टॉगल करें
-            currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+    btnToggleCam.addEventListener('click', () => {
+      if (!localStream) return;
+      const v = localStream.getVideoTracks()[0];
+      if (v) { v.enabled = !v.enabled; }
+      btnToggleCam.textContent = (v && v.enabled) ? 'Turn Camera Off' : 'Turn Camera On';
+    });
 
-            // कैमरा चालू करें
-            await startCamera();
-        }
+    btnToggleMic.addEventListener('click', () => {
+      if (!localStream) return;
+      const a = localStream.getAudioTracks()[0];
+      if (a) { a.enabled = !a.enabled; }
+      btnToggleMic.textContent = (a && a.enabled) ? 'Mute Mic' : 'Unmute Mic';
+    });
 
-        // तस्वीर लेने का फ़ंक्शन
-        function capturePhoto() {
-            if (!mediaStream) return;
-            resetDownloadButton(); // नया कैप्चर करने से पहले डाउनलोड बटन रीसेट करें
+    btnShare.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const track = stream.getVideoTracks()[0];
+        screenTrack = track;
+        const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+        if (sender) sender.replaceTrack(track);
+        track.onended = () => {
+          // Restore camera when user stops sharing
+          if (localStream) {
+            const cam = localStream.getVideoTracks()[0];
+            if (cam && sender) sender.replaceTrack(cam);
+          }
+          screenTrack = null;
+        };
+      } catch (e) {
+        console.log('Screen share cancelled/failed:', e);
+      }
+    });
 
-            // वीडियो फ़ीड से एक फ़्रेम कैनवास पर खींचें
-            photoCanvas.width = videoFeed.videoWidth;
-            photoCanvas.height = videoFeed.videoHeight;
-            photoCanvas.getContext('2d').drawImage(videoFeed, 0, 0, photoCanvas.width, photoCanvas.height);
-            
-            // कैनवास से एक छवि (blob) प्राप्त करें
-            photoCanvas.toBlob((blob) => {
-                const fileSize = blob.size;
-                const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
-                sizeDisplay.textContent = `फ़ाइल आकार: ${fileSizeMB} MB`;
+    btnHangup.addEventListener('click', stopAll);
 
-                if (fileSize > MAX_FILE_SIZE_BYTES) {
-                    // अगर फ़ाइल बहुत बड़ी है, तो एक त्रुटि संदेश दिखाएँ
-                    statusMessage.textContent = 'त्रुटि: तस्वीर 30 MB से अधिक है!';
-                    resultContainer.classList.remove('hidden');
-                    resultContainer.innerHTML = `<p class="text-red-400 text-lg md:text-xl font-bold">तस्वीर बहुत बड़ी है!</p>`;
-                } else {
-                    // फ़ाइल स्वीकार्य है, इसे दिखाएँ और डाउनलोड लिंक तैयार करें
-                    statusMessage.textContent = 'तस्वीर सफलतापूर्वक ली गई।';
-                    const imgUrl = URL.createObjectURL(blob);
-                    resultContainer.classList.remove('hidden');
-                    resultContainer.innerHTML = `<img src="${imgUrl}" alt="Captured Image" class="max-h-full max-w-full rounded-lg shadow-lg">`;
-                    
-                    // डाउनलोड बटन दिखाएं और लिंक सेट करें
-                    downloadLink.href = imgUrl;
-                    downloadLink.download = 'captured_image.jpeg';
-                    downloadLink.classList.remove('hidden');
-                }
-                resetBtn.classList.remove('hidden');
-            }, 'image/jpeg', 0.8); // JPEG प्रारूप में 0.8 की गुणवत्ता के साथ
-        }
+    // --- Caller flow
+    btnCreateOffer.addEventListener('click', async () => {
+      await startLocal();
+      const pcx = ensurePC();
+      const offer = await pcx.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true });
+      await pcx.setLocalDescription(offer);
+      await waitForIceGatheringComplete(pcx);
+      offerOut.value = JSON.stringify(pcx.localDescription);
+    });
 
-        // वीडियो रिकॉर्डिंग शुरू करने का फ़ंक्शन
-        function startVideoRecording() {
-            if (!mediaStream) return;
-            resetDownloadButton(); // नया कैप्चर करने से पहले डाउनलोड बटन रीसेट करें
+    btnCopyOffer.addEventListener('click', () => copy(offerOut));
 
-            videoChunks = []; // पुराने डेटा को साफ़ करें
-            mediaRecorder = new MediaRecorder(mediaStream);
-            isRecording = true;
+    btnApplyAnswer.addEventListener('click', async () => {
+      try {
+        const answer = JSON.parse(answerIn.value.trim());
+        await ensurePC().setRemoteDescription(answer);
+        answerIn.value = '';
+      } catch (e) {
+        alert('Invalid answer JSON');
+      }
+    });
 
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    videoChunks.push(event.data);
-                }
-            };
+    // --- Callee flow
+    btnAcceptOffer.addEventListener('click', async () => {
+      try {
+        await startLocal();
+        const pcx = ensurePC();
+        const offerDesc = JSON.parse(offerIn.value.trim());
+        await pcx.setRemoteDescription(offerDesc);
+      } catch (e) {
+        alert('Invalid offer JSON');
+      }
+    });
 
-            mediaRecorder.onstop = () => {
-                isRecording = false;
-                const videoBlob = new Blob(videoChunks, { 'type': 'video/mp4' });
-                const fileSize = videoBlob.size;
-                const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
-                sizeDisplay.textContent = `फ़ाइल आकार: ${fileSizeMB} MB`;
+    btnCreateAnswer.addEventListener('click', async () => {
+      const pcx = ensurePC();
+      const answer = await pcx.createAnswer();
+      await pcx.setLocalDescription(answer);
+      await waitForIceGatheringComplete(pcx);
+      answerOut.value = JSON.stringify(pcx.localDescription);
+    });
 
-                if (fileSize > MAX_FILE_SIZE_BYTES) {
-                    // अगर फ़ाइल बहुत बड़ी है, तो एक त्रुटि संदेश दिखाएँ
-                    statusMessage.textContent = 'त्रुटि: वीडियो 30 MB से अधिक है!';
-                    resultContainer.classList.remove('hidden');
-                    resultContainer.innerHTML = `<p class="text-red-400 text-lg md:text-xl font-bold">वीडियो बहुत बड़ा है!</p>`;
-                } else {
-                    // फ़ाइल स्वीकार्य है, इसे दिखाएँ और डाउनलोड लिंक तैयार करें
-                    statusMessage.textContent = 'वीडियो सफलतापूर्वक रिकॉर्ड किया गया।';
-                    const videoUrl = URL.createObjectURL(videoBlob);
-                    resultContainer.classList.remove('hidden');
-                    resultContainer.innerHTML = `<video controls src="${videoUrl}" class="max-h-full max-w-full rounded-lg shadow-lg"></video>`;
-                    
-                    // डाउनलोड बटन दिखाएं और लिंक सेट करें
-                    downloadLink.href = videoUrl;
-                    downloadLink.download = 'captured_video.mp4';
-                    downloadLink.classList.remove('hidden');
-                }
-                resetBtn.classList.remove('hidden');
-            };
+    btnCopyAnswer.addEventListener('click', () => copy(answerOut));
 
-            mediaRecorder.start();
-            statusMessage.textContent = 'रिकॉर्डिंग चालू है...';
-            recordVideoBtn.disabled = true;
-            capturePhotoBtn.disabled = true;
-            stopBtn.disabled = false;
-            stopBtn.classList.remove('hidden');
-        }
-
-        // वीडियो रिकॉर्डिंग बंद करने का फ़ंक्शन
-        function stopVideoRecording() {
-            if (mediaRecorder && isRecording) {
-                mediaRecorder.stop();
-            }
-            recordVideoBtn.disabled = false;
-            capturePhotoBtn.disabled = false;
-            stopBtn.disabled = true;
-            stopBtn.classList.add('hidden');
-        }
-
-        // ऐप को रीसेट करने का फ़ंक्शन
-        function resetApp() {
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
-                mediaStream = null;
-            }
-            videoFeed.srcObject = null;
-            resultContainer.classList.add('hidden');
-            resultContainer.innerHTML = '';
-            sizeDisplay.textContent = '';
-            statusMessage.textContent = "कैमरा चालू करने के लिए 'कैमरा चालू करें' पर क्लिक करें।";
-            startCameraBtn.classList.remove('hidden');
-            capturePhotoBtn.classList.add('hidden');
-            recordVideoBtn.classList.add('hidden');
-            stopBtn.classList.add('hidden');
-            resetBtn.classList.add('hidden');
-            switchCameraBtn.classList.add('hidden'); // कैमरा बदलने का बटन छिपाएँ
-            downloadLink.classList.add('hidden'); // डाउनलोड बटन भी छिपाएँ
-            downloadLink.href = '#';
-            capturePhotoBtn.disabled = true;
-            recordVideoBtn.disabled = true;
-            stopBtn.disabled = true;
-        }
-
-        // डाउनलोड बटन को रीसेट करने का फ़ंक्शन
-        function resetDownloadButton() {
-            downloadLink.classList.add('hidden');
-            downloadLink.href = '#';
-            downloadLink.download = '';
-        }
-
-        // बटन क्लिक इवेंट
-        startCameraBtn.addEventListener('click', startCamera);
-        capturePhotoBtn.addEventListener('click', capturePhoto);
-        recordVideoBtn.addEventListener('click', startVideoRecording);
-        stopBtn.addEventListener('click', stopVideoRecording);
-        resetBtn.addEventListener('click', resetApp);
-        switchCameraBtn.addEventListener('click', switchCamera);
-
-    </script>
+    // Small UX niceties
+    window.addEventListener('beforeunload', () => stopAll());
+  </script>
 </body>
 </html>
