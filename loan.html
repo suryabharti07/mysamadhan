@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samadhan Kendra - Holistic Development for Marginalized Communities</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Use Tailwind CSS for responsive and modern design -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -17,150 +18,7 @@
             color: #1a202c; /* Ensure text color is readable */
         }
         
-        /* New header specific styles */
-        .three-dots-icon {
-            font-size: 1.25rem;
-            color: #5f6368;
-        }
-
-        /* Dropdown specific styles for desktop */
-        .dropdown-menu {
-            position: absolute;
-            background-color: white;
-            box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.15);
-            z-index: 1000;
-            min-width: 180px;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            padding: 0.5rem 0;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            transform: translateY(10px);
-            top: 100%;
-            left: 0;
-            border: 1px solid #e2e8f0;
-        }
-
-        /* Class to show the dropdown */
-        .show-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        /* Styling for individual dropdown items */
-        .dropdown-item {
-            padding: 0.75rem 1.25rem;
-            display: block;
-            color: #4a5568;
-            text-decoration: none;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: #e0f2fe;
-            color: #1d4ed8;
-        }
-
-        /* Custom style for the mobile menu transition */
-        #mobileMenu {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* Password Modal Styling */
-        .password-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .password-modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .password-modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            transform: scale(0.95);
-            transition: transform 0.2s ease-out;
-        }
-
-        .password-modal-content.show {
-            transform: scale(1);
-        }
-
-        .password-modal-content input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-        }
-
-        .password-modal-content button {
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s ease;
-        }
-
-        .password-modal-content button.submit {
-            background-color: #2563eb;
-            color: white;
-        }
-
-        .password-modal-content button.submit:hover {
-            background-color: #1d4ed8;
-        }
-
-        .password-modal-content button.cancel {
-            background-color: #e5e7eb;
-            color: #374151;
-            margin-left: 0.75rem;
-        }
-
-        .password-modal-content button.cancel:hover {
-            background-color: #d1d5db;
-        }
-
-        .password-error {
-            color: #ef4444;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-         /* Additional styles from the user's uploaded file */
-        .form-container {
-            max-width: 900px;
-            width: 100%;
-            background-color: white;
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid #d1d5db;
@@ -170,7 +28,7 @@
             color: #1f2937;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: #4f46e5;
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
@@ -229,19 +87,69 @@
         .message-box.error {
             background-color: #ef4444;
         }
+        /* Mobile menu styles */
+        #mobileMenu {
+            transition: transform 0.3s ease-in-out;
+        }
+        .password-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .password-modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .password-modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.2s ease-out;
+        }
+        .password-modal-content.show {
+            transform: scale(1);
+        }
+        .password-modal-content input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+        .password-error {
+            color: #ef4444;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Password Modal -->
     <div id="passwordModal" class="password-modal-overlay hidden">
-        <div class="password-modal-content">
+        <div class="password-modal-content rounded-xl">
             <h3 class="text-xl font-semibold mb-4 text-gray-800">Enter Password to access Console</h3>
             <input type="password" id="passwordInput" placeholder="Password" class="focus:outline-none focus:ring-2 focus:ring-blue-500">
             <p id="passwordError" class="password-error hidden">Incorrect password.</p>
-            <div class="flex justify-end">
-                <button id="submitPassword" class="btn-primary px-4 py-2 text-sm">Submit</button>
-                <button id="cancelPassword" class="btn-secondary px-4 py-2 text-sm ml-4">Cancel</button>
+            <div class="flex justify-end mt-4">
+                <button id="cancelPassword" class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancel</button>
+                <button id="submitPassword" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 ml-3">Submit</button>
             </div>
         </div>
     </div>
@@ -257,29 +165,29 @@
             <nav class="hidden lg:flex items-center space-x-8 text-gray-700 text-base font-medium">
                 <a href="#" class="hover:text-blue-700 transition-colors duration-200">Home</a>
 
-                <div class="relative dropdown" id="aboutUsDropdown">
+                <div class="relative group" id="aboutUsDropdown">
                     <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
                         About us
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                     </a>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">Our Journey</a>
-                        <a href="#" class="dropdown-item">Vision & Mission</a>
-                        <a href="#" class="dropdown-item">Management & Structure</a>
+                    <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 w-48 z-10">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Our Journey</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vision & Mission</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Management & Structure</a>
                     </div>
                 </div>
 
-                <div class="relative dropdown" id="programsDropdown">
+                <div class="relative group" id="programsDropdown">
                     <a href="#" class="hover:text-blue-700 flex items-center transition-colors duration-200" aria-haspopup="true" aria-expanded="false">
                         Programs
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                     </a>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">SU-SIKSHALAYA</a>
-                        <a href="#" class="dropdown-item">Apna Vidyalaya</a>
-                        <a href="#" class="dropdown-item">Sports</a>
-                        <a href="#" class="dropdown-item">WSHG</a>
-                        <a href="#" class="dropdown-item">Environment</a>
+                    <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 w-48 z-10">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">SU-SIKSHALAYA</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Apna Vidyalaya</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sports</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">WSHG</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Environment</a>
                     </div>
                 </div>
 
@@ -312,8 +220,8 @@
             </button>
         </div>
         <nav class="flex flex-col items-center space-y-6 text-lg text-gray-800 font-medium">
-            <a href="#" class="menu-link">Home</a>
-            <div class="relative w-full text-center">
+            <a href="#" class="menu-link block w-full text-center">Home</a>
+            <div class="w-full text-center">
                 <a href="#" class="menu-link block w-full">About us</a>
                 <div class="flex flex-col space-y-2 mt-2">
                     <a href="#" class="text-sm text-gray-600 hover:text-blue-700 transition-colors">Our Journey</a>
@@ -321,7 +229,7 @@
                     <a href="#" class="text-sm text-gray-600 hover:text-blue-700 transition-colors">Management & Structure</a>
                 </div>
             </div>
-            <div class="relative w-full text-center">
+            <div class="w-full text-center">
                 <a href="#" class="menu-link block w-full">Programs</a>
                 <div class="flex flex-col space-y-2 mt-2">
                     <a href="#" class="text-sm text-gray-600 hover:text-blue-700 transition-colors">SU-SIKSHALAYA</a>
@@ -331,19 +239,19 @@
                     <a href="#" class="text-sm text-gray-600 hover:text-blue-700 transition-colors">Environment</a>
                 </div>
             </div>
-            <a href="#" class="menu-link">Founder</a>
-            <a href="#" class="menu-link">Gallery</a>
-            <a href="#" class="menu-link">Contact</a>
-            <a href="#" id="mobileConsoleLink" class="menu-link">Console</a>
+            <a href="#" class="menu-link block w-full text-center">Founder</a>
+            <a href="#" class="menu-link block w-full text-center">Gallery</a>
+            <a href="#" class="menu-link block w-full text-center">Contact</a>
+            <a href="#" id="mobileConsoleLink" class="menu-link block w-full text-center">Console</a>
         </nav>
     </div>
 
     <!-- Loan Management Form -->
     <main class="flex justify-center items-center py-8 px-4">
-        <div class="form-container">
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Loan Management Entry</h1>
-            <p class="text-center text-gray-500 mb-8">Please fill out the form below to enter new member data.</p>
-            <form id="loanEntryForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div class="max-w-4xl w-full bg-white p-6 sm:p-8 md:p-10 lg:p-12 rounded-2xl shadow-lg mt-8 mb-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2 md:mb-4">Loan Management Entry</h1>
+            <p class="text-center text-gray-500 mb-6 md:mb-8 text-sm sm:text-base">Please fill out the form below to enter new member data.</p>
+            <form id="loanEntryForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 lg:gap-x-10 gap-y-6">
 
                 <!-- Hidden field for auto-generated values -->
                 <input type="hidden" name="Sl" id="sl">
@@ -351,72 +259,81 @@
                 <!-- Input fields -->
                 <div>
                     <label for="date" class="form-label required">Date</label>
-                    <input type="date" id="date" name="Date" class="form-input" required>
+                    <input type="date" id="date" name="Date" class="form-input rounded-xl" required>
                 </div>
                 
                 <div>
                     <label for="dateOfVisit" class="form-label required">Date of Visit</label>
-                    <input type="date" id="dateOfVisit" name="DateOfVisit" class="form-input" required>
+                    <input type="date" id="dateOfVisit" name="DateOfVisit" class="form-input rounded-xl" required>
                 </div>
 
                 <div>
                     <label for="groupName" class="form-label required">Group Name</label>
-                    <input type="text" id="groupName" name="GroupName" class="form-input" required>
+                    <input type="text" id="groupName" name="GroupName" class="form-input rounded-xl" required>
                 </div>
 
                 <div>
                     <label for="memberName" class="form-label required">Member Name</label>
-                    <input type="text" id="memberName" name="MemberName" class="form-input" required>
+                    <input type="text" id="memberName" name="MemberName" class="form-input rounded-xl" required>
                 </div>
 
                 <div>
                     <label for="fatherHusbandName" class="form-label required">Father's/Husband's Name</label>
-                    <input type="text" id="fatherHusbandName" name="Father's/Husband's Name" class="form-input" required>
+                    <input type="text" id="fatherHusbandName" name="Father's/Husband's Name" class="form-input rounded-xl" required>
                 </div>
 
                 <div>
                     <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="date" id="dob" name="Date of Birth" class="form-input">
+                    <input type="date" id="dob" name="Date of Birth" class="form-input rounded-xl">
                 </div>
 
                 <div>
                     <label for="address" class="form-label required">Address</label>
-                    <input type="text" id="address" name="Address" class="form-input" required>
+                    <input type="text" id="address" name="Address" class="form-input rounded-xl" required>
                 </div>
 
                 <div>
                     <label for="mobileNo" class="form-label required">Mobile No.</label>
-                    <input type="tel" id="mobileNo" name="Mobile No" class="form-input" pattern="[0-9]{10}" minlength="10" maxlength="10" title="Please enter a 10-digit mobile number" required>
+                    <input type="tel" id="mobileNo" name="Mobile No" class="form-input rounded-xl" pattern="[0-9]{10}" minlength="10" maxlength="10" title="Please enter a 10-digit mobile number" required>
                 </div>
 
                 <div>
                     <label for="aadharNumber" class="form-label required">Aadhaar Number</label>
-                    <input type="text" id="aadharNumber" name="Aadhar Number" class="form-input" pattern="[0-9]{12}" minlength="12" maxlength="12" title="Please enter a 12-digit Aadhar number" required>
+                    <input type="text" id="aadharNumber" name="Aadhar Number" class="form-input rounded-xl" pattern="[0-9]{12}" minlength="12" maxlength="12" title="Please enter a 12-digit Aadhar number" required>
                 </div>
 
                 <div>
                     <label for="savingDeposit" class="form-label required">Saving Deposit</label>
-                    <input type="number" id="savingDeposit" name="Saving Deposit" class="form-input" min="0" required>
+                    <input type="number" id="savingDeposit" name="Saving Deposit" class="form-input rounded-xl" min="0" required>
                 </div>
 
                 <div>
                     <label for="loanDemand" class="form-label required">Loan Demand</label>
-                    <input type="number" id="loanDemand" name="Loan Demand" class="form-input" min="0" required>
+                    <input type="number" id="loanDemand" name="Loan Demand" class="form-input rounded-xl" min="0" required>
                 </div>
 
                 <div>
                     <label for="loanPassed" class="form-label required">Loan Passed</label>
-                    <input type="number" id="loanPassed" name="Loan Passed" class="form-input" min="0" required>
+                    <input type="number" id="loanPassed" name="Loan Passed" class="form-input rounded-xl" min="0" required>
+                </div>
+
+                <div>
+                    <label for="status" class="form-label required">Status</label>
+                    <select id="status" name="Status" class="form-input rounded-xl" required>
+                        <option value="">Select Status</option>
+                        <option value="SELECT">SELECT</option>
+                        <option value="REJECT">REJECT</option>
+                    </select>
                 </div>
 
                 <div>
                     <label for="animatorName" class="form-label required">Name of Animator</label>
-                    <input type="text" id="animatorName" name="Name of Animator" class="form-input" required>
+                    <input type="text" id="animatorName" name="Name of Animator" class="form-input rounded-xl" required>
                 </div>
 
                 <div class="md:col-span-2 relative">
                     <label for="visitedBy" class="form-label required">Visiter ID</label>
-                    <input type="text" id="visitedBy" name="Visited by" class="form-input" pattern="\d*" required>
+                    <input type="text" id="visitedBy" name="Visited by" class="form-input rounded-xl" pattern="\d*" required>
                     <button type="button" id="clearVisitedBy" class="absolute right-3 top-9 text-gray-400 hover:text-gray-600 focus:outline-none hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -426,7 +343,7 @@
                 </div>
 
                 <div class="md:col-span-2 mt-4">
-                    <button type="submit" id="submitBtn" class="btn-submit">
+                    <button type="submit" id="submitBtn" class="btn-submit rounded-xl">
                         <span id="submitText">Submit Data</span>
                         <div id="loadingSpinner" class="spinner hidden"></div>
                     </button>
@@ -434,7 +351,7 @@
             </form>
 
             <!-- Message box for success or error -->
-            <div id="messageBox" class="message-box hidden"></div>
+            <div id="messageBox" class="message-box rounded-xl hidden"></div>
         </div>
     </main>
 
@@ -467,24 +384,6 @@
                     mobileMenu.addEventListener('transitionend', () => {
                         mobileMenu.classList.add('lg:hidden');
                     }, { once: true });
-                });
-            });
-
-            // Desktop Dropdown Menus
-            const dropdowns = document.querySelectorAll('.dropdown');
-
-            dropdowns.forEach(dropdown => {
-                const dropdownLink = dropdown.querySelector('a');
-                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-
-                dropdown.addEventListener('mouseenter', () => {
-                    dropdownMenu.classList.add('show-menu');
-                    dropdownLink.setAttribute('aria-expanded', 'true');
-                });
-
-                dropdown.addEventListener('mouseleave', () => {
-                    dropdownMenu.classList.remove('show-menu');
-                    dropdownLink.setAttribute('aria-expanded', 'false');
                 });
             });
 
@@ -649,6 +548,7 @@
                 postData["Saving Deposit"] = data["Saving Deposit"];
                 postData["Loan Demand"] = data["Loan Demand"];
                 postData["Loan Passed"] = data["Loan Passed"];
+                postData["Status"] = data["Status"];
                 postData["Name of Animator"] = data["Name of Animator"];
                 postData["Visited by"] = data["Visited by"];
                 postData["Date of Visit"] = data["DateOfVisit"];
