@@ -3,928 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Apna Vidyalaya Admin Panel</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Base styles for dark theme and typography */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a202c; /* Dark background */
-            color: #e2e8f0; /* Light text */
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden; /* Prevent horizontal scroll on small screens */
-            padding: 1.5rem; /* Add padding directly to body */
         }
-
-        /* Main content area now takes full width */
-        .main-content {
-            flex-grow: 1;
-            width: 100%; /* Take full width */
-            max-width: 1280px; /* Optional: Max width for content centering */
-            margin: 0 auto; /* Center content */
-        }
-
-        /* Custom scrollbar for table container */
-        .table-container::-webkit-scrollbar {
-            height: 8px;
-            background-color: #2d3748; /* Darker scrollbar track */
-            border-radius: 10px;
-        }
-        .table-container::-webkit-scrollbar-thumb {
-            background-color: #4a5568; /* Dark gray scrollbar thumb */
-            border-radius: 10px;
-        }
-        .table-container::-webkit-scrollbar-thumb:hover {
-            background-color: #6a768e; /* Lighter gray on hover */
-        }
-
-        /* Full-screen modal overlay */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Darker semi-transparent black */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background-color: #2d3748; /* Dark modal background */
-            color: #e2e8f0;
-            width: 95%;
-            height: 95%;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deeper shadow for dark theme */
-        }
-
-        .modal-content.edit-form-modal {
-            width: 90%;
-            max-width: 600px;
-            height: auto;
-            max-height: 90vh;
-        }
-
-        .modal-header {
-            padding: 1rem;
-            display: flex;
-            justify-content: flex-end;
-            border-bottom: 1px solid #4a5568; /* Darker border */
-            background-color: #2d3748;
-        }
-
-        .modal-header #closeModalBtn, .modal-header #closeEditModalBtn, .modal-header #closeAttendanceModalBtn { /* Specificity for the button */
-            position: relative; /* Ensure z-index works */
-            z-index: 1001; /* Make sure it's on top within the modal, higher than iframe */
-            outline: 2px solid transparent; /* Default transparent outline */
-            outline-offset: 2px;
-            transition: outline-color 0.2s ease; /* Smooth transition for focus outline */
-            cursor: pointer; /* Explicitly set cursor to pointer */
-            pointer-events: auto; /* Ensure clicks are registered */
-        }
-
-        .modal-header #closeModalBtn:focus, .modal-header #closeEditModalBtn:focus, .modal-header #closeAttendanceModalBtn:focus {
-            outline-color: #63b3ed; /* blue-300 for focus ring */
-        }
-
-        .modal-body {
-            flex-grow: 1;
-        }
-
-        .modal-body iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Custom message box styles */
-        .message-box {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #38a169; /* Green for success/info */
+        .active-menu {
+            background-color: #3b82f6;
             color: white;
-            padding: 1rem 1.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1100;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            display: flex;
-            align-items: center;
         }
-
-        .message-box.error {
-            background-color: #e53e3e; /* Red for error */
+        .active-menu svg, .active-menu span {
+            color: white !important;
         }
-
-        .message-box.active {
-            opacity: 1;
-            transform: translateY(0);
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
         }
-
-        .message-box .close-btn {
-            margin-left: 1rem;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
+        .content-section.active {
+            display: block;
         }
-
-        /* Loading indicator styles */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-primary {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all duration-300;
+        }
+        .btn-secondary {
+            @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded-lg transition-all duration-300;
+        }
+        /* Custom styles for the embedded iframe */
+        .iframe-container {
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1200;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
-
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #4299e1; /* Blue spinner */
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Dark mode specific styles for form elements and tables */
-        .dark-theme-element {
-            background-color: #2d3748; /* Darker background for inputs/selects */
-            border-color: #4a5568; /* Darker border */
-            color: #e2e8f0; /* Light text */
-        }
-        .dark-theme-element::placeholder {
-            color: #a0aec0; /* Lighter placeholder text */
-        }
-
-        .dark-table-header {
-            background-color: #2d3748; /* Darker table header */
-            color: #a0aec0; /* Lighter header text */
-        }
-        .dark-table-row {
-            background-color: #1a202c; /* Darker row background */
-            color: #e2e8f0; /* Light row text */
-        }
-        .dark-table-row:hover {
-            background-color: #2d3748; /* Slightly lighter on hover */
-        }
-        .dark-table-divide {
-            border-color: #4a5568; /* Darker divider */
-        }
-        /* Style for clickable links in the table */
-        td a {
-            color: inherit;
-            text-decoration: none;
-        }
-        td a:hover {
-            text-decoration: underline;
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
-<body class="selection:bg-blue-600 selection:text-white">
+<body class="bg-gray-50 text-gray-800 h-screen flex flex-col md:flex-row overflow-hidden">
 
-    <div class="main-content flex flex-col">
-        <header class="bg-gray-800 rounded-xl shadow-md py-4 px-6 mb-6 flex items-center justify-between">
-            <h1 class="text-3xl font-extrabold text-white">Admin Dashboard</h1>
-            <div class="flex items-center space-x-4">
-                <!-- NEW: Attendance Button -->
-                <button id="attendanceBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out">
-                    <i class="fas fa-clipboard-check mr-2"></i> Attendance
-                </button>
-                <img src="https://placehold.co/32x32/000000/FFFFFF?text=AS" alt="User Avatar" class="rounded-full border-2 border-blue-400">
-            </div>
-        </header>
+    <!-- Sidebar / Vertical Menu -->
+    <aside class="w-full md:w-64 p-4 md:p-6 bg-gray-900 text-white shadow-lg flex flex-col md:h-screen md:overflow-y-auto">
+        <!-- Logo/Title Section -->
+        <div class="flex items-center space-x-2 text-2xl font-bold text-white p-2 mb-6">
+            <svg class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <span>Apna Vidyalaya</span>
+        </div>
 
-        <section class="bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8 mb-8">
-            <h3 class="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-3">Block-wise User Distribution</h3>
-            <div id="blockDistribution" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Navigation Menu -->
+        <nav class="mt-8 flex-1">
+            <ul class="space-y-2">
+                <!-- Dashboard -->
+                <li>
+                    <a href="#" data-target="dashboard" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span class="font-medium">Dashboard</span>
+                    </a>
+                </li>
+                <!-- Teacher -->
+                <li>
+                    <a href="#" data-target="teacher" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-6a2 2 0 01-2-2V4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H9a2 2 0 01-2-2z"/>
+                        </svg>
+                        <span class="font-medium">Teacher</span>
+                    </a>
+                </li>
+                <!-- Student -->
+                <li>
+                    <a href="#" data-target="student" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.242c3.483 3.483 3.483 9.13 0 12.613a8.914 8.914 0 01-6.307 2.625M12 4.242a8.914 8.914 0 00-6.307 2.625m6.307-2.625c-3.483 3.483-3.483 9.13 0 12.613a8.914 8.914 0 006.307-2.625M12 4.242a8.914 8.914 0 016.307 2.625"/>
+                        </svg>
+                        <span class="font-medium">Student</span>
+                    </a>
+                </li>
+                <!-- Videos -->
+                <li>
+                    <a href="#" data-target="videos" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="font-medium">Videos</span>
+                    </a>
+                </li>
+                <!-- Attendance -->
+                <li>
+                    <a href="#" data-target="attendance" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.333 0 2.667 0 4 0a4 4 0 11-8 0c1.333 0 2.667 0 4 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-3.333 0-6.667 0-10 0a12 12 0 006.002 9.002C9.335 18.335 12 18.5 12 18.5s2.665-.165 3.998-1.498A12 12 0 0022 8c-3.333 0-6.667 0-10 0z"/>
+                        </svg>
+                        <span class="font-medium">Attendance</span>
+                    </a>
+                </li>
+                <!-- Call -->
+                <li>
+                    <a href="#" data-target="call" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.134a11.042 11.042 0 005.516 5.516l1.134-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        <span class="font-medium">Call</span>
+                    </a>
+                </li>
+                <!-- Inbox -->
+                <li>
+                    <a href="#" data-target="inbox" class="menu-item group flex items-center space-x-3 p-3 text-sm hover:bg-gray-700 transition-colors duration-200 rounded-lg">
+                        <svg class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7a2 2 0 002 2h6l2 2 2-2h2a2 2 0 002-2z"/>
+                        </svg>
+                        <span class="font-medium">Inbox</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto">
+        <!-- Content Sections -->
+        <div id="content-container" class="space-y-8 flex-1 flex flex-col">
+            <!-- Message/Error Box (hidden by default) -->
+            <div id="message-box" class="hidden p-4 rounded-lg font-medium text-sm"></div>
+
+            <!-- Dashboard Content -->
+            <section id="dashboard" class="content-section active bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Analytics Overview</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-gray-50 p-6 border border-gray-200 rounded-xl shadow-inner">
+                        <h3 class="text-sm text-gray-600 font-medium">Total Teachers</h3>
+                        <p class="text-3xl font-bold text-blue-600 mt-2">125</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 border border-gray-200 rounded-xl shadow-inner">
+                        <h3 class="text-sm text-gray-600 font-medium">Total Students</h3>
+                        <p class="text-3xl font-bold text-blue-600 mt-2">2,345</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 border border-gray-200 rounded-xl shadow-inner">
+                        <h3 class="text-sm text-gray-600 font-medium">Active Courses</h3>
+                        <p class="text-3xl font-bold text-blue-600 mt-2">45</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 border border-gray-200 rounded-xl shadow-inner">
+                        <h3 class="text-sm text-gray-600 font-medium">New Enrollments</h3>
+                        <p class="text-3xl font-bold text-blue-600 mt-2">187</p>
+                    </div>
                 </div>
-        </section>
+            </section>
 
-        <div class="bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8">
-            <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-4">Manage User Data</h2>
+            <!-- Teacher Content -->
+            <section id="teacher" class="content-section flex-1 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div class="iframe-container">
+                    <iframe src="https://www.appsheet.com/start/13ee3fc2-7beb-4044-be01-d0068f1f56fe#view=TEACHER" title="Teacher Management System"></iframe>
+                </div>
+            </section>
 
-            <div class="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <input type="text" id="searchInput" placeholder="Search by User Name, Teacher, Father, or Contact No..."
-                        class="w-full sm:w-auto flex-grow px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out dark-theme-element placeholder-gray-400 text-gray-200">
-                <select id="blockFilter"
-                        class="w-full sm:w-auto px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out dark-theme-element text-gray-200">
-                    <option value="">All Blocks</option>
-                    </select>
-            </div>
+            <!-- Student Content -->
+            <section id="student" class="content-section flex-1 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div class="iframe-container">
+                    <iframe src="https://www.appsheet.com/start/13ee3fc2-7beb-4044-be01-d0068f1f56fe#view=STUDENT" title="Student Management System"></iframe>
+                </div>
+            </section>
 
-            <div class="overflow-x-auto rounded-lg shadow-md table-container border border-gray-700">
-                <table class="min-w-full table-auto divide-y divide-gray-700">
-                    <thead class="dark-table-header">
-                        <tr>
-                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="userName">
-                                User Name <i class="fas fa-sort ml-1 text-gray-500"></i>
-                            </th>
-                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="teacherName">
-                                Teacher Name <i class="fas fa-sort ml-1 text-gray-500"></i>
-                            </th>
-                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Father/Husband Name</th>
-                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Contact No</th>
-                            <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer" data-sort="block">
-                                Block <i class="fas fa-sort ml-1 text-gray-500"></i>
-                            </th>
-                            <th scope="col" class="px-2 py-3 text-center text-xs font-semibold uppercase tracking-wider">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTableBody" class="divide-y dark-table-divide">
-                        </tbody>
-                </table>
-            </div>
+            <!-- Videos Content -->
+            <section id="videos" class="content-section bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Video Library</h2>
+                <p class="text-gray-600">Manage and upload educational videos here. Organize them by subject and grade level.</p>
+            </section>
+
+            <!-- Attendance Content -->
+            <section id="attendance" class="content-section bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Attendance Tracker</h2>
+                <p class="text-gray-600">Track student and teacher attendance, generate reports, and manage attendance records.</p>
+            </section>
+
+            <!-- Call Content -->
+            <section id="call" class="content-section bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Call Log</h2>
+                <p class="text-gray-600">View the history of all calls, including calls made to students, teachers, or parents.</p>
+            </section>
+
+            <!-- Inbox Content -->
+            <section id="inbox" class="content-section bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Inbox</h2>
+                <p class="text-gray-600">This is your message center. View, compose, and send messages to other users of the system.</p>
+            </section>
         </div>
-    </div>
-
-    <!-- Existing Modals -->
-    <div id="sheetModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button id="closeModalBtn" class="text-gray-400 hover:text-white focus:outline-none p-1 rounded-full hover:bg-gray-700 transition duration-150 ease-in-out">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <iframe id="sheetIframe" src="" title="Google Sheet View"></iframe>
-            </div>
-        </div>
-    </div>
-
-    <div id="editModal" class="modal-overlay">
-        <div class="modal-content edit-form-modal">
-            <div class="modal-header">
-                <h3 class="text-xl font-bold text-white flex-grow">Edit User Data</h3>
-                <button id="closeEditModalBtn" class="text-gray-400 hover:text-white focus:outline-none p-1 rounded-full hover:bg-gray-700 transition duration-150 ease-in-out">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body p-6 overflow-y-auto">
-                <form id="editForm" class="space-y-4">
-                    <input type="hidden" id="editRowIndex">
-
-                    <div>
-                        <label for="editUserName" class="block text-sm font-medium text-gray-300">User Name</label>
-                        <input type="text" id="editUserName" class="mt-1 block w-full rounded-md dark-theme-element p-2">
-                    </div>
-                    <div>
-                        <label for="editTeacherName" class="block text-sm font-medium text-gray-300">Teacher Name</label>
-                        <input type="text" id="editTeacherName" class="mt-1 block w-full rounded-md dark-theme-element p-2">
-                    </div>
-                    <div>
-                        <label for="editFatherName" class="block text-sm font-medium text-gray-300">Father/Husband Name</label>
-                        <input type="text" id="editFatherName" class="mt-1 block w-full rounded-md dark-theme-element p-2">
-                    </div>
-                    <div>
-                        <label for="editContactNo" class="block text-sm font-medium text-gray-300">Contact No</label>
-                        <input type="tel" id="editContactNo" class="mt-1 block w-full rounded-md dark-theme-element p-2">
-                    </div>
-                    <div>
-                        <label for="editBlock" class="block text-sm font-medium text-gray-300">Block</label>
-                        <input type="text" id="editBlock" class="mt-1 block w-full rounded-md dark-theme-element p-2">
-                    </div>
-                    
-                    <div class="flex justify-end pt-4 border-t border-gray-700 mt-4">
-                        <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <!-- NEW: Full-screen modal for Attendance Sheet -->
-    <div id="attendanceModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header justify-between">
-                <h3 class="text-xl font-bold text-white flex-grow">Attendance Sheet</h3>
-                <button id="closeAttendanceModalBtn" class="text-gray-400 hover:text-white focus:outline-none p-1 rounded-full hover:bg-gray-700 transition duration-150 ease-in-out">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Google Sheet URL goes here -->
-                <iframe id="attendanceIframe" src="" title="Attendance Google Sheet"></iframe>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="messageBox" class="message-box">
-        <span id="messageText"></span>
-        <button class="close-btn" onclick="hideMessageBox()">&times;</button>
-    </div>
-
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-    </div>
+    </main>
 
     <script>
-        // Global variables for DOM elements
-        const dataTableBody = document.getElementById('dataTableBody');
-        const sheetModal = document.getElementById('sheetModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const sheetIframe = document.getElementById('sheetIframe');
-        const editModal = document.getElementById('editModal');
-        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
-        const editForm = document.getElementById('editForm');
-        const searchInput = document.getElementById('searchInput');
-        const blockFilter = document.getElementById('blockFilter');
-        const messageBox = document.getElementById('messageBox');
-        const messageText = document.getElementById('messageText');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const blockDistributionContainer = document.getElementById('blockDistribution');
-        
-        // NEW: Attendance Modal Elements
-        const attendanceBtn = document.getElementById('attendanceBtn');
-        const attendanceModal = document.getElementById('attendanceModal');
-        const closeAttendanceModalBtn = document.getElementById('closeAttendanceModalBtn');
-        const attendanceIframe = document.getElementById('attendanceIframe');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const contentSections = document.querySelectorAll('.content-section');
 
-
-        let allData = []; // Stores all fetched data for filtering and sorting
-        let currentSortColumn = null;
-        let currentSortDirection = 'asc'; // 'asc' or 'desc'
-
-        // ! IMPORTANT: Replace this URL with your deployed Google Apps Script web app URL.
-        const GOOGLE_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyXgeYiVT2a9axst_Z9ZciR5U77aSXvVBWwZPG9_FdDVEHCUCz8g8VntLFjmiNISGKewg/exec';
-        const EDIT_SHEET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyXgeYiVT2a9axst_Z9ZciR5U77aSXvVBWwZPG9_FdDVEHCUCz8g8VntLFjmiNISGKewg/exec';
-        // NEW: URL for the Attendance Google Sheet
-        const ATTENDANCE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1WLtr9Zw6_1irGX4-9SGJkSRWtOGwd1fSGjHCZM4QabE/edit?gid=0#gid=0';
-
-        // --- Dummy Data (This will only be used if fetching from the Google Sheet URL fails) ---
-        // Note: I have added a 'rowIndex' to each dummy data item to simulate what the Apps Script will return.
-        const dummyData = [
-            {
-                "rowIndex": 2, // Corresponds to row 2 in the sheet
-                "User Name": "Amit Kumar",
-                "Teacher Name": "Mr. Sharma",
-                "FATHER/HUSBAND NAME": "Rajesh Kumar",
-                "CONTACT NO": "9876543210",
-                "BLOCK": "Bidupur",
-                "WEB LINK": "https://example.com/amit",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_amit/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 3,
-                "User Name": "Bhavna Devi",
-                "Teacher Name": "Ms. Verma",
-                "FATHER/HUSBAND NAME": "Suresh Singh",
-                "CONTACT NO": "8765432109",
-                "BLOCK": "Hajipur",
-                "WEB LINK": "https://example.com/bhavna",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_bhavna/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 4,
-                "User Name": "Chandan Gupta",
-                "Teacher Name": "Mrs. Mishra",
-                "FATHER/HUSBAND NAME": "Vijay Gupta",
-                "CONTACT NO": "7654321098",
-                "BLOCK": "Patepur",
-                "WEB LINK": "https://example.com/chandan",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_chandan/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 5,
-                "User Name": "Divya Singh",
-                "Teacher Name": "Mr. Yadav",
-                "FATHER/HUSBAND NAME": "Ajay Singh",
-                "CONTACT NO": "6543210987",
-                "BLOCK": "Bidupur",
-                "WEB LINK": "https://example.com/divya",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_divya/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 6,
-                "User Name": "Ishan Sharma",
-                "Teacher Name": "Ms. Kapoor",
-                "FATHER/HUSBAND NAME": "Naveen Sharma",
-                "CONTACT NO": "5432109876",
-                "BLOCK": "Hajipur",
-                "WEB LINK": "https://example.com/ishan",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_ishan/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 7,
-                "User Name": "Fatima Khan",
-                "Teacher Name": "Mr. Singh",
-                "FATHER/HUSBAND NAME": "Abbas Khan",
-                "CONTACT NO": "4321098765",
-                "BLOCK": "Patepur",
-                "WEB LINK": "https://example.com/fatima",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_fatima/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 8,
-                "User Name": "Gaurav Jain",
-                "Teacher Name": "Ms. Gupta",
-                "FATHER/HUSBAND NAME": "Prakash Jain",
-                "CONTACT NO": "3210987654",
-                "BLOCK": "Bidupur",
-                "WEB LINK": "https://example.com/gaurav",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_gaurav/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 9,
-                "User Name": "Harmanpreet Kaur",
-                "Teacher Name": "Mr. Dhawan",
-                "FATHER/HUSBAND NAME": "Jaspal Kaur",
-                "CONTACT NO": "9988776655",
-                "BLOCK": "Raghopur",
-                "WEB LINK": "https://example.com/harman",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_harman/edit?usp=sharing"
-            },
-            {
-                "rowIndex": 10,
-                "User Name": "Imran Hashmi",
-                "Teacher Name": "Mr. Khan",
-                "FATHER/HUSBAND NAME": "Anwar Hashmi",
-                "CONTACT NO": "1122334455",
-                "BLOCK": "Raghopur",
-                "WEB LINK": "https://example.com/imran",
-                "SHEET LINK": "https://docs.google.com/spreadsheets/d/12345_dummy_sheet_id_imran/edit?usp=sharing"
-            }
-        ];
-        // --- END DUMMY DATA ---
-
-        /**
-         * Shows a custom message box with a given message and type.
-         * @param {string} message - The message to display.
-         * @param {string} type - 'success' or 'error'.
-         */
-        function showMessageBox(message, type = 'success') {
-            messageText.textContent = message;
-            messageBox.classList.remove('success', 'error'); // Remove previous types
-            messageBox.classList.add(type);
-            messageBox.classList.add('active');
-            setTimeout(() => {
-                hideMessageBox();
-            }, 3000); // Hide after 3 seconds
-        }
-
-        /**
-         * Hides the custom message box.
-         */
-        function hideMessageBox() {
-            messageBox.classList.remove('active');
-        }
-
-        /**
-         * Shows the loading overlay.
-         */
-        function showLoading() {
-            loadingOverlay.classList.add('active');
-        }
-
-        /**
-         * Hides the loading overlay.
-         */
-        function hideLoading() {
-            loadingOverlay.classList.remove('active');
-        }
-
-        /**
-         * Fetches data from the specified Google Sheet URL.
-         * This function will replace the dummy data if successful.
-         */
-        async function fetchData() {
-            showLoading(); // Show loading indicator
-            try {
-                // The Apps Script now returns the row index, so we get that back.
-                const response = await fetch(GOOGLE_SHEET_DATA_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}. Please check your Google Apps Script deployment and permissions.`);
-                }
-                const data = await response.json();
-                hideLoading(); // Hide loading indicator on success
-                return data;
-            } catch (error) {
-                console.error("Could not fetch data from Google Sheet:", error);
-                showMessageBox(`Could not fetch data. Using dummy data. Error: ${error.message}`, 'error');
-                hideLoading(); // Hide loading indicator on error
-                return dummyData; // Fallback to dummy data for demonstration
-            }
-        }
-
-        /**
-         * Populates the table with data.
-         * @param {Array<Object>} data - An array of objects, where each object is a row.
-         */
-        function populateTable(data) {
-            dataTableBody.innerHTML = ''; // Clear existing rows
-            if (data.length === 0) {
-                const noDataRow = document.createElement('tr');
-                noDataRow.innerHTML = `<td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400 italic">No matching data found.</td>`;
-                dataTableBody.appendChild(noDataRow);
-                return;
-            }
-
-            data.forEach(rowData => {
-                const row = document.createElement('tr');
-                row.classList.add('dark-table-row'); // Apply dark theme row class
-                // Store the unique row index for editing later
-                row.dataset.rowIndex = rowData.rowIndex;
-
-                // Create table cells for each column
-                const userNameCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm', 'font-medium'], rowData["User Name"] || '');
-                const teacherNameCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["Teacher Name"] || '');
-                const fatherHusbandNameCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["FATHER/HUSBAND NAME"] || '');
-
-                // MODIFIED: Create a clickable link for the contact number
-                const contactNoCell = document.createElement('td');
-                contactNoCell.classList.add('px-2', 'py-4', 'whitespace-nowrap', 'text-sm');
-                if (rowData["CONTACT NO"]) {
-                    const contactLink = document.createElement('a');
-                    contactLink.href = `tel:${rowData["CONTACT NO"]}`;
-                    contactLink.textContent = rowData["CONTACT NO"];
-                    contactNoCell.appendChild(contactLink);
-                }
-
-                const blockCell = newElement('td', ['px-2', 'py-4', 'whitespace-nowrap', 'text-sm'], rowData["BLOCK"] || '');
-
-                // Action buttons cell
-                const actionCell = document.createElement('td');
-                actionCell.classList.add('px-2', 'py-4', 'whitespace-nowrap', 'text-center', 'text-sm', 'font-medium');
-
-                const webButton = document.createElement('button');
-                webButton.textContent = 'Web';
-                webButton.classList.add(
-                    'inline-flex', 'items-center', 'px-3', 'py-1.5', 'border', 'border-transparent', 'text-xs', 'font-medium',
-                    'rounded-md', 'shadow-sm', 'text-white', 'bg-green-600', 'hover:bg-green-700', 'focus:outline-none',
-                    'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500', 'transition', 'duration-150', 'ease-in-out',
-                    'mr-1', 'rounded-lg'
-                );
-                webButton.onclick = () => {
-                    if (rowData["WEB LINK"]) {
-                        window.open(rowData["WEB LINK"], '_blank');
-                    } else {
-                        showMessageBox("Web link not available for this entry.", 'error');
-                    }
-                };
-
-                const sheetButton = document.createElement('button');
-                sheetButton.textContent = 'Sheet';
-                sheetButton.classList.add(
-                    'inline-flex', 'items-center', 'px-3', 'py-1.5', 'border', 'border-transparent', 'text-xs', 'font-medium',
-                    'rounded-md', 'shadow-sm', 'text-white', 'bg-indigo-600', 'hover:bg-indigo-700', 'focus:outline-none',
-                    'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-indigo-500', 'transition', 'duration-150', 'ease-in-out',
-                    'rounded-lg', 'mr-1'
-                );
-                sheetButton.onclick = () => {
-                    if (rowData["SHEET LINK"]) {
-                        sheetIframe.src = rowData["SHEET LINK"];
-                        sheetModal.classList.add('active'); // Show modal
-                    } else {
-                        showMessageBox("Sheet link not available for this entry.", 'error');
-                    }
-                };
-
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Edit';
-                editButton.classList.add(
-                    'inline-flex', 'items-center', 'px-3', 'py-1.5', 'border', 'border-transparent', 'text-xs', 'font-medium',
-                    'rounded-md', 'shadow-sm', 'text-white', 'bg-yellow-600', 'hover:bg-yellow-700', 'focus:outline-none',
-                    'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-yellow-500', 'transition', 'duration-150', 'ease-in-out',
-                    'rounded-lg'
-                );
-                editButton.onclick = () => {
-                    openEditModal(rowData);
-                };
-
-                actionCell.appendChild(webButton);
-                actionCell.appendChild(sheetButton);
-                actionCell.appendChild(editButton);
-
-                // Append all cells to the row
-                row.appendChild(userNameCell);
-                row.appendChild(teacherNameCell);
-                row.appendChild(fatherHusbandNameCell);
-                row.appendChild(contactNoCell);
-                row.appendChild(blockCell);
-                row.appendChild(actionCell);
-
-                dataTableBody.appendChild(row);
+        // Function to show the selected section and hide others
+        function showSection(targetId) {
+            contentSections.forEach(section => {
+                section.classList.remove('active');
             });
+            document.getElementById(targetId).classList.add('active');
         }
 
-        // Helper function to create elements with classes and text content
-        function newElement(tag, classes, textContent) {
-            const element = document.createElement(tag);
-            element.classList.add(...classes);
-            element.textContent = textContent;
-            return element;
-        }
-
-        /**
-         * Opens the edit modal and populates the form with the selected row's data.
-         * @param {Object} rowData - The data object for the selected row.
-         */
-        function openEditModal(rowData) {
-            document.getElementById('editRowIndex').value = rowData.rowIndex;
-            document.getElementById('editUserName').value = rowData["User Name"] || '';
-            document.getElementById('editTeacherName').value = rowData["Teacher Name"] || '';
-            document.getElementById('editFatherName').value = rowData["FATHER/HUSBAND NAME"] || '';
-            document.getElementById('editContactNo').value = rowData["CONTACT NO"] || '';
-            document.getElementById('editBlock').value = rowData["BLOCK"] || '';
-            editModal.classList.add('active');
-        }
-
-        /**
-         * Submits the edited data to the Google Apps Script.
-         * @param {Event} event - The form submission event.
-         */
-        async function submitEditForm(event) {
-            event.preventDefault();
-            showLoading();
-
-            const rowIndex = document.getElementById('editRowIndex').value;
-            const updatedData = {
-                'User Name': document.getElementById('editUserName').value,
-                'Teacher Name': document.getElementById('editTeacherName').value,
-                'FATHER/HUSBAND NAME': document.getElementById('editFatherName').value,
-                'CONTACT NO': document.getElementById('editContactNo').value,
-                'BLOCK': document.getElementById('editBlock').value,
-            };
-
-            const payload = {
-                rowIndex: parseInt(rowIndex, 10),
-                data: updatedData
-            };
-
-            try {
-                const response = await fetch(EDIT_SHEET_DATA_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Use 'no-cors' for Google Apps Script to avoid pre-flight issues
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    redirect: 'follow',
-                    body: JSON.stringify(payload)
+        // Add click event listener to each menu item
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                menuItems.forEach(menuItem => {
+                    menuItem.classList.remove('active-menu');
                 });
-
-                // Since we're using no-cors, we can't inspect the response, but the call will be made.
-                // We'll optimistically update the UI and re-fetch for confirmation.
-                editModal.classList.remove('active');
-                showMessageBox("Data submitted for update. Refreshing...", 'success');
-                // Re-fetch data to reflect the changes after a short delay
-                setTimeout(async () => {
-                    const freshData = await fetchData();
-                    allData = freshData;
-                    populateBlockFilter(allData);
-                    populateBlockStatistics(allData);
-                    filterAndSortData();
-                    hideLoading();
-                    showMessageBox("Dashboard updated successfully!", 'success');
-                }, 2000); // 2-second delay to allow the Apps Script to finish
-            } catch (error) {
-                console.error('Error updating data:', error);
-                showMessageBox('Failed to save data. Please try again.', 'error');
-                hideLoading();
-            }
-        }
-
-
-        /**
-         * Populates the block filter dropdown with unique block names.
-         * @param {Array<Object>} data - An array of objects containing all data.
-         */
-        function populateBlockFilter(data) {
-            const blocks = new Set();
-            data.forEach(item => {
-                if (item.BLOCK) {
-                    blocks.add(item.BLOCK);
-                }
+                e.currentTarget.classList.add('active-menu');
+                const targetId = e.currentTarget.getAttribute('data-target');
+                showSection(targetId);
             });
-            blockFilter.innerHTML = '<option value="">All Blocks</option>'; // Keep default option
-            Array.from(blocks).sort().forEach(block => {
-                const option = document.createElement('option');
-                option.value = block;
-                option.textContent = block;
-                blockFilter.appendChild(option);
-            });
-        }
+        });
 
-        /**
-         * Calculates and displays block-wise user distribution.
-         * @param {Array<Object>} data - The full dataset.
-         */
-        function populateBlockStatistics(data) {
-            const blockCounts = {};
-            data.forEach(item => {
-                const block = item.BLOCK || 'Unknown Block';
-                blockCounts[block] = (blockCounts[block] || 0) + 1;
-            });
-
-            blockDistributionContainer.innerHTML = ''; // Clear previous stats
-
-            // Sort blocks alphabetically
-            const sortedBlocks = Object.keys(blockCounts).sort();
-
-            sortedBlocks.forEach(block => {
-                const count = blockCounts[block];
-                const card = document.createElement('div');
-                card.classList.add(
-                    'bg-gray-700', 'rounded-lg', 'p-4', 'shadow-md', 'flex', 'items-center', 'justify-between',
-                    'transition', 'duration-200', 'hover:scale-105', 'hover:bg-gray-600'
-                );
-                card.innerHTML = `
-                    <div>
-                        <p class="text-gray-300 text-sm font-medium">${block}</p>
-                        <h4 class="text-white text-2xl font-bold mt-1">${count}</h4>
-                        <p class="text-gray-400 text-xs">Users</p>
-                    </div>
-                    <i class="fas fa-map-marker-alt text-blue-400 text-3xl opacity-60"></i>
-                `;
-                blockDistributionContainer.appendChild(card);
-            });
-        }
-
-        /**
-         * Filters and sorts the data based on search input, block selection, and current sort state.
-         */
-        function filterAndSortData() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const selectedBlock = blockFilter.value;
-
-            let filteredData = allData.filter(item => {
-                // Search across User Name, Teacher Name, Father/Husband Name, and Contact No
-                const matchesSearch = (!searchTerm ||
-                                       (item["User Name"] && item["User Name"].toLowerCase().includes(searchTerm)) ||
-                                       (item["Teacher Name"] && item["Teacher Name"].toLowerCase().includes(searchTerm)) ||
-                                       (item["FATHER/HUSBAND NAME"] && item["FATHER/HUSBAND NAME"].toLowerCase().includes(searchTerm)) ||
-                                       (item["CONTACT NO"] && String(item["CONTACT NO"]).includes(searchTerm))); // FIX: Convert CONTACT NO to string
-
-                const matchesBlock = selectedBlock === "" || (item.BLOCK && item.BLOCK === selectedBlock);
-                return matchesSearch && matchesBlock;
-            });
-
-            // Apply sorting if a column is selected
-            if (currentSortColumn) {
-                filteredData.sort((a, b) => {
-                    let valA, valB;
-                    if (currentSortColumn === 'userName') {
-                        valA = a["User Name"] || '';
-                        valB = b["User Name"] || '';
-                    } else if (currentSortColumn === 'teacherName') {
-                        valA = a["Teacher Name"] || '';
-                        valB = b["Teacher Name"] || '';
-                    } else if (currentSortColumn === 'block') {
-                        valA = a["BLOCK"] || '';
-                        valB = b["BLOCK"] || '';
-                    }
-
-                    if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
-                    if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
-                    return 0;
-                });
-            }
-
-            populateTable(filteredData);
-        }
-
-        /**
-         * Handles column header clicks for sorting.
-         * @param {Event} event - The click event.
-         */
-        function handleColumnSort(event) {
-            const th = event.currentTarget;
-            const column = th.dataset.sort;
-
-            if (column) {
-                if (currentSortColumn === column) {
-                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
-                } else {
-                    currentSortColumn = column;
-                    currentSortDirection = 'asc';
-                }
-
-                // Update sort icons
-                document.querySelectorAll('th[data-sort] i').forEach(icon => {
-                    icon.classList.remove('fa-sort-up', 'fa-sort-down');
-                    icon.classList.add('fa-sort');
-                });
-
-                const currentIcon = th.querySelector('i');
-                if (currentIcon) {
-                    currentIcon.classList.remove('fa-sort');
-                    currentIcon.classList.add(currentSortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
-                }
-
-                filterAndSortData(); // Re-filter and sort
-            }
-        }
-
-        // Event Listeners
+        // Set initial active state on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial data load and table population
-            fetchData().then(data => {
-                allData = data; // Store all fetched data
-                populateBlockFilter(allData); // Populate block filter
-                populateBlockStatistics(allData); // Populate block-wise statistics
-                filterAndSortData(); // Populate initial table with potential default sorting
-            });
-
-            // Search and Filter Event Listeners
-            searchInput.addEventListener('input', filterAndSortData); // Use 'input' for real-time filtering
-            blockFilter.addEventListener('change', filterAndSortData);
-
-            // Modal Event Listeners
-            closeModalBtn.addEventListener('click', () => {
-                sheetModal.classList.remove('active'); // Hide modal
-                sheetIframe.src = ''; // Clear iframe src to stop any loaded content
-            });
-            sheetModal.addEventListener('click', (event) => {
-                // This checks if the click was directly on the overlay, not its children
-                if (event.target === sheetModal) {
-                    sheetModal.classList.remove('active');
-                    sheetIframe.src = '';
-                }
-            });
-
-            // Add sorting event listeners to table headers
-            document.querySelectorAll('th[data-sort]').forEach(th => {
-                th.addEventListener('click', handleColumnSort);
-            });
-
-            // New Modal and Form Event Listeners
-            closeEditModalBtn.addEventListener('click', () => {
-                editModal.classList.remove('active');
-            });
-            editModal.addEventListener('click', (event) => {
-                if (event.target === editModal) {
-                    editModal.classList.remove('active');
-                }
-            });
-
-            editForm.addEventListener('submit', submitEditForm);
-            
-            // NEW: Attendance Button and Modal Event Listeners
-            attendanceBtn.addEventListener('click', () => {
-                attendanceIframe.src = ATTENDANCE_SHEET_URL;
-                attendanceModal.classList.add('active'); // Show modal
-            });
-
-            closeAttendanceModalBtn.addEventListener('click', () => {
-                attendanceModal.classList.remove('active');
-                attendanceIframe.src = ''; // Clear iframe src
-            });
-
-            attendanceModal.addEventListener('click', (event) => {
-                if (event.target === attendanceModal) {
-                    attendanceModal.classList.remove('active');
-                    attendanceIframe.src = '';
-                }
-            });
+            // Find the initial menu item based on a default
+            const initialItem = document.querySelector('[data-target="dashboard"]');
+            initialItem.classList.add('active-menu');
+            showSection('dashboard');
         });
     </script>
 </body>
