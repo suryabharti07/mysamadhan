@@ -145,7 +145,7 @@
             <div id="message-box" class="hidden p-4 rounded-lg font-medium text-sm"></div>
 
             <!-- Dashboard Content -->
-            <section id="dashboard" class="content-section active bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
+            <section id="dashboard" class="content-section bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
                 <h2 class="text-xl font-bold text-gray-800 mb-6">Analytics Overview</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-gray-50 p-6 border border-gray-200 rounded-xl shadow-inner">
@@ -188,9 +188,10 @@
             </section>
 
             <!-- Attendance Content -->
-            <section id="attendance" class="content-section bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex-1 m-6 md:m-10">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">Attendance Tracker</h2>
-                <p class="text-gray-600">Track student and teacher attendance, generate reports, and manage attendance records.</p>
+            <section id="attendance" class="content-section flex-1 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div class="iframe-container">
+                    <iframe src="https://www.appsheet.com/start/4f15759b-e88b-4510-ac34-cff0568d222d" title="Attendance Management System"></iframe>
+                </div>
             </section>
 
             <!-- Call Content -->
@@ -234,9 +235,8 @@
 
         // Set initial active state on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Find the initial menu item based on a default
-            const initialItem = document.querySelector('[data-target="dashboard"]');
-            initialItem.classList.add('active-menu');
+            const dashboardItem = document.querySelector('[data-target="dashboard"]');
+            dashboardItem.classList.add('active-menu');
             showSection('dashboard');
         });
     </script>
