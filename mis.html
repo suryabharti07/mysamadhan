@@ -459,7 +459,7 @@
                 }
 
                 // Summarize all three tables
-                const receptSummaryCols = ['Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
+                const receptSummaryCols = ['Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
                 const { html: receptSummaryHtml, summaryData: receptSummaryData } = createSummaryTable(filteredRecepts, 'Receipts Summary', receptSummaryCols);
                 htmlContent += receptSummaryHtml;
 
@@ -468,7 +468,7 @@
                 htmlContent += previousCashSummaryHtml;
 
                 // Updated Payment Summary with new columns
-                const paymentSummaryCols = ['Loan Disbursed', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return'];
+                const paymentSummaryCols = ['Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance'];
                 const { html: paymentSummaryHtml, summaryData: paymentSummaryData } = createSummaryTable(filteredPayments, 'Payments Summary', paymentSummaryCols);
                 htmlContent += paymentSummaryHtml;
 
