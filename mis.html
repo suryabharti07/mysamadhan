@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passbook Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .passbook-table-container {
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .modal-content {
+            animation: slide-up 0.3s ease-out;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+        @keyframes slide-up {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
+
+    <div class="w-full max-w-7xl bg-white rounded-3xl shadow-xl p-6 md:p-10 mt-10 mb-6">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center text-gray-900">SAMADHAN REPORT</h1>
+        <p class="text-sm md:text-base text-center text-gray-600 mb-6">Filter transactions by animator and date.</p>
+        
+        <!-- Filter Controls - ab bade aur behtar dikhenge (now they will look bigger and better)-->
+        <div class="w-full max-w-7xl flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4 mb-6">
+            <div class="w-full relative">
+                <label for="animatorInput" class="block text-sm font-medium text-gray-700">Search Animator</label>
+                <input type="text" id="animatorInput" placeholder="Type to search..." class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
+                <div id="animatorSuggestions" class="absolute z-10 w-full bg-white rounded-md shadow-lg max-h-48 overflow-auto hidden"></div>
+            </div>
+            
+            <div class="w-full">
+                <label for="dateSelect" class="block text-sm font-medium text-gray-700">Collection Date</label>
+                <select id="dateSelect" class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
+                    <!-- Options JavaScript se banenge (Options will be created by JavaScript)-->
+                </select>
+            </div>
+            
+            <div class="flex space-x-2 mt-4 md:mt-0">
+                <button id="resetButton" class="w-full md:w-auto px-6 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                    Reset
+                </button>
+                <button id="generateFinalDataButton" class="w-full md:w-auto px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                    Generate Final Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="text-center text-gray-500 my-8">
+            <div class="flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p>Loading transactions...</p>
+            </div>
+        </div>
+
+        <div id="content" class="w-full flex flex-col space-y-8 flex-1 hidden">
+            <!-- RECEPT (Sheet 1) Block -->
+            <div class="flex-1 bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                <h2 class="text-2xl font-bold mb-4 text-green-600 text-center">Receipts</h2>
+                <div class="passbook-table-container">
+                    <table id="receptTable" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr></tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Receipts dynamically yahan insert honge (Receipts will be dynamically inserted here)-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PREVIOUS CASH (Sheet 2) Block -->
+            <div class="flex-1 bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                <h2 class="text-2xl font-bold mb-4 text-blue-600 text-center">Previous Cash</h2>
+                <div class="passbook-table-container">
+                    <table id="previousCashTable" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr></tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Previous Cash dynamically yahan insert hoga (Previous Cash will be dynamically inserted here)-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PAYMENT (Sheet 3) Block -->
+            <div class="flex-1 bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                <h2 class="text-2xl font-bold mb-4 text-red-600 text-center">Payments</h2>
+                <div class="passbook-table-container">
+                    <table id="paymentTable" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr></tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Payments dynamically yahan insert honge (Payments will be dynamically inserted here)-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Data Modal -->
+    <div id="finalDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden modal-overlay p-4">
+        <div class="relative w-full h-full bg-white rounded-2xl shadow-2xl p-6 md:p-8 modal-content flex flex-col">
+            <button id="closeModalButton" class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-4 text-center text-gray-900">Final Calculated Data Passbook</h2>
+            <div id="finalDataTableContainer" class="flex-1 overflow-y-auto">
+                <!-- Final data yahan render hoga (Final data will be rendered here)-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const receptTable = document.getElementById('receptTable');
+            const paymentTable = document.getElementById('paymentTable');
+            const previousCashTable = document.getElementById('previousCashTable');
+            const loadingIndicator = document.getElementById('loading');
+            const contentContainer = document.getElementById('content');
+            
+            const animatorInput = document.getElementById('animatorInput');
+            const animatorSuggestions = document.getElementById('animatorSuggestions');
+            const dateSelect = document.getElementById('dateSelect');
+            
+            const resetButton = document.getElementById('resetButton');
+            const generateFinalDataButton = document.getElementById('generateFinalDataButton');
+            const finalDataModal = document.getElementById('finalDataModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const finalDataTableContainer = document.getElementById('finalDataTableContainer');
+
+            const headers = {
+                recept: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'],
+                previousCash: ['Row ID', 'Animator Name', 'Collection Date', 'Previous Cash(Advance)'],
+                payment: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total']
+            };
+
+            const csvUrls = {
+                recept: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=0&single=true&output=csv',
+                previousCash: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=230345695&single=true&output=csv',
+                payment: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=971596943&single=true&output=csv'
+            };
+            
+            let allReceptData = [];
+            let allPaymentData = [];
+            let allPreviousCashData = [];
+            let uniqueAnimators = [];
+            let uniqueDates = [];
+
+            /**
+             * Fetches and parses a single CSV file from a URL using provided headers.
+             * @param {string} url The URL of the CSV file.
+             * @param {Array<string>} headers The array of headers to use for parsing.
+             * @returns {Promise<Array<Object>>} A promise that resolves with the parsed data.
+             */
+            async function fetchAndParseCsv(url, headers) {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.error('Failed to fetch CSV:', response.statusText);
+                    return [];
+                }
+                const csvText = await response.text();
+                const lines = csvText.split('\n').slice(1).filter(line => line.trim() !== ''); 
+                
+                const data = lines.map(line => {
+                    const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/"/g, ''));
+                    const obj = {};
+                    headers.forEach((header, i) => {
+                        obj[header] = values[i] || '';
+                    });
+                    return obj;
+                });
+                return data;
+            }
+
+            /**
+             * Calculates the 'Total' for each receipt row by summing its components.
+             * This makes the data more robust and ensures the 'Total' is always correct.
+             * @param {Array<Object>} recepts The receipts data.
+             * @returns {Array<Object>} The updated receipts data with calculated totals.
+             */
+            function calculateReceptTotals(recepts) {
+                const columnsToSum = ['Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
+                return recepts.map(recept => {
+                    const total = columnsToSum.reduce((sum, col) => sum + parseFloat(recept[col] || 0), 0);
+                    return { ...recept, 'Total': total.toFixed(2) };
+                });
+            }
+            
+            /**
+             * Sets up the auto-suggest functionality for the animator search bar.
+             */
+            function setupAutosuggest() {
+                animatorInput.addEventListener('input', () => {
+                    const searchTerm = animatorInput.value.toLowerCase();
+                    animatorSuggestions.innerHTML = '';
+                    
+                    if (searchTerm === '') {
+                        animatorSuggestions.classList.add('hidden');
+                        return;
+                    }
+                    
+                    const matches = uniqueAnimators.filter(name => name.toLowerCase().includes(searchTerm));
+                    
+                    if (matches.length > 0) {
+                        matches.forEach(name => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.textContent = name;
+                            suggestionItem.className = 'px-4 py-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200';
+                            suggestionItem.addEventListener('click', () => {
+                                animatorInput.value = name;
+                                animatorSuggestions.classList.add('hidden');
+                                filterTransactions();
+                            });
+                            animatorSuggestions.appendChild(suggestionItem);
+                        });
+                        animatorSuggestions.classList.remove('hidden');
+                    } else {
+                        animatorSuggestions.classList.add('hidden');
+                    }
+                });
+                
+                animatorInput.addEventListener('focusout', () => {
+                    setTimeout(() => {
+                        animatorSuggestions.classList.add('hidden');
+                    }, 200);
+                });
+                
+                animatorInput.addEventListener('focusin', () => {
+                     if (animatorInput.value.length > 0) {
+                         setupAutosuggest();
+                     }
+                });
+            }
+            
+            /**
+             * Populates the date select dropdown with unique dates and a "Today" option.
+             */
+            function populateDateSelect(selectElement, dates) {
+                const today = new Date();
+                const todayFormatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+
+                selectElement.innerHTML = '';
+
+                const allDatesOption = document.createElement('option');
+                allDatesOption.value = '';
+                allDatesOption.textContent = 'All Dates';
+                selectElement.appendChild(allDatesOption);
+
+                const todayOption = document.createElement('option');
+                todayOption.value = 'today';
+                todayOption.textContent = `Today (${todayFormatted})`;
+                selectElement.appendChild(todayOption);
+
+                const sortedDates = dates.sort((a, b) => {
+                    const [d1, m1, y1] = a.split('/').map(Number);
+                    const [d2, m2, y2] = b.split('/').map(Number);
+                    return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                });
+                sortedDates.forEach(date => {
+                    const option = document.createElement('option');
+                    option.value = date;
+                    option.textContent = date;
+                    selectElement.appendChild(option);
+                });
+            }
+
+            /**
+             * Renders a list of items into a specified container with a table format.
+             */
+            function renderTable(tableElement, items, tableHeaders, type) {
+                const theadRow = tableElement.querySelector('thead tr');
+                const tbody = tableElement.querySelector('tbody');
+                
+                theadRow.innerHTML = '';
+                tbody.innerHTML = '';
+                
+                tableHeaders.forEach(header => {
+                    const th = document.createElement('th');
+                    th.className = 'px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider sticky top-0 bg-gray-50';
+                    th.textContent = header;
+                    theadRow.appendChild(th);
+                });
+
+                if (items.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="${tableHeaders.length}" class="px-4 py-4 text-sm text-gray-500 text-center">No data found for this selection.</td>`;
+                    tbody.appendChild(row);
+                    return;
+                }
+
+                items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-100 transition-colors duration-200';
+                    tableHeaders.forEach(header => {
+                        const cell = document.createElement('td');
+                        cell.className = 'px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200';
+                        cell.textContent = item[header] || 'N/A';
+                        if (header === 'Total' || header === 'Previous Cash(Advance)') {
+                            const amountColor = type === 'RECEPT' ? 'text-green-600' : 'text-red-600';
+                            cell.className += ` font-semibold ${amountColor}`;
+                        }
+                        row.appendChild(cell);
+                    });
+                    tbody.appendChild(row);
+                });
+            }
+
+            /**
+             * Applies filters and returns the filtered data.
+             */
+            function getFilteredData() {
+                const selectedAnimator = animatorInput.value;
+                const selectedDateValue = dateSelect.value;
+                let selectedDate = selectedDateValue;
+
+                if (selectedDateValue === 'today') {
+                    const today = new Date();
+                    selectedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+                }
+                
+                let filteredRecepts = allReceptData;
+                let filteredPayments = allPaymentData;
+                let filteredPreviousCash = allPreviousCashData;
+
+                if (selectedAnimator) {
+                    filteredRecepts = filteredRecepts.filter(item => item['Animator Name'] === selectedAnimator);
+                    filteredPayments = filteredPayments.filter(item => item['Animator Name'] === selectedAnimator);
+                    filteredPreviousCash = filteredPreviousCash.filter(item => item['Animator Name'] === selectedAnimator);
+                }
+
+                if (selectedDate) {
+                    filteredRecepts = filteredRecepts.filter(item => item['Collection Date'] === selectedDate);
+                    filteredPayments = filteredPayments.filter(item => item['Collection Date'] === selectedDate);
+                    filteredPreviousCash = filteredPreviousCash.filter(item => item['Collection Date'] === selectedDate);
+                }
+
+                return { filteredRecepts, filteredPayments, filteredPreviousCash };
+            }
+            
+            /**
+             * Filters the data based on current selections and updates the tables.
+             */
+            function filterTransactions() {
+                const { filteredRecepts, filteredPayments, filteredPreviousCash } = getFilteredData();
+                renderAllTables(filteredRecepts, filteredPayments, filteredPreviousCash);
+            }
+
+            /**
+             * Renders all tables with the provided data.
+             */
+            function renderAllTables(recepts, payments, previousCash) {
+                renderTable(receptTable, recepts, headers.recept, 'RECEPT');
+                renderTable(previousCashTable, previousCash, headers.previousCash, 'PREVIOUS_CASH');
+                renderTable(paymentTable, payments, headers.payment, 'PAYMENT');
+            }
+
+            /**
+             * Resets the filters and displays all data.
+             */
+            function resetFilters() {
+                animatorInput.value = '';
+                dateSelect.value = '';
+                filterTransactions();
+            }
+
+            /**
+             * Generates the final summary data and displays it in a modal.
+             */
+            function generateFinalData() {
+                const { filteredRecepts, filteredPayments, filteredPreviousCash } = getFilteredData();
+
+                let htmlContent = '';
+                const selectedAnimator = animatorInput.value || 'All Animators';
+                const selectedDate = dateSelect.options[dateSelect.selectedIndex].textContent;
+
+                // Function to generate a summary table for a given data set and columns
+                function createSummaryTable(data, title, columnsToSum) {
+                    const summaryData = {};
+                    let totalSummarySum = 0;
+                    columnsToSum.forEach(col => summaryData[col] = 0);
+                    
+                    data.forEach(item => {
+                        columnsToSum.forEach(col => {
+                            const value = parseFloat(item[col] || 0);
+                            summaryData[col] += value;
+                        });
+                    });
+
+                    // Special handling for Receipts Summary and Payments Summary
+                    if (title === 'Receipts Summary' || title === 'Payments Summary') {
+                        totalSummarySum = columnsToSum.reduce((sum, col) => sum + summaryData[col], 0);
+                        summaryData['Total'] = totalSummarySum;
+                    }
+
+
+                    const headersToRender = [...columnsToSum];
+                    if (title === 'Receipts Summary' || title === 'Payments Summary') {
+                        headersToRender.push('Total');
+                    }
+
+
+                    let tableHtml = `
+                        <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200 mt-4">
+                            <h3 class="text-xl font-bold mb-2 text-center text-gray-900">${title}</h3>
+                            <div class="passbook-table-container">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50 sticky top-0">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Animator Name</th>
+                                            <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Collection Date</th>
+                                            ${headersToRender.map(col => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${col}</th>`).join('')}
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-semibold">${selectedAnimator}</td>
+                                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-semibold">${selectedDate}</td>
+                                            ${headersToRender.map(col => `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-semibold">₹${summaryData[col].toFixed(2)}</td>`).join('')}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    return { html: tableHtml, summaryData: summaryData };
+                }
+
+                // Summarize all three tables
+                const receptSummaryCols = ['Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
+                const { html: receptSummaryHtml, summaryData: receptSummaryData } = createSummaryTable(filteredRecepts, 'Receipts Summary', receptSummaryCols);
+                htmlContent += receptSummaryHtml;
+
+                const previousCashSummaryCols = ['Previous Cash(Advance)'];
+                const { html: previousCashSummaryHtml, summaryData: previousCashSummaryData } = createSummaryTable(filteredPreviousCash, 'Previous Cash Summary', previousCashSummaryCols);
+                htmlContent += previousCashSummaryHtml;
+
+                // Updated Payment Summary with new columns
+                const paymentSummaryCols = ['Loan Disbursed', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return'];
+                const { html: paymentSummaryHtml, summaryData: paymentSummaryData } = createSummaryTable(filteredPayments, 'Payments Summary', paymentSummaryCols);
+                htmlContent += paymentSummaryHtml;
+
+                // Calculate Total Cash Received based on the summary totals
+                const totalReceiptsSummary = receptSummaryData['Total'] || 0;
+                const totalPreviousCashSummary = previousCashSummaryData['Previous Cash(Advance)'] || 0;
+                const totalCashReceived = totalReceiptsSummary + totalPreviousCashSummary;
+                const totalPaymentsSummary = paymentSummaryData['Total'] || 0;
+                const balance = totalCashReceived - totalPaymentsSummary;
+                
+                htmlContent += `
+                    <div class="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg shadow-md flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-green-700">Total Cash Received</h3>
+                        <p class="text-3xl font-extrabold text-green-600">₹${totalCashReceived.toFixed(2)}</p>
+                    </div>
+                `;
+                
+                // New Balance field
+                htmlContent += `
+                    <div class="mt-4 p-6 bg-red-50 border border-red-200 rounded-lg shadow-md flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-red-700">Balance</h3>
+                        <p class="text-3xl font-extrabold text-red-600">₹${balance.toFixed(2)}</p>
+                    </div>
+                `;
+
+                finalDataTableContainer.innerHTML = htmlContent;
+                showModal();
+            }
+
+            /**
+             * Shows the modal.
+             */
+            function showModal() {
+                finalDataModal.classList.remove('hidden');
+            }
+
+            /**
+             * Hides the modal.
+             */
+            function hideModal() {
+                finalDataModal.classList.add('hidden');
+            }
+
+            /**
+             * Initializes the application by fetching all CSV data.
+             */
+            async function initializeData() {
+                loadingIndicator.classList.remove('hidden');
+                contentContainer.classList.add('hidden');
+                
+                try {
+                    const [receptData, paymentData, previousCashData] = await Promise.all([
+                        fetchAndParseCsv(csvUrls.recept, headers.recept),
+                        fetchAndParseCsv(csvUrls.payment, headers.payment),
+                        fetchAndParseCsv(csvUrls.previousCash, headers.previousCash)
+                    ]);
+                    
+                    allReceptData = calculateReceptTotals(receptData);
+                    allPaymentData = paymentData;
+                    allPreviousCashData = previousCashData;
+
+                    uniqueAnimators = [...new Set(allReceptData.map(item => item['Animator Name']).filter(Boolean))];
+                    uniqueDates = [...new Set(allReceptData.map(item => item['Collection Date']).filter(Boolean))];
+
+                    setupAutosuggest();
+                    populateDateSelect(dateSelect, uniqueDates);
+                    renderAllTables(allReceptData, allPaymentData, allPreviousCashData);
+
+                    loadingIndicator.classList.add('hidden');
+                    contentContainer.classList.remove('hidden');
+                    
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    loadingIndicator.innerHTML = '<p class="text-red-500">Failed to load data. Please check the URLs.</p>';
+                    contentContainer.classList.remove('hidden');
+                }
+            }
+            
+            // Add event listeners for the filter and new buttons
+            animatorInput.addEventListener('input', filterTransactions);
+            dateSelect.addEventListener('change', filterTransactions);
+            resetButton.addEventListener('click', resetFilters);
+            generateFinalDataButton.addEventListener('click', generateFinalData);
+            closeModalButton.addEventListener('click', hideModal);
+            finalDataModal.addEventListener('click', (e) => {
+                if (e.target.id === 'finalDataModal') {
+                    hideModal();
+                }
+            });
+
+            // Initial call to load the data when the page loads
+            initializeData();
+        });
+    </script>
+</body>
+</html>
