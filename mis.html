@@ -11,6 +11,8 @@
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            padding: 0;
         }
         .passbook-table-container {
             max-height: 50vh;
@@ -36,14 +38,14 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col items-center justify-start">
 
-    <div class="w-full max-w-7xl bg-white rounded-3xl shadow-xl p-6 md:p-10 mt-10 mb-6">
+    <div class="w-full h-full bg-white rounded-none shadow-none p-6 md:p-10 mt-0 mb-0">
         <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center text-gray-900">SAMADHAN REPORT</h1>
         <p class="text-sm md:text-base text-center text-gray-600 mb-6">Filter transactions by animator and date.</p>
         
         <!-- Filter Controls - ab bade aur behtar dikhenge (now they will look bigger and better)-->
-        <div class="w-full max-w-7xl flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4 mb-6">
+        <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4 mb-6 px-4 md:px-0">
             <div class="w-full relative">
                 <label for="animatorInput" class="block text-sm font-medium text-gray-700">Search Animator</label>
                 <input type="text" id="animatorInput" placeholder="Type to search..." class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
