@@ -459,7 +459,7 @@
                 }
 
                 // Summarize all three tables
-                const receptSummaryCols = ['Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
+                const receptSummaryCols = ['Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
                 const { html: receptSummaryHtml, summaryData: receptSummaryData } = createSummaryTable(filteredRecepts, 'Receipts Summary', receptSummaryCols);
                 htmlContent += receptSummaryHtml;
 
@@ -468,16 +468,36 @@
                 htmlContent += previousCashSummaryHtml;
 
                 // Updated Payment Summary with new columns
-                const paymentSummaryCols = ['Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance'];
+                const paymentSummaryCols = ['Loan Disbursed', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return'];
                 const { html: paymentSummaryHtml, summaryData: paymentSummaryData } = createSummaryTable(filteredPayments, 'Payments Summary', paymentSummaryCols);
                 htmlContent += paymentSummaryHtml;
-
-                // Calculate Total Cash Received based on the summary totals
+                
                 const totalReceiptsSummary = receptSummaryData['Total'] || 0;
-                const totalPreviousCashSummary = previousCashSummaryData['Previous Cash(Advance)'] || 0;
-                const totalCashReceived = totalReceiptsSummary + totalPreviousCashSummary;
+                const currentDayPreviousCash = previousCashSummaryData['Previous Cash(Advance)'] || 0;
                 const totalPaymentsSummary = paymentSummaryData['Total'] || 0;
-                const balance = totalCashReceived - totalPaymentsSummary;
+
+                // पिछले दिन का Previous Cash(Advance) प्राप्त करें (Get previous day's Previous Cash(Advance))
+                const allAnimatorDates = allReceptData
+                    .filter(item => item['Animator Name'] === selectedAnimator)
+                    .map(item => item['Collection Date']);
+                const sortedDates = [...new Set(allAnimatorDates)].sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
+                
+                const currentDateIndex = sortedDates.indexOf(dateSelect.value);
+                let previousDayCashAdvance = 0;
+                
+                if (currentDateIndex > 0) {
+                    const previousDate = sortedDates[currentDateIndex - 1];
+                    const previousDayPreviousCashData = allPreviousCashData.find(item => item['Animator Name'] === selectedAnimator && item['Collection Date'] === previousDate);
+                    if (previousDayPreviousCashData) {
+                        previousDayCashAdvance = parseFloat(previousDayPreviousCashData['Previous Cash(Advance)'] || 0);
+                    }
+                }
+                
+                // Total Cash Received में केवल आज का Receipts और Previous Cash शामिल होगा (Total Cash Received will only include today's Receipts and Previous Cash)
+                const totalCashReceived = totalReceiptsSummary + currentDayPreviousCash;
+                
+                // Balance में पिछले दिन का Previous Cash(Advance) जोड़ा जाएगा (Previous day's Previous Cash(Advance) will be added to the Balance)
+                const balance = (totalCashReceived - totalPaymentsSummary) + previousDayCashAdvance;
                 
                 htmlContent += `
                     <div class="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg shadow-md flex items-center justify-between">
