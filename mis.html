@@ -538,7 +538,7 @@
                 const totalCashReceived = totalReceiptsSummary + previousAdvanceNumeric;
                 
                 // Update formula for Balance
-                const balance = totalCashReceived - totalPaymentsSummary + previousAdvanceNumeric;
+                const balance = totalCashReceived - totalPaymentsSummary;
                 
                 htmlContent += `
                     <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg shadow-md flex items-center justify-between">
@@ -597,7 +597,7 @@
                     allPaymentData = paymentData;
 
                     uniqueAnimators = [...new Set(allReceptData.map(item => item['Animator Name']).filter(Boolean))];
-                    uniqueDates = [...new Set(allReceptData.map(item => item['Collection Date']).filter(Boolean))];
+                    uniqueDates = [...new Set(allPaymentData.map(item => item['Collection Date']).filter(Boolean))];
 
                     setupAutosuggest();
                     populateDateSelect(dateSelect, uniqueDates);
