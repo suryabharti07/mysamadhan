@@ -36,6 +36,36 @@
                 opacity: 1;
             }
         }
+        /* New print-specific styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .printable-content, .printable-content * {
+                visibility: visible;
+            }
+            .printable-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                overflow: visible !important;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .modal-content {
+                animation: none;
+                transform: none;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+        }
+
+        /* Class to remove height constraints for full rendering */
+        .full-page-content .passbook-table-container, .full-page-content .modal-content {
+            max-height: none !important;
+            overflow-y: visible !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col items-center justify-start">
@@ -137,11 +167,26 @@
                 </svg>
             </button>
             <h2 class="text-2xl font-bold mb-4 text-center text-gray-900">Final Calculated Data Passbook</h2>
-            <div id="finalDataTableContainer" class="flex-1 overflow-y-auto">
+            
+            <!-- New Print and Download buttons -->
+            <div class="flex justify-center space-x-4 mb-4">
+                <button id="printButton" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                    Print
+                </button>
+                <button id="downloadPdfButton" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
+                    Download as PDF
+                </button>
+            </div>
+
+            <div id="finalDataTableContainer" class="flex-1 overflow-y-auto printable-content">
                 <!-- Final data yahan render hoga (Final data will be rendered here)-->
             </div>
         </div>
     </div>
+    
+    <!-- PDF generation libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -160,6 +205,10 @@
             const finalDataModal = document.getElementById('finalDataModal');
             const closeModalButton = document.getElementById('closeModalButton');
             const finalDataTableContainer = document.getElementById('finalDataTableContainer');
+
+            const printButton = document.getElementById('printButton');
+            const downloadPdfButton = document.getElementById('downloadPdfButton');
+
 
             const headers = {
                 recept: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'],
@@ -566,7 +615,68 @@
                     contentContainer.classList.remove('hidden');
                 }
             }
-            
+
+            // Function to handle printing
+            function handlePrint() {
+                const modalContent = document.getElementById('finalDataModal');
+                const originalMaxHeight = modalContent.style.maxHeight;
+                const originalOverflow = modalContent.style.overflow;
+                
+                modalContent.style.maxHeight = 'none';
+                modalContent.style.overflow = 'visible';
+
+                window.print();
+                
+                modalContent.style.maxHeight = originalMaxHeight;
+                modalContent.style.overflow = originalOverflow;
+            }
+
+            // Function to handle PDF download
+            function handleDownloadPdf() {
+                const { jsPDF } = window.jspdf;
+                const content = document.getElementById('finalDataTableContainer');
+                
+                const originalMaxHeight = content.style.maxHeight;
+                const originalOverflow = content.style.overflow;
+                content.style.maxHeight = 'none';
+                content.style.overflow = 'visible';
+                
+                const scale = 2; 
+
+                html2canvas(content, { 
+                    scale: scale,
+                    windowWidth: document.documentElement.scrollWidth,
+                    windowHeight: document.documentElement.scrollHeight
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgWidth = 210; 
+                    const pageHeight = 297;  
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    let heightLeft = imgHeight;
+                    let position = 0;
+
+                    // Add the first page
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+
+                    // Add subsequent pages if needed
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+
+                    pdf.save('summary-report.pdf');
+                }).catch(error => {
+                    console.error("Error generating PDF:", error);
+                }).finally(() => {
+                    content.style.maxHeight = originalMaxHeight;
+                    content.style.overflow = originalOverflow;
+                });
+            }
+
             // Add event listeners for the filter and new buttons
             animatorInput.addEventListener('input', filterTransactions);
             dateSelect.addEventListener('change', filterTransactions);
@@ -578,6 +688,10 @@
                     hideModal();
                 }
             });
+
+            // Add new event listeners for Print and PDF download
+            printButton.addEventListener('click', handlePrint);
+            downloadPdfButton.addEventListener('click', handleDownloadPdf);
 
             // Initial call to load the data when the page loads
             initializeData();
