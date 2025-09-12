@@ -126,21 +126,6 @@
                 </div>
             </div>
 
-            <!-- PREVIOUS CASH (Sheet 2) Block -->
-            <div class="flex-1 bg-white rounded-lg p-6 shadow-md border border-gray-200">
-                <h2 class="text-2xl font-bold mb-4 text-blue-600 text-center">Previous Cash</h2>
-                <div class="passbook-table-container">
-                    <table id="previousCashTable" class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50 sticky top-0">
-                            <tr></tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Previous Cash dynamically yahan insert hoga (Previous Cash will be dynamically inserted here)-->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- PAYMENT (Sheet 3) Block -->
             <div class="flex-1 bg-white rounded-lg p-6 shadow-md border border-gray-200">
                 <h2 class="text-2xl font-bold mb-4 text-red-600 text-center">Payments</h2>
@@ -192,7 +177,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             const receptTable = document.getElementById('receptTable');
             const paymentTable = document.getElementById('paymentTable');
-            const previousCashTable = document.getElementById('previousCashTable');
             const loadingIndicator = document.getElementById('loading');
             const contentContainer = document.getElementById('content');
             
@@ -212,19 +196,16 @@
 
             const headers = {
                 recept: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'],
-                previousCash: ['Row ID', 'Animator Name', 'Collection Date', 'Previous Cash(Advance)'],
                 payment: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total']
             };
 
             const csvUrls = {
                 recept: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=0&single=true&output=csv',
-                previousCash: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=230345695&single=true&output=csv',
                 payment: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=971596943&single=true&output=csv'
             };
             
             let allReceptData = [];
             let allPaymentData = [];
-            let allPreviousCashData = [];
             let uniqueAnimators = [];
             let uniqueDates = [];
 
@@ -402,37 +383,33 @@
                 
                 let filteredRecepts = allReceptData;
                 let filteredPayments = allPaymentData;
-                let filteredPreviousCash = allPreviousCashData;
 
                 if (selectedAnimator) {
                     filteredRecepts = filteredRecepts.filter(item => item['Animator Name'] === selectedAnimator);
                     filteredPayments = filteredPayments.filter(item => item['Animator Name'] === selectedAnimator);
-                    filteredPreviousCash = filteredPreviousCash.filter(item => item['Animator Name'] === selectedAnimator);
                 }
 
                 if (selectedDate) {
                     filteredRecepts = filteredRecepts.filter(item => item['Collection Date'] === selectedDate);
                     filteredPayments = filteredPayments.filter(item => item['Collection Date'] === selectedDate);
-                    filteredPreviousCash = filteredPreviousCash.filter(item => item['Collection Date'] === selectedDate);
                 }
 
-                return { filteredRecepts, filteredPayments, filteredPreviousCash };
+                return { filteredRecepts, filteredPayments };
             }
             
             /**
              * Filters the data based on current selections and updates the tables.
              */
             function filterTransactions() {
-                const { filteredRecepts, filteredPayments, filteredPreviousCash } = getFilteredData();
-                renderAllTables(filteredRecepts, filteredPayments, filteredPreviousCash);
+                const { filteredRecepts, filteredPayments } = getFilteredData();
+                renderAllTables(filteredRecepts, filteredPayments);
             }
 
             /**
              * Renders all tables with the provided data.
              */
-            function renderAllTables(recepts, payments, previousCash) {
+            function renderAllTables(recepts, payments) {
                 renderTable(receptTable, recepts, headers.recept, 'RECEPT');
-                renderTable(previousCashTable, previousCash, headers.previousCash, 'PREVIOUS_CASH');
                 renderTable(paymentTable, payments, headers.payment, 'PAYMENT');
             }
 
@@ -444,12 +421,40 @@
                 dateSelect.value = '';
                 filterTransactions();
             }
+            
+            /**
+             * Finds the previous collection date for a given animator.
+             * @param {string} animatorName The name of the animator.
+             * @param {string} currentDateStr The current date string in 'DD/MM/YYYY' format.
+             * @returns {string|null} The previous date string or null if not found.
+             */
+            function getPreviousDate(animatorName, currentDateStr) {
+                const animatorPayments = allPaymentData.filter(item => item['Animator Name'] === animatorName);
+                if (animatorPayments.length === 0) {
+                    return null;
+                }
+                
+                const uniqueDates = [...new Set(animatorPayments.map(item => item['Collection Date']))];
+                const sortedDates = uniqueDates.sort((a, b) => {
+                    const [d1, m1, y1] = a.split('/').map(Number);
+                    const [d2, m2, y2] = b.split('/').map(Number);
+                    return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                });
+                
+                const currentIndex = sortedDates.indexOf(currentDateStr);
+                
+                if (currentIndex > 0) {
+                    return sortedDates[currentIndex - 1];
+                }
+                
+                return null;
+            }
 
             /**
              * Generates the final summary data and displays it in a modal.
              */
             function generateFinalData() {
-                const { filteredRecepts, filteredPayments, filteredPreviousCash } = getFilteredData();
+                const { filteredRecepts, filteredPayments } = getFilteredData();
 
                 let htmlContent = '';
                 const selectedAnimator = animatorInput.value || 'All Animators';
@@ -506,15 +511,20 @@
                     `;
                     return { html: tableHtml, summaryData: summaryData };
                 }
+                
+                // Get previous advance amount
+                const previousDate = getPreviousDate(selectedAnimator, selectedDate);
+                const previousAdvanceAmount = previousDate ? allPaymentData
+                    .filter(item => item['Animator Name'] === selectedAnimator && item['Collection Date'] === previousDate)
+                    .reduce((sum, item) => sum + parseFloat(item['Advance'] || 0), 0)
+                    .toFixed(2) : '0.00';
+                
+                const previousAdvanceNumeric = parseFloat(previousAdvanceAmount);
 
                 // Summarize all three tables
                 const receptSummaryCols = ['Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
                 const { html: receptSummaryHtml, summaryData: receptSummaryData } = createSummaryTable(filteredRecepts, 'Receipts Summary', receptSummaryCols);
                 htmlContent += receptSummaryHtml;
-
-                const previousCashSummaryCols = ['Previous Cash(Advance)'];
-                const { html: previousCashSummaryHtml, summaryData: previousCashSummaryData } = createSummaryTable(filteredPreviousCash, 'Previous Cash Summary', previousCashSummaryCols);
-                htmlContent += previousCashSummaryHtml;
 
                 // Updated Payment Summary with new columns
                 const paymentSummaryCols = ['Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance'];
@@ -522,34 +532,23 @@
                 htmlContent += paymentSummaryHtml;
                 
                 const totalReceiptsSummary = receptSummaryData['Total'] || 0;
-                const currentDayPreviousCash = previousCashSummaryData['Previous Cash(Advance)'] || 0;
                 const totalPaymentsSummary = paymentSummaryData['Total'] || 0;
-
-                // पिछले दिन का Previous Cash(Advance) प्राप्त करें (Get previous day's Previous Cash(Advance))
-                const allAnimatorDates = allReceptData
-                    .filter(item => item['Animator Name'] === selectedAnimator)
-                    .map(item => item['Collection Date']);
-                const sortedDates = [...new Set(allAnimatorDates)].sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
                 
-                const currentDateIndex = sortedDates.indexOf(dateSelect.value);
-                let previousDayCashAdvance = 0;
+                // Update formula for Total Cash Received
+                const totalCashReceived = totalReceiptsSummary + previousAdvanceNumeric;
                 
-                if (currentDateIndex > 0) {
-                    const previousDate = sortedDates[currentDateIndex - 1];
-                    const previousDayPreviousCashData = allPreviousCashData.find(item => item['Animator Name'] === selectedAnimator && item['Collection Date'] === previousDate);
-                    if (previousDayPreviousCashData) {
-                        previousDayCashAdvance = parseFloat(previousDayPreviousCashData['Previous Cash(Advance)'] || 0);
-                    }
-                }
-                
-                // Total Cash Received में केवल आज का Receipts और Previous Cash शामिल होगा (Total Cash Received will only include today's Receipts and Previous Cash)
-                const totalCashReceived = totalReceiptsSummary + currentDayPreviousCash;
-                
-                // Balance में पिछले दिन का Previous Cash(Advance) जोड़ा जाएगा (Previous day's Previous Cash(Advance) will be added to the Balance)
-                const balance = (totalCashReceived - totalPaymentsSummary) + previousDayCashAdvance;
+                // Update formula for Balance
+                const balance = totalCashReceived - totalPaymentsSummary + previousAdvanceNumeric;
                 
                 htmlContent += `
-                    <div class="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg shadow-md flex items-center justify-between">
+                    <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg shadow-md flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-blue-700">Previous Cash(Advance)</h3>
+                        <p class="text-3xl font-extrabold text-blue-600">₹${previousAdvanceAmount}</p>
+                    </div>
+                `;
+
+                htmlContent += `
+                    <div class="mt-4 p-6 bg-green-50 border border-green-200 rounded-lg shadow-md flex items-center justify-between">
                         <h3 class="text-xl font-bold text-green-700">Total Cash Received</h3>
                         <p class="text-3xl font-extrabold text-green-600">₹${totalCashReceived.toFixed(2)}</p>
                     </div>
@@ -589,22 +588,20 @@
                 contentContainer.classList.add('hidden');
                 
                 try {
-                    const [receptData, paymentData, previousCashData] = await Promise.all([
+                    const [receptData, paymentData] = await Promise.all([
                         fetchAndParseCsv(csvUrls.recept, headers.recept),
-                        fetchAndParseCsv(csvUrls.payment, headers.payment),
-                        fetchAndParseCsv(csvUrls.previousCash, headers.previousCash)
+                        fetchAndParseCsv(csvUrls.payment, headers.payment)
                     ]);
                     
                     allReceptData = calculateReceptTotals(receptData);
                     allPaymentData = paymentData;
-                    allPreviousCashData = previousCashData;
 
                     uniqueAnimators = [...new Set(allReceptData.map(item => item['Animator Name']).filter(Boolean))];
                     uniqueDates = [...new Set(allReceptData.map(item => item['Collection Date']).filter(Boolean))];
 
                     setupAutosuggest();
                     populateDateSelect(dateSelect, uniqueDates);
-                    renderAllTables(allReceptData, allPaymentData, allPreviousCashData);
+                    renderAllTables(allReceptData, allPaymentData);
 
                     loadingIndicator.classList.add('hidden');
                     contentContainer.classList.remove('hidden');
