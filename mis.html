@@ -60,32 +60,28 @@
                 overflow: visible !important;
             }
         }
-
-        /* Class to remove height constraints for full rendering */
-        .full-page-content .passbook-table-container, .full-page-content .modal-content {
-            max-height: none !important;
-            overflow-y: visible !important;
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col items-center justify-start">
 
     <div class="w-full h-full bg-white rounded-none shadow-none p-6 md:p-10 mt-0 mb-0">
-        <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center text-gray-900">SAMADHAN REPORT</h1>
+        <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center text-gray-900">SAMADHAN KENDRA</h1>
         <p class="text-sm md:text-base text-center text-gray-600 mb-6">Filter transactions by animator and date.</p>
         
-        <!-- Filter Controls - ab bade aur behtar dikhenge (now they will look bigger and better)-->
-        <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4 mb-6 px-4 md:px-0">
-            <div class="w-full relative">
-                <label for="animatorInput" class="block text-sm font-medium text-gray-700">Search Animator</label>
-                <input type="text" id="animatorInput" placeholder="Type to search..." class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
-                <div id="animatorSuggestions" class="absolute z-10 w-full bg-white rounded-md shadow-lg max-h-48 overflow-auto hidden"></div>
+        <!-- Filter Controls -->
+        <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-6 px-4 md:px-0">
+            <div class="w-full max-w-sm">
+                <label for="animatorSelect" class="block text-sm font-medium text-gray-700">Select Animator</label>
+                <select id="animatorSelect" class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
+                    <option value="">All Animators</option>
+                    <!-- Animators dynamically yahan add honge -->
+                </select>
             </div>
             
-            <div class="w-full">
+            <div class="w-full max-w-sm">
                 <label for="dateSelect" class="block text-sm font-medium text-gray-700">Collection Date</label>
                 <select id="dateSelect" class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
-                    <!-- Options JavaScript se banenge (Options will be created by JavaScript)-->
+                    <!-- Dates dynamically yahan add honge -->
                 </select>
             </div>
             
@@ -120,7 +116,7 @@
                             <tr></tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Receipts dynamically yahan insert honge (Receipts will be dynamically inserted here)-->
+                            <!-- Receipts dynamically yahan insert honge -->
                         </tbody>
                     </table>
                 </div>
@@ -135,7 +131,7 @@
                             <tr></tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Payments dynamically yahan insert honge (Payments will be dynamically inserted here)-->
+                            <!-- Payments dynamically yahan insert honge -->
                         </tbody>
                     </table>
                 </div>
@@ -151,7 +147,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-            <h2 class="text-2xl font-bold mb-4 text-center text-gray-900">Final Calculated Data Passbook</h2>
+            <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-center text-gray-900">Final Calculated Data Passbook</h2>
             
             <!-- New Print and Download buttons -->
             <div class="flex justify-center space-x-4 mb-4">
@@ -164,7 +160,7 @@
             </div>
 
             <div id="finalDataTableContainer" class="flex-1 overflow-y-auto printable-content">
-                <!-- Final data yahan render hoga (Final data will be rendered here)-->
+                <!-- Final data yahan render hoga -->
             </div>
         </div>
     </div>
@@ -180,8 +176,7 @@
             const loadingIndicator = document.getElementById('loading');
             const contentContainer = document.getElementById('content');
             
-            const animatorInput = document.getElementById('animatorInput');
-            const animatorSuggestions = document.getElementById('animatorSuggestions');
+            const animatorSelect = document.getElementById('animatorSelect');
             const dateSelect = document.getElementById('dateSelect');
             
             const resetButton = document.getElementById('resetButton');
@@ -189,6 +184,7 @@
             const finalDataModal = document.getElementById('finalDataModal');
             const closeModalButton = document.getElementById('closeModalButton');
             const finalDataTableContainer = document.getElementById('finalDataTableContainer');
+            const modalTitle = document.getElementById('modalTitle');
 
             const printButton = document.getElementById('printButton');
             const downloadPdfButton = document.getElementById('downloadPdfButton');
@@ -206,8 +202,8 @@
             
             let allReceptData = [];
             let allPaymentData = [];
-            let uniqueAnimators = [];
             let uniqueDates = [];
+            let uniqueAnimators = [];
 
             /**
              * Fetches and parses a single CSV file from a URL using provided headers.
@@ -243,7 +239,6 @@
 
             /**
              * Calculates the 'Total' for each receipt row by summing its components.
-             * This makes the data more robust and ensures the 'Total' is always correct.
              * @param {Array<Object>} recepts The receipts data.
              * @returns {Array<Object>} The updated receipts data with calculated totals.
              */
@@ -256,81 +251,31 @@
             }
             
             /**
-             * Sets up the auto-suggest functionality for the animator search bar.
+             * Populates the date select and animator select dropdowns.
              */
-            function setupAutosuggest() {
-                animatorInput.addEventListener('input', () => {
-                    const searchTerm = animatorInput.value.toLowerCase();
-                    animatorSuggestions.innerHTML = '';
-                    
-                    if (searchTerm === '') {
-                        animatorSuggestions.classList.add('hidden');
-                        return;
-                    }
-                    
-                    const matches = uniqueAnimators.filter(name => name.toLowerCase().includes(searchTerm));
-                    
-                    if (matches.length > 0) {
-                        matches.forEach(name => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.textContent = name;
-                            suggestionItem.className = 'px-4 py-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200';
-                            suggestionItem.addEventListener('click', () => {
-                                animatorInput.value = name;
-                                animatorSuggestions.classList.add('hidden');
-                                filterTransactions();
-                            });
-                            animatorSuggestions.appendChild(suggestionItem);
-                        });
-                        animatorSuggestions.classList.remove('hidden');
-                    } else {
-                        animatorSuggestions.classList.add('hidden');
-                    }
-                });
-                
-                animatorInput.addEventListener('focusout', () => {
-                    setTimeout(() => {
-                        animatorSuggestions.classList.add('hidden');
-                    }, 200);
-                });
-                
-                animatorInput.addEventListener('focusin', () => {
-                     if (animatorInput.value.length > 0) {
-                         setupAutosuggest();
-                     }
-                });
-            }
-            
-            /**
-             * Populates the date select dropdown with unique dates and a "Today" option.
-             */
-            function populateDateSelect(selectElement, dates) {
+            function populateFilters() {
+                // Populate Animator Select
+                const allAnimators = new Set([...allReceptData.map(item => item['Animator Name']), ...allPaymentData.map(item => item['Animator Name'])]);
+                uniqueAnimators = [...allAnimators].filter(Boolean);
+                animatorSelect.innerHTML = '<option value="">All Animators</option>' + uniqueAnimators.map(name => `<option value="${name}">${name}</option>`).join('');
+
+                // Populate Date Select
+                const allDates = new Set([...allReceptData.map(item => item['Collection Date']), ...allPaymentData.map(item => item['Collection Date'])]);
+                uniqueDates = [...allDates].filter(Boolean);
                 const today = new Date();
                 const todayFormatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
 
-                selectElement.innerHTML = '';
-
-                const allDatesOption = document.createElement('option');
-                allDatesOption.value = '';
-                allDatesOption.textContent = 'All Dates';
-                selectElement.appendChild(allDatesOption);
-
-                const todayOption = document.createElement('option');
-                todayOption.value = 'today';
-                todayOption.textContent = `Today (${todayFormatted})`;
-                selectElement.appendChild(todayOption);
-
-                const sortedDates = dates.sort((a, b) => {
+                const sortedDates = uniqueDates.sort((a, b) => {
                     const [d1, m1, y1] = a.split('/').map(Number);
                     const [d2, m2, y2] = b.split('/').map(Number);
                     return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
                 });
-                sortedDates.forEach(date => {
-                    const option = document.createElement('option');
-                    option.value = date;
-                    option.textContent = date;
-                    selectElement.appendChild(option);
-                });
+
+                dateSelect.innerHTML = `
+                    <option value="">All Dates</option>
+                    <option value="today">Today (${todayFormatted})</option>
+                    ${sortedDates.map(date => `<option value="${date}">${date}</option>`).join('')}
+                `;
             }
 
             /**
@@ -378,7 +323,7 @@
              * Applies filters and returns the filtered data.
              */
             function getFilteredData() {
-                const selectedAnimator = animatorInput.value;
+                const selectedAnimator = animatorSelect.value;
                 const selectedDateValue = dateSelect.value;
                 let selectedDate = selectedDateValue;
 
@@ -423,24 +368,19 @@
              * Resets the filters and displays all data.
              */
             function resetFilters() {
-                animatorInput.value = '';
+                animatorSelect.value = '';
                 dateSelect.value = '';
                 filterTransactions();
             }
             
             /**
              * Finds the previous collection date for a given animator.
-             * @param {string} animatorName The name of the animator.
              * @param {string} currentDateStr The current date string in 'DD/MM/YYYY' format.
              * @returns {string|null} The previous date string or null if not found.
              */
-            function getPreviousDate(animatorName, currentDateStr) {
-                const animatorPayments = allPaymentData.filter(item => item['Animator Name'] === animatorName);
-                if (animatorPayments.length === 0) {
-                    return null;
-                }
-                
-                const uniqueDates = [...new Set(animatorPayments.map(item => item['Collection Date']))];
+            function getPreviousDate(animator, currentDateStr) {
+                const data = animator ? allPaymentData.filter(item => item['Animator Name'] === animator) : allPaymentData;
+                const uniqueDates = [...new Set(data.map(item => item['Collection Date']))];
                 const sortedDates = uniqueDates.sort((a, b) => {
                     const [d1, m1, y1] = a.split('/').map(Number);
                     const [d2, m2, y2] = b.split('/').map(Number);
@@ -460,11 +400,23 @@
              * Generates the final summary data and displays it in a modal.
              */
             function generateFinalData() {
-                const { filteredRecepts, filteredPayments } = getFilteredData();
+                const selectedAnimator = animatorSelect.value;
+                const selectedDate = dateSelect.value === 'today' ? `${String(new Date().getDate()).padStart(2, '0')}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${new Date().getFullYear()}` : dateSelect.value;
 
+                const { filteredRecepts, filteredPayments } = getFilteredData();
+                
                 let htmlContent = '';
-                const selectedAnimator = animatorInput.value || 'All Animators';
-                const selectedDate = dateSelect.options[dateSelect.selectedIndex].textContent;
+                
+                const reportTitle = selectedAnimator ? `Final Data for ${selectedAnimator}` : 'Final Calculated Data (All Animators)';
+                modalTitle.textContent = reportTitle;
+
+                // Add animator name and date to the report
+                htmlContent += `
+                    <div class="mb-4 text-center">
+                        <p class="text-lg font-semibold">Animator: ${selectedAnimator || 'All'}</p>
+                        <p class="text-lg font-semibold">Collection Date: ${selectedDate || 'All'}</p>
+                    </div>
+                `;
 
                 // Function to generate a summary table for a given data set and columns
                 function createSummaryTable(data, title, columnsToSum) {
@@ -491,7 +443,6 @@
                         headersToRender.push('Total');
                     }
 
-
                     let tableHtml = `
                         <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200 mt-4">
                             <h3 class="text-xl font-bold mb-2 text-center text-gray-900">${title}</h3>
@@ -499,15 +450,11 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50 sticky top-0">
                                         <tr>
-                                            <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Animator Name</th>
-                                            <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Collection Date</th>
                                             ${headersToRender.map(col => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${col}</th>`).join('')}
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr>
-                                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-semibold">${selectedAnimator}</td>
-                                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-semibold">${selectedDate}</td>
                                             ${headersToRender.map(col => `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-semibold">₹${summaryData[col].toFixed(2)}</td>`).join('')}
                                         </tr>
                                     </tbody>
@@ -518,21 +465,18 @@
                     return { html: tableHtml, summaryData: summaryData };
                 }
                 
-                // Get previous advance amount
-                const previousDate = getPreviousDate(selectedAnimator, selectedDate);
+                const previousDate = getPreviousDate(selectedAnimator, dateSelect.value);
                 const previousAdvanceAmount = previousDate ? allPaymentData
-                    .filter(item => item['Animator Name'] === selectedAnimator && item['Collection Date'] === previousDate)
+                    .filter(item => (!selectedAnimator || item['Animator Name'] === selectedAnimator) && item['Collection Date'] === previousDate)
                     .reduce((sum, item) => sum + parseFloat(item['Advance'] || 0), 0)
                     .toFixed(2) : '0.00';
                 
                 const previousAdvanceNumeric = parseFloat(previousAdvanceAmount);
 
-                // Summarize all three tables
                 const receptSummaryCols = ['Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
                 const { html: receptSummaryHtml, summaryData: receptSummaryData } = createSummaryTable(filteredRecepts, 'Receipts Summary', receptSummaryCols);
                 htmlContent += receptSummaryHtml;
 
-                // Updated Payment Summary with new columns
                 const paymentSummaryCols = ['Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance'];
                 const { html: paymentSummaryHtml, summaryData: paymentSummaryData } = createSummaryTable(filteredPayments, 'Payments Summary', paymentSummaryCols);
                 htmlContent += paymentSummaryHtml;
@@ -540,15 +484,13 @@
                 const totalReceiptsSummary = receptSummaryData['Total'] || 0;
                 const totalPaymentsSummary = paymentSummaryData['Total'] || 0;
                 
-                // Update formula for Total Cash Received
                 const totalCashReceived = totalReceiptsSummary + previousAdvanceNumeric;
                 
-                // Update formula for Balance
                 const balance = totalCashReceived - totalPaymentsSummary;
                 
                 htmlContent += `
                     <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg shadow-md flex items-center justify-between">
-                        <h3 class="text-xl font-bold text-blue-700">Previous Cash(Advance)</h3>
+                        <h3 class="text-xl font-bold text-blue-700">Previous Cash (Advance)</h3>
                         <p class="text-3xl font-extrabold text-blue-600">₹${previousAdvanceAmount}</p>
                     </div>
                 `;
@@ -560,7 +502,6 @@
                     </div>
                 `;
                 
-                // New Balance field
                 htmlContent += `
                     <div class="mt-4 p-6 bg-red-50 border border-red-200 rounded-lg shadow-md flex items-center justify-between">
                         <h3 class="text-xl font-bold text-red-700">Balance</h3>
@@ -602,22 +543,7 @@
                     allReceptData = calculateReceptTotals(receptData);
                     allPaymentData = paymentData;
 
-                    // Corrected logic: get unique animators from both datasets
-                    const allAnimatorNames = new Set([
-                        ...allReceptData.map(item => item['Animator Name']),
-                        ...allPaymentData.map(item => item['Animator Name'])
-                    ]);
-                    uniqueAnimators = [...allAnimatorNames].filter(Boolean);
-
-                    // Corrected logic: get unique dates from both datasets
-                    const allDates = new Set([
-                        ...allReceptData.map(item => item['Collection Date']),
-                        ...allPaymentData.map(item => item['Collection Date'])
-                    ]);
-                    uniqueDates = [...allDates].filter(Boolean);
-
-                    setupAutosuggest();
-                    populateDateSelect(dateSelect, uniqueDates);
+                    populateFilters();
                     renderAllTables(allReceptData, allPaymentData);
 
                     loadingIndicator.classList.add('hidden');
@@ -670,11 +596,9 @@
                     let heightLeft = imgHeight;
                     let position = 0;
 
-                    // Add the first page
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
 
-                    // Add subsequent pages if needed
                     while (heightLeft >= 0) {
                         position = heightLeft - imgHeight;
                         pdf.addPage();
@@ -692,7 +616,7 @@
             }
 
             // Add event listeners for the filter and new buttons
-            animatorInput.addEventListener('input', filterTransactions);
+            animatorSelect.addEventListener('change', filterTransactions);
             dateSelect.addEventListener('change', filterTransactions);
             resetButton.addEventListener('click', resetFilters);
             generateFinalDataButton.addEventListener('click', generateFinalData);
