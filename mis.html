@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passbook Dashboard</title>
+    <title>Samadhan KENDRA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap">
     <style>
@@ -200,8 +200,8 @@
             };
 
             const csvUrls = {
-                recept: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=0&single=true&output=csv',
-                payment: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGkANZjUyAllbbGSnNrqKXaECoJNDs2EdxZAirtU4L2eeH7xyTI89DQk-h_zRyS6PlMH3TH3bjXcJK/pub?gid=971596943&single=true&output=csv'
+                recept: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCE9-be3QTYiFHUi2TYLPeNfFCr31DMniWUBWCug9_boA24QvNYNlpwMbiqh8S4PF5gGnXt4riORe/pub?gid=0&single=true&output=csv',
+                payment: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCE9-be3QTYiFHUi2TYLPeNfFCr31DMniWUBWCug9_boA24QvNYNlpwMbiqh8S4PF5gGnXt4riORe/pub?gid=1342659418&single=true&output=csv'
             };
             
             let allReceptData = [];
@@ -222,15 +222,21 @@
                     return [];
                 }
                 const csvText = await response.text();
-                const lines = csvText.split('\n').slice(1).filter(line => line.trim() !== ''); 
+                const rawHeaders = csvText.split('\n')[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, ''));
+                const lines = csvText.split('\n').slice(1).filter(line => line.trim() !== '');
                 
                 const data = lines.map(line => {
                     const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/"/g, ''));
                     const obj = {};
-                    headers.forEach((header, i) => {
+                    rawHeaders.forEach((header, i) => {
                         obj[header] = values[i] || '';
                     });
-                    return obj;
+                    
+                    const filteredObj = {};
+                    headers.forEach(header => {
+                        filteredObj[header] = obj[header] || '';
+                    });
+                    return filteredObj;
                 });
                 return data;
             }
@@ -596,8 +602,19 @@
                     allReceptData = calculateReceptTotals(receptData);
                     allPaymentData = paymentData;
 
-                    uniqueAnimators = [...new Set(allReceptData.map(item => item['Animator Name']).filter(Boolean))];
-                    uniqueDates = [...new Set(allPaymentData.map(item => item['Collection Date']).filter(Boolean))];
+                    // Corrected logic: get unique animators from both datasets
+                    const allAnimatorNames = new Set([
+                        ...allReceptData.map(item => item['Animator Name']),
+                        ...allPaymentData.map(item => item['Animator Name'])
+                    ]);
+                    uniqueAnimators = [...allAnimatorNames].filter(Boolean);
+
+                    // Corrected logic: get unique dates from both datasets
+                    const allDates = new Set([
+                        ...allReceptData.map(item => item['Collection Date']),
+                        ...allPaymentData.map(item => item['Collection Date'])
+                    ]);
+                    uniqueDates = [...allDates].filter(Boolean);
 
                     setupAutosuggest();
                     populateDateSelect(dateSelect, uniqueDates);
