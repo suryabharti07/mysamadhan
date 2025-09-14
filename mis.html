@@ -66,7 +66,7 @@
 
     <div class="w-full h-full bg-white rounded-none shadow-none p-6 md:p-10 mt-0 mb-0">
         <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center text-gray-900">SAMADHAN KENDRA</h1>
-        <p class="text-sm md:text-base text-center text-gray-600 mb-6">Filter transactions by animator and date.</p>
+        <p class="text-sm md:text-base text-center text-gray-600 mb-6">Filter transactions by animator, date and 'Under'.</p>
         
         <!-- Filter Controls -->
         <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-6 px-4 md:px-0">
@@ -82,6 +82,14 @@
                 <label for="dateSelect" class="block text-sm font-medium text-gray-700">Collection Date</label>
                 <select id="dateSelect" class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
                     <!-- Dates dynamically yahan add honge -->
+                </select>
+            </div>
+
+            <div class="w-full max-w-sm">
+                <label for="underSelect" class="block text-sm font-medium text-gray-700">Select 'Under'</label>
+                <select id="underSelect" class="mt-1 block w-full px-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
+                    <option value="">All 'Under'</option>
+                    <!-- Under values dynamically yahan add honge -->
                 </select>
             </div>
             
@@ -178,6 +186,7 @@
             
             const animatorSelect = document.getElementById('animatorSelect');
             const dateSelect = document.getElementById('dateSelect');
+            const underSelect = document.getElementById('underSelect');
             
             const resetButton = document.getElementById('resetButton');
             const generateFinalDataButton = document.getElementById('generateFinalDataButton');
@@ -191,8 +200,8 @@
 
 
             const headers = {
-                recept: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'],
-                payment: ['Animator Name', 'Attend By', 'Meeting Date', 'Collection Date', 'Group Name', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total']
+                recept: ['Animator Name', 'Attend By', 'Under','Meeting Date', 'Collection Date', 'Group Name', 'Field Outstanding', 'Saving Balance', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'],
+                payment: ['Animator Name', 'Attend By', 'Under','Meeting Date', 'Collection Date', 'Group Name', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total']
             };
 
             const csvUrls = {
@@ -239,8 +248,8 @@
 
             /**
              * Calculates the 'Total' for each receipt row by summing its components.
-             * @param {Array<Object>} recepts The receipts data.
-             * @returns {Array<Object>} The updated receipts data with calculated totals.
+             * @param {Array<Object>> recepts The receipts data.
+             * @returns {Array<Object>>} The updated receipts data with calculated totals.
              */
             function calculateReceptTotals(recepts) {
                 const columnsToSum = ['Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others'];
@@ -251,7 +260,7 @@
             }
             
             /**
-             * Populates the date select and animator select dropdowns.
+             * Populates the date select, animator select, and 'Under' select dropdowns.
              */
             function populateFilters() {
                 // Populate Animator Select
@@ -276,6 +285,11 @@
                     <option value="today">Today (${todayFormatted})</option>
                     ${sortedDates.map(date => `<option value="${date}">${date}</option>`).join('')}
                 `;
+
+                // Populate Under Select
+                const allUnderValues = new Set([...allReceptData.map(item => item['Under']), ...allPaymentData.map(item => item['Under'])]);
+                const uniqueUnderValues = [...allUnderValues].filter(Boolean).sort();
+                underSelect.innerHTML = '<option value="">All \'Under\'</option>' + uniqueUnderValues.map(value => `<option value="${value}">${value}</option>`).join('');
             }
 
             /**
@@ -325,6 +339,8 @@
             function getFilteredData() {
                 const selectedAnimator = animatorSelect.value;
                 const selectedDateValue = dateSelect.value;
+                const selectedUnder = underSelect.value;
+                
                 let selectedDate = selectedDateValue;
 
                 if (selectedDateValue === 'today') {
@@ -343,6 +359,11 @@
                 if (selectedDate) {
                     filteredRecepts = filteredRecepts.filter(item => item['Collection Date'] === selectedDate);
                     filteredPayments = filteredPayments.filter(item => item['Collection Date'] === selectedDate);
+                }
+                
+                if (selectedUnder) {
+                    filteredRecepts = filteredRecepts.filter(item => item['Under'] === selectedUnder);
+                    filteredPayments = filteredPayments.filter(item => item['Under'] === selectedUnder);
                 }
 
                 return { filteredRecepts, filteredPayments };
@@ -370,6 +391,7 @@
             function resetFilters() {
                 animatorSelect.value = '';
                 dateSelect.value = '';
+                underSelect.value = '';
                 filterTransactions();
             }
             
@@ -402,6 +424,7 @@
             function generateFinalData() {
                 const selectedAnimator = animatorSelect.value;
                 const selectedDate = dateSelect.value === 'today' ? `${String(new Date().getDate()).padStart(2, '0')}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${new Date().getFullYear()}` : dateSelect.value;
+                const selectedUnder = underSelect.value;
 
                 const { filteredRecepts, filteredPayments } = getFilteredData();
                 
@@ -415,6 +438,7 @@
                     <div class="mb-4 text-center">
                         <p class="text-lg font-semibold">Animator: ${selectedAnimator || 'All'}</p>
                         <p class="text-lg font-semibold">Collection Date: ${selectedDate || 'All'}</p>
+                        ${selectedUnder ? `<p class="text-lg font-semibold">Under: ${selectedUnder}</p>` : ''}
                     </div>
                 `;
 
@@ -618,6 +642,7 @@
             // Add event listeners for the filter and new buttons
             animatorSelect.addEventListener('change', filterTransactions);
             dateSelect.addEventListener('change', filterTransactions);
+            underSelect.addEventListener('change', filterTransactions);
             resetButton.addEventListener('click', resetFilters);
             generateFinalDataButton.addEventListener('click', generateFinalData);
             closeModalButton.addEventListener('click', hideModal);
