@@ -36,6 +36,7 @@
                 opacity: 1;
             }
         }
+        /* New print-specific styles */
         @media print {
             body * {
                 visibility: hidden;
@@ -444,11 +445,25 @@
             }
             
             /**
-             * Finds the previous collection date for a given animator.
+             * Finds the previous collection date for a given animator and 'under' value, considering all transactions.
+             * @param {string} animator The animator's name.
+             * @param {string} under The 'Under' value.
+             * @param {string} currentDateStr The current date string in 'DD/MM/YYYY' format.
+             * @returns {string|null} The previous date string or null if not found.
              */
-            function getPreviousDate(animator, currentDateStr) {
-                const data = animator ? allPaymentData.filter(item => item['Animator Name'] === animator) : allPaymentData;
-                const uniqueDates = [...new Set(data.map(item => item['Collection Date']))];
+            function getPreviousDate(animator, under, currentDateStr) {
+                // Combine all data to get all unique dates based on the filters
+                let allData = [...allReceptData, ...allPaymentData];
+                
+                if (animator) {
+                    allData = allData.filter(item => item['Animator Name'] === animator);
+                }
+                if (under) {
+                    allData = allData.filter(item => item['Under'] === under);
+                }
+                
+                const uniqueDates = [...new Set(allData.map(item => item['Collection Date']))].filter(Boolean);
+
                 const sortedDates = uniqueDates.sort((a, b) => {
                     const [d1, m1, y1] = a.split('/').map(Number);
                     const [d2, m2, y2] = b.split('/').map(Number);
@@ -508,7 +523,7 @@
                         </div>
                     </div>`;
                 
-                return htmlContent = tableHtml;
+                return tableHtml;
             }
 
             /**
@@ -589,9 +604,14 @@
                     return { html: tableHtml, summaryData: summaryData };
                 }
                 
-                const previousDate = getPreviousDate(selectedAnimator, dateSelect.value);
+                const previousDate = getPreviousDate(selectedAnimator, selectedUnder, dateSelect.value);
                 const previousAdvanceAmount = previousDate ? allPaymentData
-                    .filter(item => (!selectedAnimator || item['Animator Name'] === selectedAnimator) && item['Collection Date'] === previousDate)
+                    .filter(item => {
+                        const isAnimatorMatch = !selectedAnimator || item['Animator Name'] === selectedAnimator;
+                        const isDateMatch = item['Collection Date'] === previousDate;
+                        const isUnderMatch = !selectedUnder || item['Under'] === selectedUnder;
+                        return isAnimatorMatch && isDateMatch && isUnderMatch;
+                    })
                     .reduce((sum, item) => sum + parseFloat(item['Advance'] || 0), 0)
                     .toFixed(2) : '0.00';
                 
