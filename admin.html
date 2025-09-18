@@ -59,6 +59,10 @@
                 max-height: none !important;
                 overflow: visible !important;
             }
+            /* Hide the unwanted columns during print */
+            .hide-on-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -354,6 +358,9 @@
                 tableHeaders.forEach(header => {
                     const th = document.createElement('th');
                     th.className = 'px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider sticky top-0 bg-gray-50';
+                    if (['Animator Name', 'Attend By', 'Under'].includes(header)) {
+                        th.classList.add('hide-on-print');
+                    }
                     th.textContent = header;
                     theadRow.appendChild(th);
                 });
@@ -371,6 +378,9 @@
                     tableHeaders.forEach(header => {
                         const cell = document.createElement('td');
                         cell.className = 'px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200';
+                        if (['Animator Name', 'Attend By', 'Under'].includes(header)) {
+                            cell.classList.add('hide-on-print');
+                        }
                         cell.textContent = item[header] || 'N/A';
                         if (header === 'Total' || header === 'Previous Cash(Advance)') {
                             const amountColor = type === 'RECEPT' ? 'text-green-600' : 'text-red-600';
@@ -483,6 +493,8 @@
              * Renders a table with a given title, headers, and data.
              */
             function renderFullTableInModal(title, data, tableHeaders, type) {
+                const headersToShow = tableHeaders.filter(header => !['Animator Name', 'Attend By', 'Under'].includes(header));
+                
                 let tableHtml = `
                     <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200 mt-4">
                         <h3 class="text-xl font-bold mb-2 text-center text-gray-900">${title}</h3>
@@ -490,7 +502,7 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50 sticky top-0">
                                     <tr>
-                                        ${tableHeaders.map(header => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${header}</th>`).join('')}
+                                        ${headersToShow.map(header => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${header}</th>`).join('')}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">`;
@@ -498,14 +510,14 @@
                 if (data.length === 0) {
                     tableHtml += `
                                     <tr>
-                                        <td colspan="${tableHeaders.length}" class="px-4 py-4 text-sm text-gray-500 text-center">Is selection ke liye koi data nahi mila.</td>
+                                        <td colspan="${headersToShow.length}" class="px-4 py-4 text-sm text-gray-500 text-center">Is selection ke liye koi data nahi mila.</td>
                                     </tr>`;
                 } else {
                     data.forEach(item => {
                         const row = document.createElement('tr');
                         row.className = 'hover:bg-gray-100 transition-colors duration-200';
                         tableHtml += `<tr class="hover:bg-gray-100 transition-colors duration-200">`;
-                        tableHeaders.forEach(header => {
+                        headersToShow.forEach(header => {
                             let cellClass = 'px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200';
                             if (header === 'Total' || header === 'Previous Cash(Advance)') {
                                 const amountColor = type === 'RECEPT' ? 'text-green-600' : 'text-red-600';
