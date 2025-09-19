@@ -38,6 +38,9 @@
         }
         /* New print-specific styles */
         @media print {
+            body {
+                background-color: white;
+            }
             body * {
                 visibility: hidden;
             }
@@ -50,7 +53,7 @@
                 top: 0;
                 width: 100%;
                 overflow: visible !important;
-                padding: 20px;
+                padding: 0;
                 box-sizing: border-box;
             }
             .modal-content {
@@ -58,6 +61,26 @@
                 transform: none;
                 max-height: none !important;
                 overflow: visible !important;
+                padding: 0;
+            }
+            /* Add page breaks to prevent content from splitting awkwardly */
+            .page-break {
+                display: block;
+                page-break-before: always;
+            }
+            .page-break-after {
+                page-break-after: always;
+            }
+            
+            h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
             }
         }
     </style>
@@ -168,6 +191,9 @@
                 <button id="downloadPdfButton" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
                     Download as PDF
                 </button>
+                <button id="downloadExcelButton" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors">
+                    Print in Excel
+                </button>
             </div>
 
             <div id="finalDataTableContainer" class="flex-1 overflow-y-auto printable-content">
@@ -201,6 +227,7 @@
 
             const printButton = document.getElementById('printButton');
             const downloadPdfButton = document.getElementById('downloadPdfButton');
+            const downloadExcelButton = document.getElementById('downloadExcelButton'); // New Excel button
 
 
             const headers = {
@@ -592,7 +619,7 @@
                         const balance = totalReceipts - totalPayments;
 
                         listHtml += `
-                            <div class="bg-gray-100 p-4 rounded-md shadow-sm mb-4">
+                            <div class="bg-gray-100 p-4 rounded-md shadow-sm mb-4 page-break-after">
                                 <h3 class="text-xl font-bold text-blue-700 mb-2">Animator Name: ${animator}</h3>
                                 <div class="flex justify-between items-center mb-4 text-sm font-semibold text-gray-700">
                                     <div>Total Cash Received: <span class="text-green-600">₹${totalReceipts.toFixed(2)}</span></div>
@@ -600,6 +627,7 @@
                                     <div>Balance: <span class="${balance >= 0 ? 'text-green-600' : 'text-red-600'}">₹${balance.toFixed(2)}</span></div>
                                 </div>
                         `;
+                        // Removed the unwanted columns as requested
                         const receptListHeaders = ['Group Name', 'Meeting Date', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'];
                         const paymentListHeaders = ['Group Name', 'Meeting Date', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total'];
                         
@@ -720,45 +748,134 @@
                 const { jsPDF } = window.jspdf;
                 const content = document.getElementById('finalDataTableContainer');
                 
-                const originalMaxHeight = content.style.maxHeight;
-                const originalOverflow = content.style.overflow;
-                content.style.maxHeight = 'none';
-                content.style.overflow = 'visible';
+                // Temporarily disable modal overflow for full content rendering
+                const modalContent = document.getElementById('finalDataModal');
+                const originalModalMaxHeight = modalContent.style.maxHeight;
+                const originalModalOverflow = modalContent.style.overflow;
+                modalContent.style.maxHeight = 'none';
+                modalContent.style.overflow = 'visible';
+
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pageHeight = pdf.internal.pageSize.height;
+                const imgWidth = pdf.internal.pageSize.width;
+
+                const contentElements = content.children;
+                let yOffset = 10; // Initial top margin
+                const margin = 10;
+
+                const processElement = async (el) => {
+                    return new Promise(resolve => {
+                        html2canvas(el, { scale: 2 }).then(canvas => {
+                            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                            if (yOffset + imgHeight > pageHeight - margin) {
+                                pdf.addPage();
+                                yOffset = margin;
+                            }
+
+                            pdf.addImage(imgData, 'JPEG', margin, yOffset, imgWidth - (2 * margin), imgHeight);
+                            yOffset += imgHeight + 5; // Add some space between elements
+                            resolve();
+                        });
+                    });
+                };
                 
-                const scale = 2; 
-
-                html2canvas(content, { 
-                    scale: scale,
-                    windowWidth: document.documentElement.scrollWidth,
-                    windowHeight: document.documentElement.scrollHeight
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const imgWidth = 210; 
-                    const pageHeight = 297;  
-                    const imgHeight = canvas.height * imgWidth / canvas.width;
-                    let heightLeft = imgHeight;
-                    let position = 0;
-
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-
-                    while (heightLeft >= 0) {
-                        position = heightLeft - imgHeight;
-                        pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
+                const processAllElements = async () => {
+                    for (const el of contentElements) {
+                        await processElement(el);
                     }
+                    pdf.save('detailed-report.pdf');
 
-                    pdf.save('summary-report.pdf');
-                }).catch(error => {
-                    console.error("Error generating PDF:", error);
-                }).finally(() => {
-                    content.style.maxHeight = originalMaxHeight;
-                    content.style.overflow = originalOverflow;
-                });
+                    // Restore original styles
+                    modalContent.style.maxHeight = originalModalMaxHeight;
+                    modalContent.style.overflow = originalModalOverflow;
+                };
+
+                processAllElements();
+            }
+            
+            /**
+             * Handles the download of data in Excel (CSV) format.
+             */
+            function handleDownloadExcel() {
+                const { filteredRecepts, filteredPayments } = getFilteredData();
+                let csvContent = generateCsvContent(filteredRecepts, filteredPayments);
+                
+                const underValue = underSelect.value || 'All';
+                const dateValue = dateSelect.value === 'today' ? `${String(new Date().getDate()).padStart(2, '0')}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${new Date().getFullYear()}` : dateSelect.value.replace(/\//g, '-');
+                
+                const fileName = `report_${underValue}_${dateValue}.csv`;
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
 
+            function generateCsvContent(recepts, payments) {
+                let csvContent = "";
+                const selectedAnimator = animatorSelect.value || 'All';
+                const selectedDate = dateSelect.value === 'today' ? `${String(new Date().getDate()).padStart(2, '0')}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${new Date().getFullYear()}` : dateSelect.value;
+                const selectedUnder = underSelect.value || 'All';
+                
+                // Add filter info to CSV
+                csvContent += `Report for: ${selectedAnimator}\n`;
+                csvContent += `Collection Date: ${selectedDate}\n`;
+                csvContent += `Under: ${selectedUnder}\n\n`;
+
+                const animatorsInList = [...new Set([...recepts.map(d => d['Animator Name']), ...payments.map(d => d['Animator Name'])])].filter(Boolean).sort();
+
+                if (animatorsInList.length === 0) {
+                    return csvContent;
+                }
+
+                animatorsInList.forEach(animator => {
+                    const animatorRecepts = recepts.filter(d => d['Animator Name'] === animator);
+                    const animatorPayments = payments.filter(d => d['Animator Name'] === animator);
+                    
+                    const totalReceipts = animatorRecepts.reduce((sum, item) => sum + parseFloat(item['Total'] || 0), 0);
+                    const totalPayments = animatorPayments.reduce((sum, item) => sum + parseFloat(item['Total'] || 0), 0);
+                    const balance = totalReceipts - totalPayments;
+                    
+                    // Add animator summary
+                    csvContent += `Animator: ${animator}\n`;
+                    csvContent += `Total Cash Received: ${totalReceipts.toFixed(2)}, Total Payments: ${totalPayments.toFixed(2)}, Balance: ${balance.toFixed(2)}\n\n`;
+                    
+                    // Add Receipts table
+                    csvContent += "Receipts\n";
+                    const receptListHeaders = ['Group Name', 'Meeting Date', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'];
+                    csvContent += receptListHeaders.join(',') + "\n";
+                    animatorRecepts.forEach(item => {
+                        const row = receptListHeaders.map(h => {
+                            const value = item[h] || '';
+                            return `"${value}"`; // Encapsulate values in quotes to handle commas
+                        }).join(',');
+                        csvContent += row + "\n";
+                    });
+                    csvContent += "\n";
+
+                    // Add Payments table
+                    csvContent += "Payments\n";
+                    const paymentListHeaders = ['Group Name', 'Meeting Date', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total'];
+                    csvContent += paymentListHeaders.join(',') + "\n";
+                    animatorPayments.forEach(item => {
+                        const row = paymentListHeaders.map(h => {
+                            const value = item[h] || '';
+                            return `"${value}"`; // Encapsulate values in quotes to handle commas
+                        }).join(',');
+                        csvContent += row + "\n";
+                    });
+                    csvContent += "\n\n";
+                });
+                return csvContent;
+            }
+            
             // Add event listeners for the filter and new buttons
             animatorSelect.addEventListener('change', filterTransactions);
             dateSelect.addEventListener('change', filterTransactions);
@@ -776,6 +893,7 @@
             // Add new event listeners for Print and PDF download
             printButton.addEventListener('click', handlePrint);
             downloadPdfButton.addEventListener('click', handleDownloadPdf);
+            downloadExcelButton.addEventListener('click', handleDownloadExcel);
 
             // Initial call to load the data when the page loads
             initializeData();
