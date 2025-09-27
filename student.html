@@ -3,423 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Data Search</title>
+    <title>Student & Teacher Report Dashboard</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
-    <!-- Heroicons for better visuals -->
-    <script src="https://cdn.jsdelivr.net/npm/@heroicons/2.1.3/dist/heroicons.min.js"></script>
     <style>
+        /* Custom styles for a clean, professional look */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212; /* Darker, more modern background */
+            background-color: #f0f4f8; /* Light blue-gray background */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top to prevent table from centering vertically */
         }
-        .container-bg {
-            background-color: #121212;
+        .card {
+            background-color: white;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease-in-out;
         }
-        .card-bg {
-            background-color: #1e1e1e; /* Slightly lighter than the background for contrast */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.15), 0 15px 15px -5px rgba(0, 0, 0, 0.08);
         }
-        .accent-color {
-            background-color: #4CAF50; /* A vibrant green accent for a fresh look */
-            color: #ffffff;
+        .data-table-container {
+            max-height: 500px; /* Limit height for vertical scroll */
+            overflow-y: auto;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .border-accent {
-            border-color: #4CAF50;
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            /* Added styling for ranking table */
+            border-bottom: 1px solid #e0e7ff; 
         }
-        /* Custom animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        th {
+            position: sticky;
+            top: 0;
+            background-color: #4f46e5; /* Indigo-600 */
+            color: white;
+            z-index: 10;
         }
-        #resultsContainer, #noResults, #loading, #initialMessage {
-            animation: fadeIn 0.5s ease-in-out;
+        .ranking-row td {
+            font-weight: 500;
         }
-        /* Style the scrollbar */
-        .overflow-y-auto::-webkit-scrollbar {
-            width: 8px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-track {
-            background: #1e1e1e;
-        }
-        .overflow-y-auto::-webkit-scrollbar-thumb {
-            background-color: #4CAF50;
-            border-radius: 4px;
-            border: 2px solid #1e1e1e;
-        }
-        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-            background-color: #388E3C;
-        }
-        /* New result card hover effect */
-        .google-result:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-        /* New loading spinner */
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #4CAF50;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .ranking-row:nth-child(1) {
+            background-color: #fcd34d; /* Amber-300 for top rank */
+            font-weight: bold;
         }
     </style>
 </head>
-<body class="container-bg min-h-screen flex flex-col items-center p-4">
+<body class="p-8">
 
-    <!-- Fixed Header with Search Bar -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-[#1e1e1e] bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-[#2e2e2e] p-4 shadow-2xl flex items-center justify-center">
-        <div class="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#" class="text-3xl sm:text-4xl font-extrabold text-white mb-2 sm:mb-0 mr-auto hover:text-gray-400 transition-colors duration-200">
-                Student Search
-            </a>
-            <div class="relative w-full group">
-                <input type="text" id="searchInput" placeholder="Enter student or father's name..." class="w-full p-4 rounded-full border-2 border-[#2e2e2e] bg-[#2a2a2a] text-gray-200 focus:outline-none focus:ring-4 focus:ring-[#4CAF50] transition-all duration-300 pr-12 text-lg">
-                <button id="searchButton" class="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-full text-white bg-[#4CAF50] hover:bg-[#388E3C] transition-colors duration-200 shadow-lg group-focus-within:bg-[#388E3C]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                        <path d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 4.906l3.712 3.713a.75.75 0 0 1-1.06 1.06l-3.713-3.712A8.25 8.25 0 0 1 2.25 10.5Z" />
-                    </svg>
-                </button>
+    <div class="w-full max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-3 tracking-tight">📚 Student and Teacher Report</h1>
+            <p class="text-xl text-indigo-700 font-medium">Data Analysis from Two Separate CSV Sources</p>
+        </header>
+
+        <!-- Main Report Grid (Summary Cards) - 4 columns on large screens -->
+        <div id="report-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            
+            <!-- 1. Student Number Card -->
+            <div id="student-card" class="card p-6 text-center border-b-6 border-indigo-500 bg-indigo-50/50">
+                <p class="text-xl font-bold text-indigo-500 mb-3">
+                    <span id="student-label">Student Number</span>
+                </p>
+                <div class="text-5xl font-extrabold text-indigo-700" id="total-students">0</div>
+                <p class="mt-2 text-xs text-gray-500">Total count of student records.</p>
+            </div>
+
+            <!-- 2. Teacher Name Card (Unique Count from Teacher CSV) -->
+            <div id="teacher-card" class="card p-6 text-center border-b-6 border-emerald-500 bg-emerald-50/50">
+                <p class="text-xl font-bold text-emerald-500 mb-3">
+                    <span id="teacher-label">Teacher Name</span>
+                </p>
+                <div class="text-5xl font-extrabold text-emerald-700" id="total-teachers">0</div>
+                <p class="mt-2 text-xs text-gray-500">Count of unique teacher entries.</p>
+            </div>
+
+            <!-- 3. Bidupur Students Card -->
+            <div id="bidupur-card" class="card p-6 text-center border-b-6 border-yellow-500 bg-yellow-50/50">
+                <p class="text-xl font-bold text-yellow-600 mb-3">
+                    Bidupur Students
+                </p>
+                <div class="text-5xl font-extrabold text-yellow-700" id="total-bidupur">0</div>
+                <p class="mt-2 text-xs text-gray-500">Total students in Bidupur block.</p>
+            </div>
+
+            <!-- 4. Raghopur Students Card -->
+            <div id="raghopur-card" class="card p-6 text-center border-b-6 border-red-500 bg-red-50/50">
+                <p class="text-xl font-bold text-red-600 mb-3">
+                    Raghopur Students
+                </p>
+                <div class="text-5xl font-extrabold text-red-700" id="total-raghopur">0</div>
+                <p class="mt-2 text-xs text-gray-500">Total students in Raghopur block.</p>
             </div>
         </div>
-    </header>
 
-    <!-- Main Content Area -->
-    <main class="w-full max-w-6xl px-4 py-8 mt-28">
-        <!-- Section for data summary with animated numbers -->
-        <div id="dataSummary" class="w-full text-white mb-10 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
-                <!-- Total Students Box -->
-                <div class="card-bg p-8 rounded-2xl shadow-xl border-2 border-[#2e2e2e] hover:scale-[1.03] transition-transform duration-300 transform-gpu">
-                    <h3 class="text-xl text-gray-400 font-semibold uppercase tracking-wider">Total Students</h3>
-                    <p id="totalCountDisplay" class="text-5xl md:text-6xl font-extrabold mt-3 text-[#4CAF50]">0</p>
-                </div>
-                <!-- Raghopur Students Box -->
-                <div class="card-bg p-8 rounded-2xl shadow-xl border-2 border-[#2e2e2e] hover:scale-[1.03] transition-transform duration-300 transform-gpu">
-                    <h3 class="text-xl text-gray-400 font-semibold uppercase tracking-wider">Raghopur</h3>
-                    <p id="raghopurCountDisplay" class="text-5xl md:text-6xl font-extrabold mt-3 text-red-500">0</p>
-                </div>
-                <!-- Bidupur Students Box -->
-                <div class="card-bg p-8 rounded-2xl shadow-xl border-2 border-[#2e2e2e] hover:scale-[1.03] transition-transform duration-300 transform-gpu">
-                    <h3 class="text-xl text-gray-400 font-semibold uppercase tracking-wider">Bidupur</h3>
-                    <p id="bidupurCountDisplay" class="text-5xl md:text-6xl font-extrabold mt-3 text-blue-500">0</p>
-                </div>
+        <!-- Teacher Ranking Table Section (NEW) -->
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Teacher Ranking (Based on Students with > 80% Percent)</h2>
+        <div id="teacher-ranking-container" class="data-table-container w-full bg-white">
+            <p class="text-center py-12 text-gray-500" id="ranking-loading-message">Calculating teacher rankings...</p>
+            <!-- Ranking Table will be injected here -->
+        </div>
+
+        <!-- Simple Message Box for Errors/Loading -->
+        <div id="message-box" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+            <div class="bg-white p-6 rounded-lg shadow-2xl max-w-sm w-full text-center">
+                <p id="message-text" class="text-xl font-medium text-gray-700">Loading data...</p>
+                <div id="spinner" class="mt-4 mx-auto w-6 h-6 border-4 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
             </div>
         </div>
 
-        <!-- Initial Message / Loading Indicator -->
-        <div id="loading" class="flex flex-col items-center justify-center text-lg text-gray-400 mt-20">
-            <div class="spinner mb-4"></div>
-            <span>Loading data from Google Sheet...</span>
-        </div>
-        <div id="initialMessage" class="text-center text-gray-400 mt-20 hidden">
-            <p class="text-3xl mb-4 font-bold text-white">Start your search.</p>
-            <p class="text-md">Your results will appear here.</p>
-        </div>
-
-        <!-- Results container -->
-        <div id="resultsContainer" class="w-full text-white p-4 hidden">
-            <!-- Results will be dynamically inserted here -->
-        </div>
-
-        <!-- No Results Found Message -->
-        <div id="noResults" class="text-center text-red-400 mt-20 hidden">
-            <p class="text-4xl font-bold mb-4">No Results Found.</p>
-            <p class="text-xl">Sorry, no data matches your search.</p>
-        </div>
-    </main>
-    
-    <!-- Full-screen modal for detailed view -->
-    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
-        <div class="card-bg p-8 rounded-3xl shadow-2xl w-full max-w-7xl h-[90vh] overflow-y-auto text-white relative border border-[#2e2e2e] transform-gpu transition-all duration-300">
-            <button id="closeModal" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors duration-200 p-2 rounded-full bg-[#2a2a2a] hover:bg-[#3e3e3e]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <h2 id="modalStudentName" class="text-3xl font-bold mb-6 text-center text-[#4CAF50]"></h2>
-            <div id="detailTableContainer" class="overflow-x-auto">
-                <!-- Detailed table will be inserted here -->
-            </div>
-        </div>
     </div>
 
-    <script>
-        // Data array to store student information
-        let studentData = [];
-        let allHeaders = []; // To store the headers from the CSV
+    <script type="text/javascript">
+        // CSV Data URLs
+        const STUDENT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKk9M53r_-L7UaXCOjl34BP9AHSF0Qg4DpPK6jT8z-AurpM6tU39w78hnWMx5OucPgnOUtO4vBeTD4/pub?gid=0&single=true&output=csv';
+        const TEACHER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ81zyRqysHzUUvFsYun0Uy31hfszIusdm2L36ClqSpwl-u8mlFd7dt3IRNxPFzE8E8UvVUce8IY2r7/pub?gid=0&single=true&output=csv';
 
-        // Google Sheet URLs
-        const csvUrls = [
-            { url: 'https://docs.google.com/spreadsheets/d/1djUbyANRP1K87Fv7bzB3cWJfPlPHKLCtKrXnye5RilA/export?format=csv&gid=1522639976', location: 'Raghopur' },
-            { url: 'https://docs.google.com/spreadsheets/d/1Cb8ruWQi-Us90yFsHD3jMqxvwe1W7pM2ZOsb8eaJr6c/export?format=csv&gid=2007015600', location: 'Bidupur' }
-        ];
-
-        // Define groups for data based on column index ranges (A=0, B=1, etc.)
-        const DATA_GROUPS = [
-            { name: 'Student Details', range: [0, 3] },
-            { name: 'Hindi', range: [4, 44] },
-            { name: 'English', range: [45, 87] },
-            { name: 'Kamal Book', range: [88, 129] },
-            { name: 'Counting', range: [130, 139] },
-            { name: 'Tables', range: [140, 158] },
-            { name: 'Math', range: [159, 162] },
-            { name: 'Percentage', range: [169, 169] },
-            { name: 'FO', range: [170, 170] },
-            { name: 'Extra Information', range: [171, 171] }
-        ];
-
-        // Get HTML elements
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const loadingIndicator = document.getElementById('loading');
-        const initialMessage = document.getElementById('initialMessage');
-        const noResultsMessage = document.getElementById('noResults');
-        const detailModal = document.getElementById('detailModal');
-        const closeModalButton = document.getElementById('closeModal');
-        const detailTableContainer = document.getElementById('detailTableContainer');
-        const dataSummary = document.getElementById('dataSummary');
-        const modalStudentName = document.getElementById('modalStudentName');
+        // Configuration: Column indices (0-based)
+        const STUDENT_COLUMN_INDEX = 0; // Column A (Student Name)
+        const TEACHER_CSV_INDEX = 0; // Teacher CSV Column 0 (for unique count)
+        const TEACHER_NAME_COLUMN_INDEX = 6; // Column G (Teacher Name) in Student CSV
+        const PERCENT_COLUMN_INDEX = 7; // Column H (Percent) in Student CSV
         
-        // Function to animate numbers
-        function animateCount(element, target, duration = 1000) {
-            let start = 0;
-            const startTime = performance.now();
-            
-            function updateCount(timestamp) {
-                const elapsed = timestamp - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const currentValue = Math.floor(progress * (target - start) + start);
-                element.textContent = currentValue;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(updateCount);
-                }
+        // Block Configuration
+        const BLOCK_COLUMN_INDEX = 5; // Column F (Block)
+        const BIDUPUR_BLOCK_NAME = 'Bidupur';
+        const RAGHOPUR_BLOCK_NAME = 'Raghopur';
+        const RANKING_THRESHOLD = 80; // Percent threshold for ranking
+
+        // UI elements
+        const totalStudentsEl = document.getElementById('total-students');
+        const totalTeachersEl = document.getElementById('total-teachers');
+        const totalBidupurEl = document.getElementById('total-bidupur');
+        const totalRaghopurEl = document.getElementById('total-raghopur');
+
+        const messageBox = document.getElementById('message-box');
+        const messageTextEl = document.getElementById('message-text');
+        const spinnerEl = document.getElementById('spinner');
+
+        const teacherRankingContainer = document.getElementById('teacher-ranking-container');
+
+
+        /**
+         * Parses CSV text into an array of rows, handling quotes and newlines.
+         * @param {string} text The raw CSV data.
+         * @returns {string[][]} Array of arrays (rows and columns).
+         */
+        function parseCSV(text) {
+            const lines = text.split(/\r\n|\n/);
+            const data = [];
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].trim() === '') continue;
+                // Simple split by comma, works for basic CSV structures
+                const columns = lines[i].split(',');
+                data.push(columns.map(col => col.trim().replace(/^"|"$/g, ''))); // Remove quotes
             }
-            requestAnimationFrame(updateCount);
+            return data;
         }
 
-        // Function to fetch data from all Google Sheets
-        async function fetchStudentData() {
-            let combinedData = [];
-            let headersLoaded = false;
+        /**
+         * Displays a message box for loading or errors.
+         */
+        function showMessage(message, isLoading = false) {
+            messageTextEl.textContent = message;
+            if (isLoading) {
+                spinnerEl.classList.remove('hidden');
+                messageBox.classList.add('flex');
+            } else {
+                spinnerEl.classList.add('hidden');
+                messageBox.classList.add('flex');
+            }
+        }
+
+        /**
+         * Hides the message box.
+         */
+        function hideMessage() {
+            messageBox.classList.remove('flex');
+            messageBox.classList.add('hidden');
+        }
+
+        /**
+         * Fetches a CSV file and returns the parsed data.
+         * @param {string} url The CSV URL.
+         * @returns {Promise<string[][]>} All parsed data (header + records).
+         */
+        async function fetchCSV(url) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`CSV Fetch Error (Status: ${response.status}) for URL: ${url}`);
+            }
+            const csvText = await response.text();
+            return parseCSV(csvText);
+        }
+
+        /**
+         * Calculates unique count for a given column in a dataset.
+         * @param {string[][]} data The parsed CSV data.
+         * @param {number} colIndex The column index for unique counting.
+         * @returns {number} The unique count.
+         */
+        function calculateUniqueCount(data, colIndex) {
+            if (data.length <= 1) return 0;
+            const records = data.slice(1);
+            const uniqueSet = new Set();
+            records.forEach(row => {
+                const value = row[colIndex];
+                if (value && value.trim() !== '') {
+                    uniqueSet.add(value.trim().toUpperCase()); 
+                }
+            });
+            return uniqueSet.size;
+        }
+
+        /**
+         * Generates and displays the Teacher Ranking Table.
+         * @param {string[][]} studentData The pre-fetched and parsed Student CSV data.
+         */
+        function displayTeacherRanking(studentData) {
+            const rankingMessageEl = document.getElementById('ranking-loading-message');
+            rankingMessageEl.textContent = 'Calculating rankings...';
 
             try {
-                for (const sheet of csvUrls) {
-                    const response = await fetch(sheet.url);
-                    const csvText = await response.text();
-                    const rows = csvText.trim().split('\n').filter(row => row.trim() !== '');
+                if (studentData.length <= 1) {
+                    teacherRankingContainer.innerHTML = '<p class="text-center py-12 text-gray-500">No student data found for ranking.</p>';
+                    return;
+                }
 
-                    // Get headers from the first sheet only
-                    if (!headersLoaded) {
-                        allHeaders = rows[0].split(',').map(header => header.trim());
-                        headersLoaded = true;
+                const studentRecords = studentData.slice(1);
+                const teacherScores = {}; // Key: Teacher Name, Value: Count of > 80% students
+
+                // 1. Calculate scores for each teacher
+                studentRecords.forEach(row => {
+                    const teacherName = row[TEACHER_NAME_COLUMN_INDEX];
+                    const percentValue = parseFloat(row[PERCENT_COLUMN_INDEX]);
+
+                    // Check for valid teacher name and percentage above threshold
+                    if (teacherName && teacherName.trim() !== '' && !isNaN(percentValue) && percentValue > RANKING_THRESHOLD) {
+                        const name = teacherName.trim();
+                        teacherScores[name] = (teacherScores[name] || 0) + 1;
                     }
+                });
+
+                // 2. Convert scores to an array and sort it
+                let rankingArray = Object.keys(teacherScores).map(name => ({
+                    teacherName: name,
+                    successfulStudents: teacherScores[name]
+                }));
+
+                rankingArray.sort((a, b) => b.successfulStudents - a.successfulStudents);
+
+                if (rankingArray.length === 0) {
+                     teacherRankingContainer.innerHTML = `<p class="text-center py-12 text-gray-500">No teachers found whose students scored above ${RANKING_THRESHOLD}%.`;
+                     return;
+                }
+
+                // 3. Generate Table HTML
+                let tableHTML = '<table class="min-w-full divide-y divide-indigo-200 border-collapse">';
+                
+                // Table Header
+                tableHTML += '<thead><tr>';
+                tableHTML += '<th class="bg-indigo-600 w-1/12">Rank</th>';
+                tableHTML += '<th class="bg-indigo-600 w-6/12">Teacher Name</th>';
+                tableHTML += '<th class="bg-indigo-600 w-5/12">Successful Students (> 80%)</th>';
+                tableHTML += '</tr></thead>';
+
+                // Table Body
+                tableHTML += '<tbody class="bg-white divide-y divide-gray-200">';
+                rankingArray.forEach((item, index) => {
+                    const rank = index + 1;
+                    const rowClass = rank === 1 ? 'ranking-row bg-yellow-100' : 
+                                   (rank === 2 ? 'ranking-row bg-gray-100' : 
+                                   (rank === 3 ? 'ranking-row bg-amber-100' : 'bg-white hover:bg-indigo-50'));
                     
-                    // Convert data into an array of objects
-                    const data = rows.slice(1).map(row => {
-                        const values = row.split(',').map(value => value ? value.trim() : '');
-                        const student = {};
-                        allHeaders.forEach((header, index) => {
-                            student[header] = values[index] ? values[index] : '';
-                        });
-                        student.sourceLocation = sheet.location; // Add the location to the student object
-                        return student;
-                    });
-                    combinedData = combinedData.concat(data);
-                }
-                return combinedData;
+                    tableHTML += `<tr class="${rowClass} transition duration-150">`;
+                    tableHTML += `<td class="text-lg font-extrabold text-center text-indigo-800">${rank}</td>`;
+                    tableHTML += `<td class="text-base text-gray-900">${item.teacherName}</td>`;
+                    tableHTML += `<td class="text-base text-gray-700 font-bold">${item.successfulStudents}</td>`;
+                    tableHTML += '</tr>';
+                });
+                tableHTML += '</tbody></table>';
+
+                teacherRankingContainer.innerHTML = tableHTML;
+
             } catch (error) {
-                console.error("Error fetching data:", error);
-                loadingIndicator.innerHTML = `<p class="text-center text-red-400 mt-4">There was an issue loading the data. Please check the URLs or try again.</p>`;
-                return [];
+                console.error('Error generating teacher ranking:', error);
+                teacherRankingContainer.innerHTML = `<p class="text-center py-12 text-red-500">Error generating ranking: ${error.message}</p>`;
             }
         }
-        
-        // Load data on page load
-        window.onload = async () => {
-            studentData = await fetchStudentData();
-            loadingIndicator.classList.add('hidden'); // Hide loading message
-            
-            // Show the data summary section immediately
-            dataSummary.classList.remove('hidden');
 
-            // Calculate counts and start the animations
-            if (studentData.length > 0) {
-                const totalCount = studentData.length;
-                const raghopurCount = studentData.filter(s => s.sourceLocation === 'Raghopur').length;
-                const bidupurCount = studentData.filter(s => s.sourceLocation === 'Bidupur').length;
+
+        /**
+         * Fetches data from both CSVs and updates the dashboard.
+         */
+        async function loadReportData() {
+            showMessage('Loading data from both CSVs...', true);
+
+            try {
+                // 1. Fetch data concurrently
+                const [studentData, teacherData] = await Promise.all([
+                    fetchCSV(STUDENT_CSV_URL), 
+                    fetchCSV(TEACHER_CSV_URL)   
+                ]);
                 
-                animateCount(document.getElementById('totalCountDisplay'), totalCount, 1500);
-                animateCount(document.getElementById('raghopurCountDisplay'), raghopurCount, 1500);
-                animateCount(document.getElementById('bidupurCountDisplay'), bidupurCount, 1500);
-            }
-        };
-
-        // Event listener for search button click
-        searchButton.addEventListener('click', () => {
-            performSearch(searchInput.value.trim());
-        });
-        
-        // Event listener for 'Enter' key press in search input
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                performSearch(this.value.trim());
-            }
-        });
-
-        // Main search function
-        function performSearch(searchTerm) {
-            // Hide all sections first
-            resultsContainer.classList.add('hidden');
-            noResultsMessage.classList.add('hidden');
-            initialMessage.classList.add('hidden');
-            detailModal.classList.add('hidden'); // Also hide the modal if it's open
-            dataSummary.classList.add('hidden'); // Hide the summary on search
-
-            if (searchTerm === '') {
-                initialMessage.classList.remove('hidden');
-                dataSummary.classList.remove('hidden'); // Show summary again if search is cleared
-                return;
-            }
-
-            loadingIndicator.classList.remove('hidden');
-            resultsContainer.innerHTML = '';
-            
-            setTimeout(() => {
-                const foundStudents = studentData.filter(student =>
-                    (student['Student Name'] && student['Student Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (student['Father Name'] && student['Father Name'].toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (student['Extra_Info'] && student['Extra_Info'].toLowerCase().includes(searchTerm.toLowerCase()))
-                );
-
-                loadingIndicator.classList.add('hidden');
-
-                if (foundStudents.length > 0) {
-                    const resultCards = foundStudents.map((student, index) => {
-                        // Determine badge color based on location
-                        const badgeColor = student.sourceLocation === 'Raghopur' ? 'bg-red-500' : 'bg-blue-500';
-
-                        return `
-                            <div data-index="${index}" class="google-result cursor-pointer card-bg rounded-2xl shadow-lg p-6 relative flex flex-col items-start md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-6 transition-all duration-300 transform-gpu border border-[#2e2e2e]">
-                                <!-- Location badge at the very top -->
-                                <span class="${badgeColor} text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10 mb-2">${student.sourceLocation}</span>
-                                
-                                <!-- Content below the badge, no mt-10 needed -->
-                                <div class="w-full flex-1"> 
-                                    <!-- Student Name and Father's Name on one line in white -->
-                                    <h3 class="text-xl md:text-2xl font-bold text-[#4CAF50]">${student['Student Name']}</h3>
-                                    <p class="text-md md:text-lg font-semibold text-gray-300 mt-1">
-                                        <span class="font-normal text-gray-400">Father:</span> ${student['Father Name']}
-                                    </p>
-                                    <!-- Extra Info -->
-                                    <p class="text-md md:text-lg font-semibold text-gray-300 mt-2">
-                                        <span class="font-normal text-gray-400">Teacher:</span> ${student['Extra_Info']}
-                                    </p>
-                                </div>
-                                <div class="flex-shrink-0 text-right">
-                                    <span class="text-sm font-semibold text-gray-400">More Details</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6 text-[#4CAF50] ml-2 inline-block">
-                                        <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.94l-3.22-3.22a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-
-                    const resultsHTML = `
-                        <p class="text-lg text-gray-400 mb-6">${foundStudents.length} results found.</p>
-                        <div class="flex flex-col gap-6">
-                            ${resultCards}
-                        </div>
-                    `;
-                    resultsContainer.innerHTML = resultsHTML;
-                    resultsContainer.classList.remove('hidden');
-
-                    // Add click event listeners to the new cards
-                    document.querySelectorAll('.google-result').forEach(card => {
-                        card.addEventListener('click', (event) => {
-                            const index = event.currentTarget.dataset.index;
-                            // The click event needs to find the student object from the original filtered array
-                            const clickedStudent = foundStudents[index];
-                            showDetails(clickedStudent);
-                        });
-                    });
-
-                } else {
-                    noResultsMessage.classList.remove('hidden');
-                }
-            }, 500);
-        }
-
-        // Function to show full details in a modal
-        function showDetails(student) {
-            let detailHTML = '';
-            modalStudentName.textContent = student['Student Name'] || 'Details';
-            
-            DATA_GROUPS.forEach(group => {
-                const [startIndex, endIndex] = group.range;
+                // 2. Process Student Summary Counts
+                const studentRecords = studentData.slice(1);
                 
-                // Create a section for the group if it has any data
-                detailHTML += `
-                    <h3 class="text-xl font-semibold text-[#4CAF50] mt-6 mb-3">${group.name}</h3>
-                    <div class="overflow-x-auto rounded-xl shadow-xl mb-4">
-                        <table class="w-full text-left text-sm text-gray-400 border-collapse">
-                            <tbody class="divide-y divide-[#2e2e2e]">
-                `;
+                // a. Total Student Number (Count non-empty in STUDENT_COLUMN_INDEX)
+                const totalStudentsCount = studentRecords.filter(row => 
+                    row[STUDENT_COLUMN_INDEX] && row[STUDENT_COLUMN_INDEX].trim() !== ''
+                ).length;
 
-                // Iterate through the columns for the current group using the correct headers
-                for (let i = startIndex; i <= endIndex; i++) {
-                    const key = allHeaders[i];
-                    if (Object.hasOwnProperty.call(student, key)) {
-                        detailHTML += `
-                            <tr class="bg-[#2a2a2a] hover:bg-[#3e3e3e] transition-colors duration-200">
-                                <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">${key}</td>
-                                <td class="px-6 py-4">${student[key]}</td>
-                            </tr>
-                        `;
+                // b. Block Counts
+                let bidupurCount = 0;
+                let raghopurCount = 0;
+                studentRecords.forEach(row => {
+                    const studentName = row[STUDENT_COLUMN_INDEX];
+                    const blockName = row[BLOCK_COLUMN_INDEX];
+                    
+                    // Only count if Student Name is present (valid record)
+                    if (studentName && studentName.trim() !== '') {
+                        if (blockName && blockName.trim().toUpperCase() === BIDUPUR_BLOCK_NAME.toUpperCase()) {
+                            bidupurCount++;
+                        }
+                        if (blockName && blockName.trim().toUpperCase() === RAGHOPUR_BLOCK_NAME.toUpperCase()) {
+                            raghopurCount++;
+                        }
                     }
-                }
+                });
 
-                detailHTML += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            });
+                // c. Total Teacher Unique Count
+                const totalTeachersCount = calculateUniqueCount(teacherData, TEACHER_CSV_INDEX);
 
-            // Add a row for the source location
-            detailHTML += `
-                <h3 class="text-xl font-semibold text-[#4CAF50] mt-6 mb-3">Other Details</h3>
-                <div class="overflow-x-auto rounded-xl shadow-xl mb-4">
-                    <table class="w-full text-left text-sm text-gray-400 border-collapse">
-                        <tbody class="divide-y divide-[#2e2e2e]">
-                            <tr class="bg-[#2a2a2a] hover:bg-[#3e3e3e] transition-colors duration-200">
-                                <td class="px-6 py-4 font-bold text-gray-200 whitespace-nowrap">Location</td>
-                                <td class="px-6 py-4">${student.sourceLocation}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
+                // 3. Update Summary UI
+                totalStudentsEl.textContent = totalStudentsCount;
+                totalTeachersEl.textContent = totalTeachersCount;
+                totalBidupurEl.textContent = bidupurCount;
+                totalRaghopurEl.textContent = raghopurCount;
 
-            detailTableContainer.innerHTML = detailHTML;
-            detailModal.classList.remove('hidden');
+                hideMessage(); 
+
+                // 4. Generate and display the Teacher Ranking Table
+                displayTeacherRanking(studentData);
+
+            } catch (error) {
+                console.error('Error loading report data:', error);
+                // Show a generic error message
+                showMessage(`Error loading data: ${error.message}. Please ensure both links are in public CSV format.`, false);
+                // Reset display
+                totalStudentsEl.textContent = 'Error';
+                totalTeachersEl.textContent = 'Error';
+                totalBidupurEl.textContent = 'Error';
+                totalRaghopurEl.textContent = 'Error';
+            }
         }
 
-        // Event listener to close the modal
-        closeModalButton.addEventListener('click', () => {
-            detailModal.classList.add('hidden');
-        });
-        
+        // Run the function when the window loads
+        window.onload = loadReportData;
     </script>
+
 </body>
 </html>
-
