@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samadhan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFA;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: #F8FAFA;
+            justify-content: center;
+            align-items: center;
+        }
+        .dashboard-card {
+            display: flex;
+            background-color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: none;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+            border-radius: 0;
+        }
+        @media (min-width: 1024px) {
+            .dashboard-card {
+                flex-direction: row;
+            }
+        }
+        /* Hide scrollbar for main content area */
+        .main-content::-webkit-scrollbar {
+            display: none;
+        }
+        .main-content {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Style for active link */
+        .nav-link.active {
+            background-color: #2D3A50;
+            color: #ffffff;
+            border-left: 4px solid #3B82F6;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link:hover {
+            transform: translateY(-1px);
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="h-full w-full">
+    <div class="dashboard-container h-full w-full py-0 px-0">
+        <div class="dashboard-card h-full w-full rounded-none">
+
+            <!-- Sidebar -->
+            <aside class="w-16 lg:w-64 bg-slate-900 p-4 lg:p-6 flex flex-col justify-between overflow-y-auto border-r border-slate-700">
+                <div>
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-2 mb-10 mt-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl font-bold">S</div>
+                        <span class="text-2xl font-bold text-gray-100 hidden lg:block">Samadhan</span>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav>
+                        <ul class="space-y-2">
+                            <li>
+                                <a href="#" onclick="showPage('dashboard-page', this)" data-page="dashboard" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors active">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    <span class="hidden lg:block">Dashboard</span>
+                                </a>
+                            </li>
+                            <!-- Employee menu item and sub-menu -->
+                            <li class="relative">
+                                <a href="#" onclick="toggleSubMenu('employee-menu')" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <span class="hidden lg:block">Employee</span>
+                                    <svg id="employee-arrow" class="w-4 h-4 ml-auto transition-transform duration-300 transform rotate-0 hidden lg:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </a>
+                                <ul id="employee-menu" class="hidden pl-8 mt-2 space-y-2">
+                                    <li>
+                                        <a href="#" onclick="showPage('staff-page', this)" data-page="staff" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+                                            <span class="hidden lg:block">STAFF</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" onclick="showPage('coordinator-page', this)" data-page="coordinator" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+                                            <span class="hidden lg:block">COORDINATOR</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- New Cluster Menu Item -->
+                            <li>
+                                <a href="#" onclick="showPage('cluster-page', this)" data-page="cluster" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                                    <span class="hidden lg:block">Cluster</span>
+                                </a>
+                            </li>
+                            <!-- New Group Menu Item -->
+                            <li>
+                                <a href="#" onclick="showPage('group-page', this)" data-page="group" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                                    <span class="hidden lg:block">Group</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <!-- Bottom navigation -->
+                <div class="mt-8 pt-4 border-t border-slate-700">
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#" onclick="showPage('settings-page', this)" data-page="settings" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.608 3.292.001z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span class="hidden lg:block">Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="showPage('logout-page', this)" data-page="logout" class="nav-link flex items-center justify-center lg:justify-start space-x-4 p-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                <span class="hidden lg:block">Log out</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main content area -->
+            <div class="flex-1 bg-gray-50 p-6 lg:p-10 rounded-r-3xl overflow-y-auto main-content h-full">
+                
+                <!-- Page Content Container -->
+                <div id="page-container" class="h-full">
+                    <!-- Dashboard Page -->
+                    <div id="dashboard-page" class="page-content h-full">
+                        <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
+                        <p class="mt-4 text-gray-600">This is the dashboard page. Add your dashboard content here.</p>
+                    </div>
+
+                    <!-- Staff Page (hidden by default) -->
+                    <div id="staff-page" class="page-content hidden h-full">
+                        <iframe src="https://www.appsheet.com/start/ea8f5446-b879-42cc-84a6-b205ecc9b77f#view=Employee" style="width: 100%; height: 100%; border: 0;"></iframe>
+                    </div>
+
+                    <!-- Coordinator Page (hidden by default) -->
+                    <div id="coordinator-page" class="page-content hidden h-full">
+                        <iframe src="https://www.appsheet.com/start/ea8f5446-b879-42cc-84a6-b205ecc9b77f#view=Coordinator" style="width: 100%; height: 100%; border: 0;"></iframe>
+                    </div>
+
+                    <!-- Cluster Page (hidden by default) -->
+                    <div id="cluster-page" class="page-content hidden h-full">
+                        <iframe src="https://www.appsheet.com/start/ea8f5446-b879-42cc-84a6-b205ecc9b77f#view=Cluster" style="width: 100%; height: 100%; border: 0;"></iframe>
+                    </div>
+
+                    <!-- Group Page (hidden by default) -->
+                    <div id="group-page" class="page-content hidden h-full">
+                        <iframe src="https://www.appsheet.com/start/ea8f5446-b879-42cc-84a6-b205ecc9b77f#view=Group" style="width: 100%; height: 100%; border: 0;"></iframe>
+                    </div>
+
+                    <!-- Settings Page (hidden by default) -->
+                    <div id="settings-page" class="page-content hidden h-full">
+                        <h2 class="text-3xl font-bold text-gray-800">Settings</h2>
+                        <p class="mt-4 text-gray-600">This is the settings page. Configure your preferences and account settings here.</p>
+                    </div>
+
+                    <!-- Log out Page (hidden by default) -->
+                    <div id="logout-page" class="page-content hidden h-full">
+                        <h2 class="text-3xl font-bold text-gray-800">Logged Out</h2>
+                        <p class="mt-4 text-gray-600">You have been successfully logged out. You can add a logout action here.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Function to show the selected page and update the active link
+        function showPage(pageId, element) {
+            // Get all page content containers and hide them
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.add('hidden'));
+
+            // Show the selected page
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.classList.remove('hidden');
+            }
+
+            // Remove active class from all navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active', 'bg-blue-100', 'text-blue-600');
+            });
+
+            // Add active class to the selected link
+            if (element) {
+                element.classList.add('active', 'bg-blue-100', 'text-blue-600');
+            }
+        }
+        
+        // Function to toggle the sub-menu visibility and arrow rotation
+        function toggleSubMenu(menuId) {
+            const subMenu = document.getElementById(menuId);
+            const arrow = document.getElementById(menuId.replace('menu', 'arrow'));
+            if (subMenu.classList.contains('hidden')) {
+                subMenu.classList.remove('hidden');
+                arrow.classList.remove('rotate-0');
+                arrow.classList.add('rotate-180');
+            } else {
+                subMenu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+                arrow.classList.add('rotate-0');
+            }
+        }
+
+        // Initially show the dashboard page
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('dashboard-page', document.querySelector('[data-page="dashboard"]'));
+        });
+    </script>
+</body>
+</html>
