@@ -320,8 +320,10 @@
             // Table Header
             tableHTML += '<thead><tr>';
             tableHTML += '<th class="bg-indigo-600 w-1/12">Rank</th>';
-            tableHTML += '<th class="bg-indigo-600 w-5/12">Teacher Name</th>';
-            tableHTML += '<th class="bg-indigo-600 w-3/12">Students with 100%</th>';
+            tableHTML += '<th class="bg-indigo-600 w-4/12">Teacher Name</th>';
+            tableHTML += '<th class="bg-indigo-600 w-2/12">Students with 100%</th>';
+            // <!-- MODIFICATION: Added Total Students header -->
+            tableHTML += '<th class="bg-indigo-600 w-2/12">Total Students</th>';
             tableHTML += '<th class="bg-indigo-600 w-3/12">Payment (Students x ₹1,000)</th>';
             tableHTML += '</tr></thead>';
 
@@ -338,6 +340,8 @@
                 tableHTML += `<td class="text-lg font-extrabold text-center text-indigo-800">${rank}</td>`;
                 tableHTML += `<td class="text-base text-gray-900">${escapeHTML(item.teacherName)}</td>`;
                 tableHTML += `<td class="text-base text-gray-700 font-bold">${item.successfulStudents}</td>`;
+                // <!-- MODIFICATION: Added Total Students cell -->
+                tableHTML += `<td class="text-base text-gray-700">${item.totalStudents}</td>`;
                 tableHTML += `<td class="text-base text-gray-700 font-bold">₹ ${item.payment.toLocaleString('en-IN')}</td>`;
                 tableHTML += '</tr>';
             });
@@ -502,22 +506,31 @@
          */
         function calculateTeacherRanking(studentData) {
             const studentRecords = studentData.slice(1);
-            const teacherScores = {}; // Key: Teacher Name, Value: { successfulStudents: 0, blocks: new Set() }
+            // <!-- MODIFICATION: Added totalStudents to tracking object -->
+            const teacherScores = {}; // Key: Teacher Name, Value: { successfulStudents: 0, totalStudents: 0, blocks: new Set() }
 
             // 1. Calculate scores and find blocks for each teacher
             studentRecords.forEach(row => {
+                const studentName = row[STUDENT_COLUMN_INDEX];
                 const teacherName = row[TEACHER_NAME_COLUMN_INDEX];
                 const percentValue = parseFloat(row[PERCENT_COLUMN_INDEX]);
                 const blockName = row[BLOCK_COLUMN_INDEX] ? row[BLOCK_COLUMN_INDEX].trim().toUpperCase() : 'UNKNOWN';
 
-                if (!teacherName || teacherName.trim() === '') return; // Skip if no teacher name
+                // Skip if no teacher name OR no student name
+                if (!teacherName || teacherName.trim() === '' || !studentName || studentName.trim() === '') {
+                    return;
+                }
                 
                 const name = teacherName.trim();
                 
                 // Ensure teacher entry exists
                 if (!teacherScores[name]) {
-                    teacherScores[name] = { successfulStudents: 0, blocks: new Set() };
+                    // <!-- MODIFICATION: Initialize totalStudents to 0 -->
+                    teacherScores[name] = { successfulStudents: 0, totalStudents: 0, blocks: new Set() };
                 }
+
+                // <!-- MODIFICATION: Increment total students for this teacher -->
+                teacherScores[name].totalStudents++;
 
                 // Add 100% student count
                 if (!isNaN(percentValue) && percentValue === RANKING_THRESHOLD) {
@@ -536,6 +549,8 @@
             let rankingArray = Object.keys(teacherScores).map(name => ({
                 teacherName: name,
                 successfulStudents: teacherScores[name].successfulStudents,
+                // <!-- MODIFICATION: Add totalStudents to the array object -->
+                totalStudents: teacherScores[name].totalStudents,
                 payment: teacherScores[name].successfulStudents * 1000,
                 blocks: Array.from(teacherScores[name].blocks) // Store as ['Bidupur', 'Raghopur']
             }));
@@ -636,5 +651,3 @@
 
 </body>
 </html>
-
-
