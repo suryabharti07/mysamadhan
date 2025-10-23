@@ -14,11 +14,11 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align to top to prevent table from centering vertically */
+            align-items: flex-start; /* Align to top */
         }
         .card {
             background-color: white;
-            border-radius: 1.5rem; /* More rounded corners */
+            border-radius: 1.5rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             transition: all 0.3s ease-in-out;
         }
@@ -35,7 +35,6 @@
         th, td {
             padding: 12px 16px;
             text-align: left;
-            /* Added styling for ranking table */
             border-bottom: 1px solid #e0e7ff; 
         }
         th {
@@ -52,6 +51,45 @@
             background-color: #fcd34d; /* Amber-300 for top rank */
             font-weight: bold;
         }
+
+        /* NEW: Styles for Filter/Search */
+        .filter-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-btn.active-filter {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+        }
+        .filter-btn:not(.active-filter):hover {
+            background-color: #eef2ff;
+        }
+
+        /* NEW: Styles for Modal */
+        #student-modal {
+            transition: opacity 0.3s ease;
+        }
+        #student-modal-content {
+            transition: all 0.3s ease;
+        }
+        /* Style for clickable teacher rows */
+        .teacher-row-clickable {
+            cursor: pointer;
+        }
+        /* Make student table in modal scrollable */
+        #modal-student-table-container {
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        /* Sticky header for modal table */
+        #modal-student-table-container th {
+            position: sticky;
+            top: 0;
+            background-color: #f3f4f6; /* Gray-100 */
+            color: #374151; /* Gray-700 */
+            z-index: 1;
+        }
+
     </style>
 </head>
 <body class="p-8">
@@ -60,11 +98,11 @@
         <!-- Header -->
         <header class="text-center mb-10">
             <h1 class="text-5xl font-extrabold text-gray-900 mb-3 tracking-tight">📚 Student and Teacher Report</h1>
-            <p class="text-xl text-indigo-700 font-medium">Data Analysis from Two Separate CSV Sources</p>
+            <p class="text-xl text-indigo-700 font-medium">Data Analysis from Student CSV Source</p>
         </header>
 
-        <!-- Main Report Grid (Summary Cards) - 4 columns on large screens -->
-        <div id="report-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- Main Report Grid (Summary Cards) -->
+        <div id="report-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             
             <!-- 1. Student Number Card -->
             <div id="student-card" class="card p-6 text-center border-b-6 border-indigo-500 bg-indigo-50/50">
@@ -75,13 +113,13 @@
                 <p class="mt-2 text-xs text-gray-500">Total count of student records.</p>
             </div>
 
-            <!-- 2. Teacher Name Card (Unique Count from Teacher CSV) -->
+            <!-- 2. Total Teacher Card -->
             <div id="teacher-card" class="card p-6 text-center border-b-6 border-emerald-500 bg-emerald-50/50">
                 <p class="text-xl font-bold text-emerald-500 mb-3">
-                    <span id="teacher-label">Teacher Name</span>
+                    <span id="teacher-label">Total Teachers</span>
                 </p>
                 <div class="text-5xl font-extrabold text-emerald-700" id="total-teachers">0</div>
-                <p class="mt-2 text-xs text-gray-500">Count of unique teacher entries.</p>
+                <p class="mt-2 text-xs text-gray-500">Unique teachers from student data.</p>
             </div>
 
             <!-- 3. Bidupur Students Card -->
@@ -101,10 +139,40 @@
                 <div class="text-5xl font-extrabold text-red-700" id="total-raghopur">0</div>
                 <p class="mt-2 text-xs text-gray-500">Total students in Raghopur block.</p>
             </div>
+
+            <!-- 5. Bidupur Teachers Card -->
+            <div id="bidupur-teachers-card" class="card p-6 text-center border-b-6 border-cyan-500 bg-cyan-50/50">
+                <p class="text-xl font-bold text-cyan-600 mb-3">
+                    Bidupur Teachers
+                </p>
+                <div class="text-5xl font-extrabold text-cyan-700" id="total-bidupur-teachers">0</div>
+                <p class="mt-2 text-xs text-gray-500">Unique teachers in Bidupur.</p>
+            </div>
+
+            <!-- 6. Raghopur Teachers Card -->
+            <div id="raghopur-teachers-card" class="card p-6 text-center border-b-6 border-purple-500 bg-purple-50/50">
+                <p class="text-xl font-bold text-purple-600 mb-3">
+                    Raghopur Teachers
+                </p>
+                <div class="text-5xl font-extrabold text-purple-700" id="total-raghopur-teachers">0</div>
+                <p class="mt-2 text-xs text-gray-500">Unique teachers in Raghopur.</p>
+            </div>
         </div>
 
-        <!-- Teacher Ranking Table Section (NEW) -->
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">Teacher Ranking (Based on Students with > 80% Percent)</h2>
+        <!-- Teacher Ranking Section Title -->
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Teacher Ranking (Based on Students with 100% Percent)</h2>
+        
+        <!-- NEW: Filter/Search Bar -->
+        <div class="mb-4 flex flex-col sm:flex-row gap-4 w-full bg-white p-4 rounded-xl shadow-sm">
+            <input type="text" id="teacher-search" placeholder="Search for a teacher..." class="flex-grow p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition duration-200">
+            <div class="flex items-center gap-2" id="filter-buttons">
+                <button data-filter="All" class="filter-btn active-filter py-3 px-5 rounded-lg font-medium">All</button>
+                <button data-filter="Bidupur" class="filter-btn bg-white text-gray-700 py-3 px-5 rounded-lg font-medium border border-gray-300">Bidupur</button>
+                <button data-filter="Raghopur" class="filter-btn bg-white text-gray-700 py-3 px-5 rounded-lg font-medium border border-gray-300">Raghopur</button>
+            </div>
+        </div>
+
+        <!-- Teacher Ranking Table Container -->
         <div id="teacher-ranking-container" class="data-table-container w-full bg-white">
             <p class="text-center py-12 text-gray-500" id="ranking-loading-message">Calculating teacher rankings...</p>
             <!-- Ranking Table will be injected here -->
@@ -118,16 +186,32 @@
             </div>
         </div>
 
+        <!-- NEW: Student Popup Modal -->
+        <div id="student-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center p-4 z-50">
+            <div id="student-modal-content" class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col transform scale-95 opacity-0">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                    <h3 id="modal-title" class="text-2xl font-bold text-gray-800">Student List</h3>
+                    <button id="modal-close-btn" class="text-gray-400 hover:text-gray-600 transition duration-150">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <!-- Modal Content (Table Container) -->
+                <div id="modal-student-table-container" class="p-6">
+                    <!-- Student table will be injected here -->
+                    <p class="text-center text-gray-500">Loading student data...</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script type="text/javascript">
         // CSV Data URLs
         const STUDENT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT0kegsZDKanviJlh17vG_C5OMY4c0hm6zSvYTQ5GLOUx6k6T4umQogvMxeajAe0HT6wXnOxI5Fa0kT/pub?gid=0&single=true&output=csv';
-        const TEACHER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ81zyRqysHzUUvFsYun0Uy31hfszIusdm2L36ClqSpwl-u8mlFd7dt3IRNxPFzE8E8UvVUce8IY2r7/pub?gid=0&single=true&output=csv';
 
         // Configuration: Column indices (0-based)
         const STUDENT_COLUMN_INDEX = 0; // Column A (Student Name)
-        const TEACHER_CSV_INDEX = 0; // Teacher CSV Column 0 (for unique count)
         const TEACHER_NAME_COLUMN_INDEX = 6; // Column G (Teacher Name) in Student CSV
         const PERCENT_COLUMN_INDEX = 7; // Column H (Percent) in Student CSV
         
@@ -135,13 +219,16 @@
         const BLOCK_COLUMN_INDEX = 5; // Column F (Block)
         const BIDUPUR_BLOCK_NAME = 'Bidupur';
         const RAGHOPUR_BLOCK_NAME = 'Raghopur';
-        const RANKING_THRESHOLD = 80; // Percent threshold for ranking
+        
+        const RANKING_THRESHOLD = 100; // Percent threshold for ranking
 
         // UI elements
         const totalStudentsEl = document.getElementById('total-students');
         const totalTeachersEl = document.getElementById('total-teachers');
-        const totalBidupurEl = document.getElementById('total-bidupur');
-        const totalRaghopurEl = document.getElementById('total-raghopur');
+        const totalBidupurStudentsEl = document.getElementById('total-bidupur');
+        const totalRaghopurStudentsEl = document.getElementById('total-raghopur');
+        const totalBidupurTeachersEl = document.getElementById('total-bidupur-teachers');
+        const totalRaghopurTeachersEl = document.getElementById('total-raghopur-teachers');
 
         const messageBox = document.getElementById('message-box');
         const messageTextEl = document.getElementById('message-text');
@@ -149,20 +236,48 @@
 
         const teacherRankingContainer = document.getElementById('teacher-ranking-container');
 
+        // NEW: Global data stores
+        let fullRankingData = [];
+        let allStudentData = [];
+
+        // NEW: Modal UI Elements
+        const studentModal = document.getElementById('student-modal');
+        const studentModalContent = document.getElementById('student-modal-content');
+        const modalTitleEl = document.getElementById('modal-title');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalStudentTableContainer = document.getElementById('modal-student-table-container');
+
+        // NEW: Filter/Search UI Elements
+        const searchInput = document.getElementById('teacher-search');
+        const filterButtonsContainer = document.getElementById('filter-buttons');
+
 
         /**
-         * Parses CSV text into an array of rows, handling quotes and newlines.
-         * @param {string} text The raw CSV data.
-         * @returns {string[][]} Array of arrays (rows and columns).
+         * Helper function to escape HTML special characters
+         */
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
+
+        /**
+         * Parses CSV text into an array of rows.
          */
         function parseCSV(text) {
             const lines = text.split(/\r\n|\n/);
             const data = [];
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].trim() === '') continue;
-                // Simple split by comma, works for basic CSV structures
                 const columns = lines[i].split(',');
-                data.push(columns.map(col => col.trim().replace(/^"|"$/g, ''))); // Remove quotes
+                data.push(columns.map(col => col.trim().replace(/^"|"$/g, '')));
             }
             return data;
         }
@@ -172,27 +287,21 @@
          */
         function showMessage(message, isLoading = false) {
             messageTextEl.textContent = message;
-            if (isLoading) {
-                spinnerEl.classList.remove('hidden');
-                messageBox.classList.add('flex');
-            } else {
-                spinnerEl.classList.add('hidden');
-                messageBox.classList.add('flex');
-            }
+            spinnerEl.classList.toggle('hidden', !isLoading);
+            messageBox.classList.remove('hidden');
+            messageBox.classList.add('flex');
         }
 
         /**
          * Hides the message box.
          */
         function hideMessage() {
-            messageBox.classList.remove('flex');
             messageBox.classList.add('hidden');
+            messageBox.classList.remove('flex');
         }
 
         /**
          * Fetches a CSV file and returns the parsed data.
-         * @param {string} url The CSV URL.
-         * @returns {Promise<string[][]>} All parsed data (header + records).
          */
         async function fetchCSV(url) {
             const response = await fetch(url);
@@ -204,163 +313,308 @@
         }
 
         /**
-         * Calculates unique count for a given column in a dataset.
-         * @param {string[][]} data The parsed CSV data.
-         * @param {number} colIndex The column index for unique counting.
-         * @returns {number} The unique count.
+         * NEW: Renders the teacher ranking table based on provided data.
+         * @param {object[]} dataToRender The filtered array of teacher data.
          */
-        function calculateUniqueCount(data, colIndex) {
-            if (data.length <= 1) return 0;
-            const records = data.slice(1);
-            const uniqueSet = new Set();
-            records.forEach(row => {
-                const value = row[colIndex];
-                if (value && value.trim() !== '') {
-                    uniqueSet.add(value.trim().toUpperCase()); 
-                }
+        function renderTeacherTable(dataToRender) {
+            if (dataToRender.length === 0) {
+                teacherRankingContainer.innerHTML = `<p class="text-center py-12 text-gray-500">No teachers match the current filter.</p>`;
+                return;
+            }
+
+            let tableHTML = '<table class="min-w-full divide-y divide-indigo-200 border-collapse">';
+            
+            // Table Header
+            tableHTML += '<thead><tr>';
+            tableHTML += '<th class="bg-indigo-600 w-1/12">Rank</th>';
+            tableHTML += '<th class="bg-indigo-600 w-5/12">Teacher Name</th>';
+            tableHTML += '<th class="bg-indigo-600 w-3/12">Students with 100%</th>';
+            tableHTML += '<th class="bg-indigo-600 w-3/12">Payment (Students x ₹1,000)</th>';
+            tableHTML += '</tr></thead>';
+
+            // Table Body
+            tableHTML += '<tbody class="bg-white divide-y divide-gray-200">';
+            dataToRender.forEach((item, index) => {
+                const rank = index + 1;
+                const rowClass = rank === 1 ? 'ranking-row bg-yellow-100' : 
+                               (rank === 2 ? 'ranking-row bg-gray-100' : 
+                               (rank === 3 ? 'ranking-row bg-amber-100' : 'bg-white hover:bg-indigo-50'));
+                
+                // Add data-teacher-name and clickable class
+                tableHTML += `<tr class="${rowClass} transition duration-150 teacher-row-clickable" data-teacher-name="${escapeHTML(item.teacherName)}">`;
+                tableHTML += `<td class="text-lg font-extrabold text-center text-indigo-800">${rank}</td>`;
+                tableHTML += `<td class="text-base text-gray-900">${escapeHTML(item.teacherName)}</td>`;
+                tableHTML += `<td class="text-base text-gray-700 font-bold">${item.successfulStudents}</td>`;
+                tableHTML += `<td class="text-base text-gray-700 font-bold">₹ ${item.payment.toLocaleString('en-IN')}</td>`;
+                tableHTML += '</tr>';
             });
-            return uniqueSet.size;
+            tableHTML += '</tbody></table>';
+
+            teacherRankingContainer.innerHTML = tableHTML;
         }
 
         /**
-         * Generates and displays the Teacher Ranking Table.
-         * @param {string[][]} studentData The pre-fetched and parsed Student CSV data.
+         * NEW: Applies filters based on search input and block buttons.
          */
-        function displayTeacherRanking(studentData) {
-            const rankingMessageEl = document.getElementById('ranking-loading-message');
-            rankingMessageEl.textContent = 'Calculating rankings...';
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = filterButtonsContainer.querySelector('.active-filter').dataset.filter;
 
-            try {
-                if (studentData.length <= 1) {
-                    teacherRankingContainer.innerHTML = '<p class="text-center py-12 text-gray-500">No student data found for ranking.</p>';
-                    return;
-                }
+            let filteredData = [...fullRankingData];
 
-                const studentRecords = studentData.slice(1);
-                const teacherScores = {}; // Key: Teacher Name, Value: Count of > 80% students
+            // Apply block filter
+            if (activeFilter !== 'All') {
+                filteredData = filteredData.filter(item => item.blocks.includes(activeFilter));
+            }
 
-                // 1. Calculate scores for each teacher
-                studentRecords.forEach(row => {
-                    const teacherName = row[TEACHER_NAME_COLUMN_INDEX];
-                    const percentValue = parseFloat(row[PERCENT_COLUMN_INDEX]);
+            // Apply search filter
+            if (searchTerm) {
+                filteredData = filteredData.filter(item => item.teacherName.toLowerCase().includes(searchTerm));
+            }
 
-                    // Check for valid teacher name and percentage above threshold
-                    if (teacherName && teacherName.trim() !== '' && !isNaN(percentValue) && percentValue > RANKING_THRESHOLD) {
-                        const name = teacherName.trim();
-                        teacherScores[name] = (teacherScores[name] || 0) + 1;
-                    }
-                });
+            renderTeacherTable(filteredData);
+        }
 
-                // 2. Convert scores to an array and sort it
-                let rankingArray = Object.keys(teacherScores).map(name => ({
-                    teacherName: name,
-                    successfulStudents: teacherScores[name]
-                }));
-
-                rankingArray.sort((a, b) => b.successfulStudents - a.successfulStudents);
-
-                if (rankingArray.length === 0) {
-                     teacherRankingContainer.innerHTML = `<p class="text-center py-12 text-gray-500">No teachers found whose students scored above ${RANKING_THRESHOLD}%.`;
-                     return;
-                }
-
-                // 3. Generate Table HTML
-                let tableHTML = '<table class="min-w-full divide-y divide-indigo-200 border-collapse">';
-                
-                // Table Header
-                tableHTML += '<thead><tr>';
-                tableHTML += '<th class="bg-indigo-600 w-1/12">Rank</th>';
-                tableHTML += '<th class="bg-indigo-600 w-6/12">Teacher Name</th>';
-                tableHTML += '<th class="bg-indigo-600 w-5/12">Successful Students (> 80%)</th>';
-                tableHTML += '</tr></thead>';
-
-                // Table Body
-                tableHTML += '<tbody class="bg-white divide-y divide-gray-200">';
-                rankingArray.forEach((item, index) => {
-                    const rank = index + 1;
-                    const rowClass = rank === 1 ? 'ranking-row bg-yellow-100' : 
-                                   (rank === 2 ? 'ranking-row bg-gray-100' : 
-                                   (rank === 3 ? 'ranking-row bg-amber-100' : 'bg-white hover:bg-indigo-50'));
+        /**
+         * NEW: Adds event listeners for filter/search UI.
+         */
+        function addFilterAndSearchListeners() {
+            searchInput.addEventListener('keyup', applyFilters);
+            
+            filterButtonsContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    // Remove active class from all
+                    filterButtonsContainer.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active-filter', 'bg-indigo-600', 'text-white');
+                        btn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300');
+                    });
+                    // Add active class to clicked
+                    e.target.classList.add('active-filter', 'bg-indigo-600', 'text-white');
+                    e.target.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-300');
                     
-                    tableHTML += `<tr class="${rowClass} transition duration-150">`;
-                    tableHTML += `<td class="text-lg font-extrabold text-center text-indigo-800">${rank}</td>`;
-                    tableHTML += `<td class="text-base text-gray-900">${item.teacherName}</td>`;
-                    tableHTML += `<td class="text-base text-gray-700 font-bold">${item.successfulStudents}</td>`;
+                    applyFilters();
+                }
+            });
+        }
+
+        /**
+         * NEW: Shows the student popup modal for a specific teacher.
+         * @param {string} teacherName The name of the teacher to show students for.
+         */
+        function showStudentPopup(teacherName) {
+            modalTitleEl.textContent = `Students for ${escapeHTML(teacherName)}`;
+            modalStudentTableContainer.innerHTML = '<p class="text-center py-8 text-gray-500">Loading student data...</p>';
+            
+            // Show modal with animation
+            studentModal.classList.remove('hidden');
+            studentModal.classList.add('flex');
+            setTimeout(() => {
+                studentModalContent.classList.remove('scale-95', 'opacity-0');
+                studentModalContent.classList.add('scale-100', 'opacity-100');
+            }, 10); // Short delay to allow CSS transition
+
+            // Filter student data
+            const header = allStudentData[0];
+            const studentRecords = allStudentData.slice(1);
+            
+            const relatedStudents = studentRecords.filter(row => 
+                row[TEACHER_NAME_COLUMN_INDEX] && row[TEACHER_NAME_COLUMN_INDEX].trim() === teacherName
+            );
+
+            // Build student table HTML
+            let tableHTML = '<table class="min-w-full divide-y divide-gray-200">';
+            tableHTML += '<thead><tr>';
+            // Using indices for headers from the CSV
+            tableHTML += `<th class="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${header[STUDENT_COLUMN_INDEX] || 'Student Name'}</th>`;
+            tableHTML += `<th class="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${header[BLOCK_COLUMN_INDEX] || 'Block'}</th>`;
+            tableHTML += `<th class="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${header[PERCENT_COLUMN_INDEX] || 'Percent'}</th>`;
+            tableHTML += '</tr></thead><tbody class="bg-white divide-y divide-gray-200">';
+
+            if (relatedStudents.length === 0) {
+                 tableHTML = '<p class="text-center py-8 text-gray-500">No student records found for this teacher.</p>';
+            } else {
+                relatedStudents.forEach(row => {
+                    const percent = parseFloat(row[PERCENT_COLUMN_INDEX]);
+                    const percentClass = percent === 100 ? 'text-green-600 font-bold' : 'text-gray-800';
+
+                    tableHTML += '<tr>';
+                    tableHTML += `<td class="p-3 whitespace-nowrap text-sm text-gray-800">${escapeHTML(row[STUDENT_COLUMN_INDEX])}</td>`;
+                    tableHTML += `<td class="p-3 whitespace-nowrap text-sm text-gray-500">${escapeHTML(row[BLOCK_COLUMN_INDEX])}</td>`;
+                    tableHTML += `<td class="p-3 whitespace-nowrap text-sm ${percentClass}">${!isNaN(percent) ? percent + '%' : 'N/A'}</td>`;
                     tableHTML += '</tr>';
                 });
                 tableHTML += '</tbody></table>';
-
-                teacherRankingContainer.innerHTML = tableHTML;
-
-            } catch (error) {
-                console.error('Error generating teacher ranking:', error);
-                teacherRankingContainer.innerHTML = `<p class="text-center py-12 text-red-500">Error generating ranking: ${error.message}</p>`;
             }
+            modalStudentTableContainer.innerHTML = tableHTML;
+        }
+
+        /**
+         * NEW: Hides the student popup modal.
+         */
+        function hideStudentPopup() {
+            studentModalContent.classList.add('scale-95', 'opacity-0');
+            studentModalContent.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                studentModal.classList.add('hidden');
+                studentModal.classList.remove('flex');
+            }, 300); // Wait for animation
+        }
+
+        /**
+         * NEW: Adds event listeners for modal interactions.
+         */
+        function addModalListeners() {
+            modalCloseBtn.addEventListener('click', hideStudentPopup);
+            
+            // Close on overlay click
+            studentModal.addEventListener('click', (e) => {
+                if (e.target === studentModal) {
+                    hideStudentPopup();
+                }
+            });
+
+            // Event delegation for table row clicks
+            teacherRankingContainer.addEventListener('click', (e) => {
+                const row = e.target.closest('tr[data-teacher-name]');
+                if (row) {
+                    const teacherName = row.dataset.teacherName;
+                    showStudentPopup(teacherName);
+                }
+            });
         }
 
 
         /**
-         * Fetches data from both CSVs and updates the dashboard.
+         * Calculates teacher rankings and stores data globally.
+         * @param {string[][]} studentData The pre-fetched and parsed Student CSV data.
+         */
+        function calculateTeacherRanking(studentData) {
+            const studentRecords = studentData.slice(1);
+            const teacherScores = {}; // Key: Teacher Name, Value: { successfulStudents: 0, blocks: new Set() }
+
+            // 1. Calculate scores and find blocks for each teacher
+            studentRecords.forEach(row => {
+                const teacherName = row[TEACHER_NAME_COLUMN_INDEX];
+                const percentValue = parseFloat(row[PERCENT_COLUMN_INDEX]);
+                const blockName = row[BLOCK_COLUMN_INDEX] ? row[BLOCK_COLUMN_INDEX].trim().toUpperCase() : 'UNKNOWN';
+
+                if (!teacherName || teacherName.trim() === '') return; // Skip if no teacher name
+                
+                const name = teacherName.trim();
+                
+                // Ensure teacher entry exists
+                if (!teacherScores[name]) {
+                    teacherScores[name] = { successfulStudents: 0, blocks: new Set() };
+                }
+
+                // Add 100% student count
+                if (!isNaN(percentValue) && percentValue === RANKING_THRESHOLD) {
+                    teacherScores[name].successfulStudents++;
+                }
+
+                // Add block info for *any* student associated with the teacher
+                if (blockName === BIDUPUR_BLOCK_NAME.toUpperCase()) {
+                     teacherScores[name].blocks.add(BIDUPUR_BLOCK_NAME);
+                } else if (blockName === RAGHOPUR_BLOCK_NAME.toUpperCase()) {
+                     teacherScores[name].blocks.add(RAGHOPUR_BLOCK_NAME);
+                }
+            });
+
+            // 2. Convert scores to an array
+            let rankingArray = Object.keys(teacherScores).map(name => ({
+                teacherName: name,
+                successfulStudents: teacherScores[name].successfulStudents,
+                payment: teacherScores[name].successfulStudents * 1000,
+                blocks: Array.from(teacherScores[name].blocks) // Store as ['Bidupur', 'Raghopur']
+            }));
+
+            // 3. Sort and store globally
+            fullRankingData = rankingArray.sort((a, b) => b.successfulStudents - a.successfulStudents);
+        }
+
+
+        /**
+         * Fetches data from CSV and updates the dashboard.
          */
         async function loadReportData() {
-            showMessage('Loading data from both CSVs...', true);
+            showMessage('Loading data from Student CSV...', true);
 
             try {
-                // 1. Fetch data concurrently
-                const [studentData, teacherData] = await Promise.all([
-                    fetchCSV(STUDENT_CSV_URL), 
-                    fetchCSV(TEACHER_CSV_URL)   
-                ]);
+                // 1. Fetch data
+                const studentData = await fetchCSV(STUDENT_CSV_URL);
+                allStudentData = [...studentData]; // Store raw data for popups
                 
                 // 2. Process Student Summary Counts
                 const studentRecords = studentData.slice(1);
                 
-                // a. Total Student Number (Count non-empty in STUDENT_COLUMN_INDEX)
                 const totalStudentsCount = studentRecords.filter(row => 
                     row[STUDENT_COLUMN_INDEX] && row[STUDENT_COLUMN_INDEX].trim() !== ''
                 ).length;
 
-                // b. Block Counts
                 let bidupurCount = 0;
                 let raghopurCount = 0;
+                const allTeachers = new Set();
+                const bidupurTeachers = new Set();
+                const raghopurTeachers = new Set();
+
                 studentRecords.forEach(row => {
                     const studentName = row[STUDENT_COLUMN_INDEX];
                     const blockName = row[BLOCK_COLUMN_INDEX];
+                    const teacherName = row[TEACHER_NAME_COLUMN_INDEX];
                     
-                    // Only count if Student Name is present (valid record)
                     if (studentName && studentName.trim() !== '') {
-                        if (blockName && blockName.trim().toUpperCase() === BIDUPUR_BLOCK_NAME.toUpperCase()) {
+                        const validTeacher = teacherName && teacherName.trim() !== '';
+                        const upperBlock = blockName ? blockName.trim().toUpperCase() : '';
+
+                        if (upperBlock === BIDUPUR_BLOCK_NAME.toUpperCase()) {
                             bidupurCount++;
-                        }
-                        if (blockName && blockName.trim().toUpperCase() === RAGHOPUR_BLOCK_NAME.toUpperCase()) {
+                            if (validTeacher) {
+                                bidupurTeachers.add(teacherName.trim().toUpperCase());
+                                allTeachers.add(teacherName.trim().toUpperCase());
+                            }
+                        } else if (upperBlock === RAGHOPUR_BLOCK_NAME.toUpperCase()) {
                             raghopurCount++;
+                            if (validTeacher) {
+                                raghopurTeachers.add(teacherName.trim().toUpperCase());
+                                allTeachers.add(teacherName.trim().toUpperCase());
+                            }
                         }
                     }
                 });
 
-                // c. Total Teacher Unique Count
-                const totalTeachersCount = calculateUniqueCount(teacherData, TEACHER_CSV_INDEX);
-
                 // 3. Update Summary UI
                 totalStudentsEl.textContent = totalStudentsCount;
-                totalTeachersEl.textContent = totalTeachersCount;
-                totalBidupurEl.textContent = bidupurCount;
-                totalRaghopurEl.textContent = raghopurCount;
+                totalTeachersEl.textContent = allTeachers.size;
+                totalBidupurStudentsEl.textContent = bidupurCount;
+                totalRaghopurStudentsEl.textContent = raghopurCount;
+                totalBidupurTeachersEl.textContent = bidupurTeachers.size;
+                totalRaghopurTeachersEl.textContent = raghopurTeachers.size;
 
                 hideMessage(); 
 
-                // 4. Generate and display the Teacher Ranking Table
-                displayTeacherRanking(studentData);
+                // 4. Calculate and display the Teacher Ranking Table
+                calculateTeacherRanking(studentData);
+                
+                if (fullRankingData.length === 0) {
+                     teacherRankingContainer.innerHTML = `<p class="text-center py-12 text-gray-500">No teachers found whose students scored exactly ${RANKING_THRESHOLD}%.`;
+                } else {
+                    renderTeacherTable(fullRankingData);
+                }
+
+                // 5. Add all new event listeners
+                addFilterAndSearchListeners();
+                addModalListeners();
 
             } catch (error) {
                 console.error('Error loading report data:', error);
-                // Show a generic error message
-                showMessage(`Error loading data: ${error.message}. Please ensure both links are in public CSV format.`, false);
+                showMessage(`Error loading data: ${error.message}. Please check the CSV link.`, false);
                 // Reset display
                 totalStudentsEl.textContent = 'Error';
                 totalTeachersEl.textContent = 'Error';
-                totalBidupurEl.textContent = 'Error';
-                totalRaghopurEl.textContent = 'Error';
+                totalBidupurStudentsEl.textContent = 'Error';
+                totalRaghopurStudentsEl.textContent = 'Error';
+                totalBidupurTeachersEl.textContent = 'Error';
+                totalRaghopurTeachersEl.textContent = 'Error';
             }
         }
 
