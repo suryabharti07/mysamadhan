@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mysamadhan Reporting Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Heroicons for Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Lighter gray background */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a8a8a8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Loader Animation */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6; /* blue-500 */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 100; /* Splash is on top */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            transition: opacity 0.5s ease-out;
+            overflow: hidden; 
+        }
+        
+        /* Rupee Background Animation */
+        #rupee-animation-container {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            display: block;
+        }
+        .rupee {
+            position: absolute;
+            display: block;
+            width: 15px;
+            height: 15px;
+            background: #fbbf24; /* amber-400 */
+            opacity: 0.2;
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            from {
+                transform: translateY(-10vh) rotate(0deg);
+            }
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+        
+        /* Text Container */
+        .splash-text-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Title Styling */
+        .splash-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            animation: splashFadeInScale 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        /* Subtitle Styling */
+        .splash-subtitle {
+            font-size: 1.25rem;
+            color: #d1d5db; /* gray-300 */
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            animation: splashFadeInUp 1s 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Loader Styling */
+        #splash-screen .splash-loader {
+            width: 32px;
+            height: 32px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite, splashFadeInUp 1s 1s ease-out forwards;
+            margin-top: 40px;
+            position: relative;
+            z-index: 10;
+            opacity: 0; /* Start hidden for animation */
+        }
+        
+        /* Text Animations */
+        @keyframes splashFadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes splashFadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Filter input styling */
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.875rem;
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #ffffff; /* bg-white */
+            transition: all 0.2s;
+        }
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            box-shadow: 0 0 0 2px #dbeafe; /* focus:ring-blue-200 */
+        }
+        /* Style for disabled select */
+        .filter-select:disabled {
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #6b7280; /* text-gray-500 */
+            cursor: not-allowed;
+        }
+        
+        /* Header Date Filter Style */
+        .header-date-filter {
+            padding: 0.5rem 0.75rem; /* Slightly smaller padding */
+            font-size: 0.875rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            background-color: #f9fafb; /* bg-gray-50 */
+            transition: all 0.2s;
+        }
+        .header-date-filter:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px #dbeafe;
+        }
+
+        /* Table Sticky Header */
+        #table-head th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f9fafb; /* Lighter sticky header */
+        }
+        
+        /* Button Base Styles */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            border: 1px solid #2563eb;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-color: #1d4ed8; /* blue-700 */
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #374151; /* gray-700 */
+            border: 1px solid #d1d5db; /* gray-300 */
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #f9fafb; /* gray-50 */
+        }
+        .btn-danger {
+            background-color: #ffffff;
+            color: #dc2626; /* red-600 */
+            border: 1px solid #d1d5db; /* gray-300 */
+        }
+        .btn-danger:hover:not(:disabled) {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #fca5a5; /* red-300 */
+        }
+        .btn-danger:disabled {
+             background-color: #fef2f2; /* red-50 */
+             color: #ef4444; /* red-500 */
+        }
+        
+        /* Animations */
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes slideInDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        .slide-in-down {
+            animation: slideInDown 0.4s 0.1s ease-out forwards; /* Added delay */
+            opacity: 0;
+        }
+        .fade-in-up {
+            animation: fade-in-up 0.5s ease-out;
+        }
+
+        /* Print Styles */
+        @page {
+            size: A4 portrait;
+            margin: 0.3cm;
+        }
+
+        @media print {
+            body, #report-modal {
+                font-size: 9pt !important;
+            }
+            html, body {
+                height: 100%;
+                overflow: hidden !important;
+            }
+            body * {
+                visibility: hidden;
+            }
+            #report-modal, #report-modal * {
+                visibility: visible;
+            }
+            #report-modal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100vh !important;
+                overflow: hidden !important;
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #report-modal-body {
+                background: white !important;
+                display: block !important;
+            }
+            #report-modal-sidebar {
+                display: none !important;
+            }
+            #report-modal-main-content {
+                width: 100% !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                background: white !important;
+            }
+            #report-modal-body .grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            #report-modal-body .grid > div {
+                page-break-inside: avoid;
+            }
+            
+            #report-modal-main-content > .bg-white {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                padding: 0.3rem !important;
+                margin-bottom: 0.3rem !important;
+                page-break-inside: avoid;
+            }
+            
+            .receipt-header {
+                 padding: 0.3rem !important;
+            }
+            .receipt-header h4 {
+                font-size: 11pt !important;
+            }
+            
+            .receipt-list-item {
+                padding: 0.1rem 0 !important;
+                border-bottom: 1px solid #f0f0f0 !important;
+            }
+            .receipt-list-item span {
+                font-size: 8pt !important;
+            }
+
+            #report-modal-main-content > .print\:block {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <!-- --- Coordinator Login Modal --- -->
+    <div id="login-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-gray-900 bg-opacity-75 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-sm p-8 rounded-2xl shadow-2xl m-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Coordinator Login</h2>
+            <p class="text-center text-gray-500 mb-6">Please enter your ID to proceed.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label for="login-id-input" class="block text-sm font-medium text-gray-700 mb-1">Coordinator ID</label>
+                    <input type="text" id="login-id-input" placeholder="Enter your ID" class="filter-input text-lg">
+                </div>
+                
+                <!-- Error message area -->
+                <p id="login-error" class="text-sm text-center text-red-600 h-5"></p> 
+                
+                <button id="login-button" class="btn btn-primary w-full justify-center text-base py-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h5a3 3 0 013 3v1"></path></svg>
+                    <span>Login</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="hidden">
+        <div id="rupee-animation-container"></div> <!-- Rupee container (z-0) -->
+        <div class="splash-text-container"> <!-- Text container (z-10) -->
+            <h1 class="splash-title">MYSAMADHAN.IN</h1>
+            <p class="splash-subtitle">REPORT</p>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
+    <!-- Main Application Wrapper -->
+    <div class="flex min-h-screen bg-gray-50 opacity-0" id="app-wrapper">
+        
+    <!-- Sidebar Navigation -->
+    <nav class="flex flex-row sm:flex-col w-full sm:w-20 bg-white text-gray-800 border-b sm:border-b-0 sm:border-r border-gray-200 slide-in-left">
+            <a href="#" class="flex items-center justify-center py-5 text-blue-600">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            </a>
+            <div class="flex flex-col items-center flex-1 mt-6 space-y-4">
+                <a href="#" class="p-3 text-blue-600 bg-blue-50 rounded-lg" title="Dashboard">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                </a>
+                <a href="#" class="p-3 text-gray-500 rounded-lg hover:bg-blue-50 hover:text-blue-600" title="Members">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </a>
+                <a href="#" class="p-3 text-gray-500 rounded-lg hover:bg-blue-50 hover:text-blue-600" title="Settings">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-y-auto">
+            
+            <!-- Header -->
+            <header class="flex items-center justify-between p-6 bg-white">
+                <h1 class="text-3xl font-bold text-gray-900 slide-in-down">
+                    Mysamadhan Dashboard
+                </h1>
+                <div class="flex items-center space-x-4 slide-in-down" style="animation-delay: 0.2s;">
+                    <!-- Date Filter -->
+                    <div class="hidden sm:block">
+                        <label for="headerDateFilter" class="sr-only">Filter by Date</label>
+                        <input type="date" id="headerDateFilter" class="header-date-filter">
+                    </div>
+                    <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    </button>
+                    <!-- Display logged-in user name/avatar -->
+                    <div class="flex items-center space-x-2">
+                        <span id="userNameDisplay" class="text-sm font-medium text-gray-700 hidden sm:block">Admin</span>
+                        <img id="userAvatar" class="object-cover w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff&bold=true" alt="User Avatar">
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-6">
+                
+                <!-- Main KPI Cards (Top 3) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Total Members Card -->
+                    <div class="flex items-center p-6 bg-white rounded-xl shadow-md fade-in-up" style="animation-delay: 0.1s;">
+                        <div class="p-3 mr-4 text-blue-600 bg-blue-100 rounded-full">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.08-1.285-.23-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.08-1.285.23-1.857m0 0a5.002 5.002 0 01-4.47-2.768A5.002 5.002 0 017 10c0 .653.08 1.285.23 1.857m0 0A5.002 5.002 0 0012 13c1.22 0 2.36-.44 3.27-1.143m-6.54 0a5.002 5.002 0 015.54 0M12 10a5.002 5.002 0 01-4.77 1.857m4.77 0a5.002 5.002 0 00-4.77-1.857M12 10a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase">Total Members</h3>
+                            <p id="kpi-total-rows" class="text-3xl font-semibold text-gray-900 mt-1">0</p>
+                        </div>
+                    </div>
+                    <!-- Total Loan Card -->
+                    <div class="flex items-center p-6 bg-white rounded-xl shadow-md fade-in-up" style="animation-delay: 0.2s;">
+                        <div class="p-3 mr-4 text-green-600 bg-green-100 rounded-full">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM4 14V8c0-1.105.895-2 2-2h12c1.105 0 2 .895 2 2v6c0 1.105-.895 2-2 2H6c-1.105 0-2-.895-2-2zm0 0v2c0 1.105.895 2 2 2h12c1.105 0 2-.895 2-2v-2m0 0V8c0-1.105-.895-2-2-2H6c-1.105 0-2 .895-2 2v6m0 0v2c0 1.105.895 2 2 2h12c1.105 0 2-.895 2-2v-2"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase">Total Loan Outstanding</h3>
+                            <p id="kpi-total-loan" class="text-3xl font-semibold text-gray-900 mt-1">₹0</p>
+                        </div>
+                    </div>
+                    <!-- Total Saving Card -->
+                    <div class="flex items-center p-6 bg-white rounded-xl shadow-md fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="p-3 mr-4 text-indigo-600 bg-indigo-100 rounded-full">
+                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase">Total Saving Outstanding</h3>
+                            <p id="kpi-total-saving" class="text-3xl font-semibold text-gray-900 mt-1">₹0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter & Controls Bar -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8 fade-in-up" style="animation-delay: 0.4s;">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-5">Data Controls</h2>
+                    
+                    <!-- Filter Inputs -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+                        <!-- Animator -->
+                        <div>
+                            <label for="animatorFilter" class="block text-sm font-medium text-gray-700 mb-1">Animator</label>
+                            <select id="animatorFilter" class="filter-select">
+                                <option value="all">All Animators</option>
+                            </select>
+                        </div>
+                        <!-- Coordinator -->
+                        <div>
+                            <label for="coordinatorFilter" class="block text-sm font-medium text-gray-700 mb-1">Coordinator</label>
+                            <!-- --- UPDATED: Disabled style will be applied by JS --- -->
+                            <select id="coordinatorFilter" class="filter-select">
+                                <option value="all">All Coordinators</option>
+                            </select>
+                        </div>
+                        <!-- Search -->
+                        <div class="sm:col-span-2 lg:col-span-1"> <!-- Make search span 2 cols on sm, 1 on lg -->
+                            <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Search Table</label>
+                            <input type="text" id="searchInput" placeholder="Search..." class="filter-input">
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3">
+                         <button id="showReportBtn" class="btn btn-primary">
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            View Summary Report
+                        </button>
+                        <button id="exportBtn" class="btn btn-secondary">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export as CSV
+                        </button>
+                         <button id="resetFiltersBtn" class="btn btn-danger sm:ml-auto">
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loader -->
+                <div id="loader" class="flex justify-center items-center h-64">
+                    <div class="loader"></div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert">
+                    <strong class="font-bold">Error:</strong>
+                    <span class="block sm:inline">Could not load data. Please check the console.</span>
+                </div>
+
+                <!-- Data Table Container -->
+                <div id="table-container" class="hidden fade-in-up" style="animation-delay: 0.5s;">
+                    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-md">
+                        <div class="overflow-x-auto max-h-[60vh] relative">
+                            <table id="data-table" class="min-w-full border-collapse">
+                                <thead id="table-head">
+                                    <!-- Header row will be injected by JS -->
+                                </thead>
+                                <tbody id="table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Data rows will be injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div class="mt-4 text-sm text-gray-600">
+                         Showing <span id="rowCount" class="font-semibold text-gray-800">0</span> results.
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <footer class="mt-12 text-center text-gray-500 text-sm">
+                    &copy; <span id="currentYear"></span> Mysamadhan. All rights reserved.
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- Full Screen Report Modal -->
+    <div id="report-modal" class="fixed inset-0 z-30 flex bg-gray-900 bg-opacity-50 backdrop-blur-sm hidden">
+        
+        <div id="modal-content" class="bg-gray-50 w-full h-full flex flex-col">
+            <!-- Modal Header -->
+            <header class="flex items-center justify-between p-5 bg-white border-b border-gray-200 no-print w-full slide-in-down">
+                <h2 class="text-2xl font-semibold text-gray-800">
+                    Summary Report
+                </h2>
+                <div class="flex items-center gap-3">
+                    <button id="print-report-btn" class="btn btn-secondary">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm7-8a1 1 0 100-2 1 1 0 000 2z"></path></svg>
+                        Print Report
+                    </button>
+                    <button id="close-modal-btn" class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- 2-Column Modal Body -->
+            <div id="report-modal-body" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                
+                <!-- Sidebar for Key Metrics -->
+                <aside id="report-modal-sidebar" class="w-full lg:w-1/3 xl:w-1/4 bg-white p-6 overflow-y-auto no-print border-r border-gray-200 fade-in-up">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6">Key Metrics</h3>
+                    
+                    <div class="space-y-4">
+                        <!-- KPI 1: Members -->
+                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5">
+                            <h4 class="text-sm font-medium text-indigo-700 capitalize">Total Members</h4>
+                            <p id="modal-kpi-total-rows" class="text-4xl font-semibold text-indigo-600 mt-1">0</p>
+                        </div>
+                        
+                        <!-- KPI 2: Loan -->
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-5">
+                            <h4 class="text-sm font-medium text-green-700 capitalize">Total Loan</h4>
+                            <p id="modal-kpi-total-loan" class="text-4xl font-semibold text-green-600 mt-1">₹0</p>
+                        </div>
+
+                        <!-- KPI 3: Saving -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                            <h4 class="text-sm font-medium text-blue-700 capitalize">Total Saving</h4>
+                            <p id="modal-kpi-total-saving" class="text-4xl font-semibold text-blue-600 mt-1">₹0</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content for Receipts -->
+                <main id="report-modal-main-content" class="flex-1 p-6 overflow-y-auto">
+                    
+                    <!-- Print-only Key Metrics Header -->
+                    <div class="hidden print:block">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4">Key Metrics</h3>
+                        <div class="grid grid-cols-3 gap-6">
+                            <!-- KPI 1: Members -->
+                            <div class="bg-gray-50 border border-gray-300 rounded-xl p-4">
+                                <h4 class="text-sm font-medium text-indigo-700 capitalize">Total Members</h4>
+                                <p id="print-kpi-total-rows" class="text-3xl font-semibold text-indigo-600 mt-1">0</p>
+                            </div>
+                            <!-- KPI 2: Loan -->
+                            <div class="bg-gray-50 border border-gray-300 rounded-xl p-4">
+                                <h4 class="text-sm font-medium text-green-700 capitalize">Total Loan</h4>
+                                <p id="print-kpi-total-loan" class="text-3xl font-semibold text-green-600 mt-1">₹0</p>
+                            </div>
+                            <!-- KPI 3: Saving -->
+                            <div class="bg-gray-50 border border-gray-300 rounded-xl p-4">
+                                <h4 class="text-sm font-medium text-blue-700 capitalize">Total Saving</h4>
+                                <p id="print-kpi-total-saving" class="text-3xl font-semibold text-blue-600 mt-1">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Details Section -->
+                    <div class="bg-white rounded-xl shadow-lg p-5 mb-6 border border-gray-200 fade-in-up" style="animation-delay: 0.1s;">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-3">Report Details</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-500">For Animator:</span>
+                                <span id="report-animator-name" class="font-semibold text-gray-900 block mt-1"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-500">For Coordinator:</span>
+                                <span id="report-coordinator-name" class="font-semibold text-gray-900 block mt-1"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-500">Date Range:</span>
+                                <span id="report-date-range" class="font-semibold text-gray-900 block mt-1"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3-Receipt Layout -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                        <!-- Receipt 1: Member Summary -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col fade-in-up" style="animation-delay: 0.2s;">
+                            <div class="p-5 bg-gray-50 border-b border-gray-200 receipt-header">
+                                <h4 class="text-lg font-semibold text-indigo-700 capitalize">Member Summary</h4>
+                            </div>
+                            <div id="receipt-members-list" class="p-5 space-y-3 flex-1">
+                                <p class="text-gray-500 text-sm">loading details...</p> 
+                            </div>
+                        </div>
+
+                        <!-- Receipt 2: Loan Summary -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col fade-in-up" style="animation-delay: 0.3s;">
+                            <div class="p-5 bg-gray-50 border-b border-gray-200 receipt-header">
+                                <h4 class="text-lg font-semibold text-green-700 capitalize">Loan Summary</h4>
+                            </div>
+                            <div id="receipt-loan-list" class="p-5 space-y-3 flex-1">
+                                <p class="text-gray-500 text-sm">loading details...</p>
+                            </div>
+                        </div>
+
+                        <!-- Receipt 3: Saving Summary -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col fade-in-up" style="animation-delay: 0.4s;">
+                            <div class="p-5 bg-gray-50 border-b border-gray-200 receipt-header">
+                                <h4 class="text-lg font-semibold text-blue-700 capitalize">Saving Summary</h4>
+                            </div>
+                            <div id="receipt-saving-list" class="p-5 space-y-3 flex-1">
+                                <p class="text-gray-500 text-sm">loading details...</p>
+                            </div>
+                        </div>
+
+                    </div> <!-- /end grid -->
+                </main>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- CONFIGURATION ---
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRyoLpP_zce_nHdwT_fp4S12WCNMbtIIyFSJmlnNLocF6KhfL2GN_zuJqhQ86Y4gDuvrV6oK2OxIKy1/pub?gid=0&single=true&output=csv';
+        
+        // --- NEW: Coordinator Login CSV ---
+        const COORDINATOR_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR45sel0mwJMAxPwUzQ_yjg6J3BvoBYCPgAuLRt7jTLq02DOKWuVQ1gE6IZRhomQDL7ECcQToOE3X-E/pub?gid=617061834&single=true&output=csv';
+
+        // --- Column Name Constants (Update if sheet changes) ---
+        const DATE_COLUMN = 'DATE';
+        const ANIMATOR_COLUMN = 'ANIMATOR NAME';
+        const COORDINATOR_COLUMN = 'COORDINATOR NAME';
+        const LOAN_COLUMN = 'Total Loan Outstanding';
+        const SAVING_COLUMN = 'Total Saving Outstanding';
+        
+        const LOANEE_MEMBER_COL = 'LOANEE MEMBER';
+        const PAID_LOANEE_MEMBER_COL = 'PAID LOANEE MEMBER';
+        const DUES_LOANEE_MEMBER_COL = 'DUES LOANEE MEMBER';
+        const PAID_SAVING_MEMBER_COL = 'PAID SAVING MEMBER';
+        const DUES_SAVING_MEMBER_COL = 'DUES SAVING MEMBER';
+        const RE_RECOVERY_COL = 'RE-RECOVERY';
+        const NEW_MEMBER_ADD_COL = 'NEW MEMBER ADD';
+        const NEW_MEMBER_PASS_COL = 'NEW MEMBER PASS';
+        const NEW_MEMBER_CANCEL_COL = 'NEW MEMBER CANCEL';
+        const OLD_MEMBER_APP_COL = 'OLD MEMBER APPLICATION';
+        const OLD_MEMBER_APP_PASS_COL = 'OLD MEMBER APPLICATION PASS';
+        const OLD_MEMBER_APP_CANCEL_COL = 'OLD MEMBER APPLICATION CANCEL';
+        
+        // --- All 12 Detailed KPI Columns ---
+        const DETAILED_KPI_COLS = [
+            LOANEE_MEMBER_COL, PAID_LOANEE_MEMBER_COL, DUES_LOANEE_MEMBER_COL,
+            PAID_SAVING_MEMBER_COL, DUES_SAVING_MEMBER_COL, RE_RECOVERY_COL,
+            NEW_MEMBER_ADD_COL, NEW_MEMBER_PASS_COL, NEW_MEMBER_CANCEL_COL,
+            OLD_MEMBER_APP_COL, OLD_MEMBER_APP_PASS_COL, OLD_MEMBER_APP_CANCEL_COL
+        ];
+
+        // --- Groupings for the 3 Receipts ---
+        const MEMBER_RECEIPT_COLS = [
+            NEW_MEMBER_ADD_COL, NEW_MEMBER_PASS_COL, NEW_MEMBER_CANCEL_COL,
+            OLD_MEMBER_APP_COL, OLD_MEMBER_APP_PASS_COL, OLD_MEMBER_APP_CANCEL_COL
+        ];
+        
+        const LOAN_RECEIPT_COLS = [
+            LOANEE_MEMBER_COL, PAID_LOANEE_MEMBER_COL, DUES_LOANEE_MEMBER_COL, RE_RECOVERY_COL
+        ];
+        
+        const SAVING_RECEIPT_COLS = [
+            PAID_SAVING_MEMBER_COL, DUES_SAVING_MEMBER_COL
+        ];
+
+        // --- GLOBAL VARIABLES ---
+        let allData = [];
+        let currentFilteredData = [];
+        let headers = [];
+        let coordinatorData = []; 
+        let loggedInCoordinatorName = null; 
+        
+        const inrFormatter = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+
+        // --- DOM ELEMENTS ---
+        const splashScreen = document.getElementById('splash-screen');
+        const appWrapper = document.getElementById('app-wrapper');
+        const loader = document.getElementById('loader');
+        const errorEl = document.getElementById('error');
+        const tableContainer = document.getElementById('table-container');
+        const tableHead = document.getElementById('table-head');
+        const tableBody = document.getElementById('table-body');
+        const rowCountEl = document.getElementById('rowCount');
+        
+        // Filter Elements
+        const searchInput = document.getElementById('searchInput');
+        const animatorFilter = document.getElementById('animatorFilter');
+        const coordinatorFilter = document.getElementById('coordinatorFilter');
+        const headerDateFilter = document.getElementById('headerDateFilter');
+        
+        // Button Elements
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const showReportBtn = document.getElementById('showReportBtn');
+
+        // Modal Elements
+        const reportModal = document.getElementById('report-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const printReportBtn = document.getElementById('print-report-btn');
+        
+        // --- Login Modal Elements ---
+        const loginModal = document.getElementById('login-modal');
+        const loginIdInput = document.getElementById('login-id-input');
+        const loginButton = document.getElementById('login-button');
+        const loginError = document.getElementById('login-error');
+        
+        // User Display Elements
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        // Main KPI Elements
+        const kpiTotalRows = document.getElementById('kpi-total-rows');
+        const kpiTotalLoan = document.getElementById('kpi-total-loan');
+        const kpiTotalSaving = document.getElementById('kpi-total-saving');
+        
+        // Modal KPI Elements
+        const modalKpiTotalRows = document.getElementById('modal-kpi-total-rows');
+        const modalKpiTotalLoan = document.getElementById('modal-kpi-total-loan');
+        const modalKpiTotalSaving = document.getElementById('modal-kpi-total-saving');
+        
+        // Receipt List Elements
+        const receiptMembersList = document.getElementById('receipt-members-list');
+        const receiptLoanList = document.getElementById('receipt-loan-list');
+        const receiptSavingList = document.getElementById('receipt-saving-list');
+
+        // Report Detail Elements
+        const reportAnimatorName = document.getElementById('report-animator-name');
+        const reportCoordinatorName = document.getElementById('report-coordinator-name');
+        const reportDateRange = document.getElementById('report-date-range');
+
+        // Print-only KPI Elements
+        const printKpiTotalRows = document.getElementById('print-kpi-total-rows');
+        const printKpiTotalLoan = document.getElementById('print-kpi-total-loan');
+        const printKpiTotalSaving = document.getElementById('print-kpi-total-saving');
+
+
+        // --- MAIN FUNCTIONS ---
+
+        /**
+         * Fetches and parses Coordinator CSV data.
+         */
+        async function fetchCoordinatorData() {
+            try {
+                const response = await fetch(`${COORDINATOR_CSV_URL}&t=${new Date().getTime()}`);
+                if (!response.ok) {
+                    throw new Error(`Coordinator data network response was not ok: ${response.statusText}`);
+                }
+                const csvText = await response.text();
+                
+                // Parse coordinator CSV
+                const lines = csvText.split(/\r\n|\n/).filter(line => line.trim() !== '');
+                if (lines.length < 1) throw new Error('Coordinator CSV is empty.');
+
+                const coordHeaders = parseCsvLine(lines[0]).map(header => header.trim());
+                const idHeader = 'Coordinator ID';
+                const nameHeader = 'Full Name';
+
+                if (!coordHeaders.includes(idHeader) || !coordHeaders.includes(nameHeader)) {
+                    throw new Error(`Coordinator CSV is missing required columns: "${idHeader}" or "${nameHeader}".`);
+                }
+
+                coordinatorData = lines.slice(1).map(line => {
+                    const values = parseCsvLine(line);
+                    const obj = {};
+                    coordHeaders.forEach((header, index) => {
+                        obj[header] = values[index] || '';
+                    });
+                    return obj;
+                }).filter(row => row[idHeader]); 
+
+                console.log('Coordinator data loaded:', coordinatorData.length, 'records');
+
+            } catch (error) {
+                console.error('Critical Error fetching coordinator data:', error);
+                // --- TRANSLATION: Error loading login data. Please refresh. ---
+                loginError.textContent = `Error loading login data. Please refresh.`;
+                loginButton.disabled = true;
+                loginButton.innerHTML = '<span>Error</span>';
+                loginButton.classList.replace('btn-primary', 'btn-danger');
+            }
+        }
+
+        /**
+         * Handles the coordinator login attempt.
+         */
+        function handleLogin() {
+            const inputId = loginIdInput.value.trim();
+            if (!inputId) {
+                // --- TRANSLATION: Please enter an ID. ---
+                loginError.textContent = 'Please enter an ID.';
+                return;
+            }
+
+            const coordinator = coordinatorData.find(c => c['Coordinator ID'] === inputId);
+
+            if (coordinator) {
+                // --- SUCCESS ---
+                loggedInCoordinatorName = coordinator['Full Name'];
+                console.log(`Login successful. Coordinator: ${loggedInCoordinatorName}`);
+                
+                // Update header display
+                userNameDisplay.textContent = loggedInCoordinatorName;
+                userAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(loggedInCoordinatorName)}&background=3b82f6&color=fff&bold=true`;
+                
+                // Hide login modal
+                loginModal.classList.add('fade-out');
+                setTimeout(() => loginModal.style.display = 'none', 500); 
+                
+                // Start the main application
+                startApp();
+
+            } else {
+                // --- FAILURE ---
+                console.warn(`Login failed for ID: ${inputId}`);
+                // --- TRANSLATION: Invalid Coordinator ID. Please try again. ---
+                loginError.textContent = 'Invalid Coordinator ID. Please try again.';
+                loginIdInput.focus();
+                loginIdInput.select();
+                loginModal.querySelector('.bg-white').animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(0)' }
+                ], {
+                    duration: 300,
+                    easing: 'ease-in-out'
+                });
+            }
+        }
+
+
+        /**
+         * Fetches and parses the MAIN CSV data from the Google Sheet.
+         * This runs *after* successful login.
+         */
+        async function fetchData() {
+            showLoading(true);
+            try {
+                const response = await fetch(`${CSV_URL}&t=${new Date().getTime()}`);
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                const csvText = await response.text();
+                parseCSV(csvText);
+                
+                // We call populateFilterDropdowns here to populate the full lists.
+                populateFilterDropdowns();
+                
+                // Then we apply filters, which will:
+                // 1. Filter the data based on the logged-in coordinator.
+                // 2. Re-populate the Animator dropdown based on the filtered data.
+                applyFilters(); 
+                
+                showError(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                // --- TRANSLATION: Failed to load data. ---
+                showError(true, `Failed to load data. ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        /**
+         * Parses a single line of CSV text, handling quoted commas.
+         */
+        function parseCsvLine(line) {
+            const values = [];
+            let currentVal = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    if (inQuotes && line[i+1] === '"') {
+                        currentVal += '"';
+                        i++; // Skip the escaped quote
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    values.push(currentVal.trim());
+                    currentVal = '';
+                } else {
+                    currentVal += char;
+                }
+            }
+            values.push(currentVal.trim());
+            return values.map(val => {
+                if (val.startsWith('"') && val.endsWith('"')) {
+                    return val.slice(1, -1).replace(/""/g, '"');
+                }
+                return val;
+            });
+        }
+
+        /**
+         * Parses the raw MAIN CSV text into an array of objects.
+         */
+        function parseCSV(csvText) {
+            const lines = csvText.split(/\r\n|\n/).filter(line => line.trim() !== '');
+            if (lines.length < 1) return;
+
+            headers = parseCsvLine(lines[0]).map(header => header.trim());
+            
+            allData = lines.slice(1).map(line => {
+                if (line.trim() === "") return null;
+                const values = parseCsvLine(line);
+                const obj = {};
+                headers.forEach((header, index) => {
+                    obj[header] = values[index] || '';
+                });
+                obj.parsedDate = parseDate(obj[DATE_COLUMN]);
+                return obj;
+            }).filter(row => row !== null);
+            
+            allData.sort((a, b) => {
+                const dateA = a.parsedDate ? a.parsedDate.getTime() : 0;
+                const dateB = b.parsedDate ? b.parsedDate.getTime() : 0;
+                return dateA - dateB;
+            });
+        }
+        
+        /**
+         * Populates the Coordinator dropdown and sets the lock.
+         */
+        function populateFilterDropdowns() {
+            // Populate Coordinators
+            const coordinators = new Set();
+            allData.forEach(row => {
+                if (row[COORDINATOR_COLUMN]) coordinators.add(row[COORDINATOR_COLUMN]);
+            });
+            
+            coordinatorFilter.innerHTML = '<option value="all">All Coordinators</option>';
+            coordinators.forEach(val => {
+                const option = document.createElement('option');
+                option.value = val;
+                option.textContent = val;
+                coordinatorFilter.appendChild(option);
+            });
+
+            // --- LOGIN LOCK ---
+            if (loggedInCoordinatorName) {
+                const optionExists = Array.from(coordinatorFilter.options).some(
+                    opt => opt.value === loggedInCoordinatorName
+                );
+
+                if (optionExists) {
+                    coordinatorFilter.value = loggedInCoordinatorName;
+                } else {
+                    const newOption = document.createElement('option');
+                    newOption.value = loggedInCoordinatorName;
+                    newOption.textContent = loggedInCoordinatorName;
+                    coordinatorFilter.appendChild(newOption);
+                    coordinatorFilter.value = loggedInCoordinatorName;
+                }
+                
+                // LOCK THE FILTER
+                coordinatorFilter.disabled = true;
+            }
+        }
+        
+        /**
+         * Filters data by coordinator (if logged in) and updates the Animator dropdown.
+         */
+        function filterAndPopulateAnimatorDropdown(currentData) {
+            const currentAnimator = animatorFilter.value; // Preserve current selected animator
+            const isCoordinatorLoggedIn = !!loggedInCoordinatorName;
+            
+            // 1. Filter data based on coordinator lock (if active)
+            const baseDataForAnimatorFilter = isCoordinatorLoggedIn
+                ? currentData.filter(row => row[COORDINATOR_COLUMN] === loggedInCoordinatorName)
+                : currentData; // If not logged in, use all data (or already filtered data)
+            
+            // 2. Get unique Animators from this filtered set
+            const animators = new Set();
+            baseDataForAnimatorFilter.forEach(row => {
+                if (row[ANIMATOR_COLUMN]) animators.add(row[ANIMATOR_COLUMN]);
+            });
+
+            // 3. Populate Animator dropdown
+            animatorFilter.innerHTML = '<option value="all">All Animators</option>';
+            Array.from(animators).sort().forEach(val => { // Sort alphabetically for better UX
+                const option = document.createElement('option');
+                option.value = val;
+                option.textContent = val;
+                animatorFilter.appendChild(option);
+            });
+            
+            // 4. Try to restore the previous selection, or default to 'all'
+            if (Array.from(animatorFilter.options).some(opt => opt.value === currentAnimator)) {
+                animatorFilter.value = currentAnimator;
+            } else {
+                animatorFilter.value = 'all';
+            }
+
+            // 5. If coordinator is logged in, disable the animator dropdown if there are no animators
+            if (isCoordinatorLoggedIn && animators.size === 0) {
+                 animatorFilter.disabled = true;
+                 animatorFilter.innerHTML = '<option value="all">No Animators Found</option>';
+            } else {
+                 animatorFilter.disabled = false;
+            }
+        }
+
+
+        /**
+         * Applies all active filters to the data and re-renders the table.
+         */
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const animator = animatorFilter.value;
+            
+            // If logged in, force the coordinator value. Otherwise, use the dropdown.
+            const coordinator = loggedInCoordinatorName ? loggedInCoordinatorName : coordinatorFilter.value;
+
+            const selectedDateStr = headerDateFilter.value;
+            
+            let filteredData = allData.filter(row => {
+                // 1. Date Filter
+                let dateMatch = true;
+                if (selectedDateStr) {
+                    const rowDateStr = toLocalYYYYMMDD(row.parsedDate);
+                    dateMatch = (rowDateStr === selectedDateStr);
+                }
+
+                // 2. Search Filter
+                let searchMatch = true;
+                if (searchTerm) {
+                    const originalDateVal = (row[DATE_COLUMN] || '').toString().toLowerCase();
+                    const formattedDateVal = toLocalYYYYMMDD(row.parsedDate);
+                    searchMatch = (originalDateVal.includes(searchTerm) || (formattedDateVal && formattedDateVal.includes(searchTerm)));
+                }
+
+                // 3. Coordinator Filter (Respects login override)
+                let coordinatorMatch = true;
+                if (coordinator !== 'all') {
+                    coordinatorMatch = row[COORDINATOR_COLUMN] === coordinator;
+                }
+
+                return dateMatch && searchMatch && coordinatorMatch;
+            });
+            
+            // --- NEW LOGIC: Filter Animators only AFTER Coordinator/Date/Search has run ---
+            // This is needed to dynamically update the Animator dropdown based on the
+            // Coordinator selection, but we only do the re-populating if a coordinator is logged in.
+            if (loggedInCoordinatorName) {
+                // If logged in, we update the Animator dropdown options to reflect the coordinator's filtered list.
+                // We call this *before* the final Animator filter step to ensure the dropdown content is correct.
+                filterAndPopulateAnimatorDropdown(filteredData);
+            }
+
+            // 4. Animator Filter
+            // Apply the final filter based on the (potentially updated) animator dropdown value.
+            filteredData = filteredData.filter(row => {
+                let animatorMatch = true;
+                if (animator !== 'all') {
+                    animatorMatch = row[ANIMATOR_COLUMN] === animator;
+                }
+                return animatorMatch;
+            });
+
+            currentFilteredData = filteredData;
+            
+            renderTable(currentFilteredData);
+            updateDashboardKPIs(currentFilteredData);
+        }
+        
+        /**
+         * Calculates and displays MAIN KPIs based on the filtered data.
+         */
+        function updateDashboardKPIs(data) {
+            // Sum of column 2 (Total Member) - index 1
+            let totalMembers = 0;
+            if (headers.length > 1) {
+                totalMembers = data.reduce((sum, row) => sum + parseNumber(row[headers[1]]), 0);
+            }
+            
+            // Sum of Column 3 (index 2) for Loan
+            let totalLoan = 0;
+            if (headers.length > 2) {
+                totalLoan = data.reduce((sum, row) => sum + parseNumber(row[headers[2]]), 0);
+            }
+
+            // Sum of Column 8 (index 7) for Saving
+            let totalSaving = 0;
+            if (headers.length > 7) {
+                totalSaving = data.reduce((sum, row) => sum + parseNumber(row[headers[7]]), 0);
+            }
+
+            kpiTotalRows.textContent = totalMembers;
+            kpiTotalLoan.textContent = inrFormatter.format(totalLoan);
+            kpiTotalSaving.textContent = inrFormatter.format(totalSaving);
+        }
+        
+        /**
+         * Calculates and populates the DETAILED Summary Report Modal.
+         * --- TRANSLATION: Updated to use pure English labels/messages ---
+         */
+        function updateReportModal(data) {
+            // 1. Get Filter Values
+            const animatorName = animatorFilter.value;
+            // Get coordinator name from the locked-in value or the dropdown
+            const coordinatorName = loggedInCoordinatorName ? loggedInCoordinatorName : coordinatorFilter.value;
+            const dateValue = headerDateFilter.value;
+
+            // 2. Populate Report Details
+            reportAnimatorName.textContent = animatorName === 'all' ? 'All Animators' : animatorName;
+            reportCoordinatorName.textContent = coordinatorName === 'all' ? 'All Coordinators' : coordinatorName;
+            reportDateRange.textContent = dateValue ? dateValue : 'All Dates';
+
+            // 3. Calculate all KPIs
+            let totalMembers = 0;
+             if (headers.length > 1) {
+                totalMembers = data.reduce((sum, row) => sum + parseNumber(row[headers[1]]), 0);
+            }
+            let totalLoan = 0;
+            if (headers.length > 2) {
+                totalLoan = data.reduce((sum, row) => sum + parseNumber(row[headers[2]]), 0);
+            }
+            let totalSaving = 0;
+            if (headers.length > 7) {
+                totalSaving = data.reduce((sum, row) => sum + parseNumber(row[headers[7]]), 0);
+            }
+            
+            const detailedSums = {};
+            DETAILED_KPI_COLS.forEach(colName => {
+                if (headers.includes(colName)) {
+                    detailedSums[colName] = data.reduce((sum, row) => sum + parseNumber(row[colName]), 0);
+                } else {
+                    console.warn(`Column "${colName}" not found in headers. Defaulting to 0.`);
+                    detailedSums[colName] = 0;
+                }
+            });
+
+            // 4. Populate KPI Cards
+            modalKpiTotalRows.textContent = totalMembers;
+            modalKpiTotalLoan.textContent = inrFormatter.format(totalLoan);
+            modalKpiTotalSaving.textContent = inrFormatter.format(totalSaving);
+            
+            printKpiTotalRows.textContent = totalMembers;
+            printKpiTotalLoan.textContent = inrFormatter.format(totalLoan);
+            printKpiTotalSaving.textContent = inrFormatter.format(totalSaving);
+            
+            // 5. Populate Detailed Receipt Lists
+            const createListItem = (colName) => {
+                const value = detailedSums[colName] || 0;
+                
+                // Use English, capitalizing words for display in the report
+                const displayLabel = colName.toLowerCase()
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                    
+                return `
+                <div class="flex justify-between items-center text-sm py-2 border-b border-gray-100 receipt-list-item">
+                    <span class="text-gray-600">${displayLabel}</span>
+                    <span class="font-semibold text-gray-900 text-base">${value}</span>
+                </div>
+                `;
+            };
+
+            receiptMembersList.innerHTML = MEMBER_RECEIPT_COLS.map(createListItem).join('');
+            receiptLoanList.innerHTML = LOAN_RECEIPT_COLS.map(createListItem).join('');
+            receiptSavingList.innerHTML = SAVING_RECEIPT_COLS.map(createListItem).join('');
+            
+            // --- TRANSLATION: English Fallback Messages ---
+            if (receiptMembersList.innerHTML === '') receiptMembersList.innerHTML = '<p class="text-gray-500 text-sm">No member details found.</p>';
+            if (receiptLoanList.innerHTML === '') receiptLoanList.innerHTML = '<p class="text-gray-500 text-sm">No loan details found.</p>';
+            if (receiptSavingList.innerHTML === '') receiptSavingList.innerHTML = '<p class="text-gray-500 text-sm">No saving details found.</p>';
+        }
+        
+        /**
+         * Renders the data into the HTML table.
+         * --- TRANSLATION: Updated fallback message ---
+         */
+        function renderTable(data) {
+            tableHead.innerHTML = '';
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.scope = 'col';
+                th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-b border-gray-200 whitespace-nowrap';
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            tableHead.appendChild(headerRow);
+
+            tableBody.innerHTML = '';
+            if (data.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = headers.length;
+                td.className = 'px-6 py-4 text-center text-gray-500';
+                // --- TRANSLATION: No results found for the selected filters. ---
+                td.textContent = 'No results found for the selected filters.';
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+            } else {
+                data.forEach((row, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50 transition-colors duration-150 ease-in-out';
+                    
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-700';
+                        td.textContent = row[header];
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                });
+            }
+            
+            rowCountEl.textContent = data.length;
+        }
+
+        /**
+         * Exports the current filtered data to a CSV file.
+         * --- TRANSLATION: Updated warning message ---
+         */
+        function exportToCSV(data, filename) {
+            if (data.length === 0) {
+                // --- TRANSLATION: No data to export. ---
+                console.warn('No data to export.');
+                return;
+            }
+            
+            const csvRows = [];
+            csvRows.push(headers.join(','));
+            
+            for (const row of data) {
+                const values = headers.map(header => {
+                    let val = ('' + row[header]).replace(/"/g, '""');
+                    if (val.includes(',')) {
+                        val = `"${val}"`;
+                    }
+                    return val;
+                });
+                csvRows.push(values.join(','));
+            }
+            
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        /**
+         * Resets all filter inputs to their default state.
+         */
+        function resetAllFilters() {
+            searchInput.value = '';
+            headerDateFilter.value = '';
+            
+            // --- NEW: Reset only unlocked filters and re-apply logic ---
+            animatorFilter.value = 'all'; 
+
+            if (!loggedInCoordinatorName) {
+                coordinatorFilter.value = 'all';
+            }
+            
+            // Re-apply filters which will re-populate the animator dropdown if logged in
+            applyFilters();
+        }
+
+        // --- HELPER FUNCTIONS ---
+        
+        function showLoading(isLoading) {
+            loader.style.display = isLoading ? 'flex' : 'none';
+            if (isLoading) {
+                tableContainer.style.display = 'none';
+            } else {
+                setTimeout(() => {
+                    if (tableContainer) {
+                        tableContainer.style.display = 'block';
+                    }
+                }, 0);
+            }
+        }
+
+        function showError(isVisible, message) {
+            if (isVisible) {
+                if (errorEl) {
+                    errorEl.style.display = 'block';
+                    if (message) {
+                        errorEl.querySelector('span').textContent = message;
+                    }
+                }
+                showLoading(false);
+            } else {
+                if (errorEl) {
+                    errorEl.style.display = 'none';
+                }
+            }
+        }
+        
+        function parseNumber(value) {
+            if (typeof value === 'number') return value;
+            if (typeof value !== 'string') return 0;
+            const cleaned = value.replace(/[^0-9.-]+/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+        
+        function parseDate(dateString) {
+            if (!dateString) return null;
+            let date, parts;
+            parts = dateString.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+            if (parts) {
+                date = new Date(parts[1], parts[2] - 1, parts[3]);
+                if (!isNaN(date.getTime()) && date.getDate() == parts[3]) return date;
+            }
+            parts = dateString.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (parts) {
+                date = new Date(parts[3], parts[2] - 1, parts[1]);
+                if (!isNaN(date.getTime()) && date.getDate() == parts[1]) return date;
+            }
+            parts = dateString.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (parts) {
+                date = new Date(parts[3], parts[1] - 1, parts[2]);
+                 if (!isNaN(date.getTime()) && date.getDate() == parts[2]) return date;
+            }
+            date = new Date(dateString);
+            if (!isNaN(date.getTime())) return date;
+            console.warn('Could not parse date:', dateString);
+            return null;
+        }
+
+        function toLocalYYYYMMDD(date) {
+            if (!date || isNaN(date.getTime())) return null;
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+
+        // --- INITIALIZATION ---
+
+        /**
+         * This function runs *after* successful login.
+         */
+        function startApp() {
+            console.log('startApp() called.');
+            
+            splashScreen.classList.remove('hidden');
+
+            const rupeeContainer = document.getElementById('rupee-animation-container');
+            if (rupeeContainer) {
+                for (let i = 0; i < 20; i++) {
+                    const rupee = document.createElement('div');
+                    rupee.className = 'rupee';
+                    rupee.style.left = `${Math.random() * 100}vw`;
+                    rupee.style.animationDelay = `${Math.random() * 10}s`;
+                    rupee.style.animationDuration = `${5 + Math.random() * 5}s`;
+                    rupeeContainer.appendChild(rupee);
+                }
+            }
+
+            setTimeout(() => {
+                if (splashScreen) {
+                    splashScreen.classList.add('fade-out');
+                }
+                if (appWrapper) {
+                    appWrapper.style.opacity = '1';
+                    appWrapper.classList.remove('opacity-0');
+                    appWrapper.classList.add('transition-opacity', 'duration-500');
+                }
+                setTimeout(() => {
+                    if (splashScreen) {
+                        splashScreen.style.display = 'none';
+                    }
+                }, 500);
+            }, 2500);
+
+            // --- Add event listeners ---
+            [searchInput, animatorFilter, coordinatorFilter].forEach(el => {
+                if (el) el.addEventListener('input', applyFilters);
+            });
+            if (headerDateFilter) headerDateFilter.addEventListener('change', applyFilters);
+            
+            if (resetFiltersBtn) resetFiltersBtn.addEventListener('click', resetAllFilters);
+            if (exportBtn) exportBtn.addEventListener('click', () => {
+                exportToCSV(currentFilteredData, 'mysamadhan_report.csv');
+            });
+            
+            if (showReportBtn) showReportBtn.addEventListener('click', () => {
+                updateReportModal(currentFilteredData); 
+                if (reportModal) reportModal.classList.remove('hidden');
+            });
+            if (closeModalBtn) closeModalBtn.addEventListener('click', () => {
+                if (reportModal) reportModal.classList.add('hidden');
+            });
+            if (printReportBtn) printReportBtn.addEventListener('click', () => {
+                window.print();
+            });
+
+            // --- Fetch main data immediately ---
+            fetchData();
+        }
+
+        /**
+         * This is the main entry point on page load.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentYearEl = document.getElementById('currentYear');
+            if (currentYearEl) {
+                currentYearEl.textContent = new Date().getFullYear();
+            }
+
+            // --- LOGIN FLOW SETUP ---
+            if (loginButton) loginButton.addEventListener('click', handleLogin);
+            
+            if (loginIdInput) {
+                loginIdInput.addEventListener('keyup', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleLogin();
+                    }
+                });
+                loginIdInput.focus();
+            }
+
+            // Fetch coordinator data immediately
+            fetchCoordinatorData();
+        });
+
+    </script>
+</body>
+</html>
