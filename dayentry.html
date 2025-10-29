@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todays Report - MySamadhan</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* Basic Reset & Font */
+        :root {
+            --primary-color: #007BFF; /* Main brand color */
+            --primary-hover: #0056b3;
+            --success-color: #28a745;
+            --background-color: #eef2f7;
+            --card-background: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --input-bg: #f8f9fa;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            /* REMOVED flex/align/justify/padding from body 
+              to allow form-container to go full screen.
+            */
+        }
+
+        /* --- 1. Splash Screen Styles --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), #004182);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .splash-title {
+            font-size: 3.5rem;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .finance-animation {
+            font-size: 6rem;
+            color: white;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* Splash screen fade out state */
+        #splash-screen.fade-out {
+            opacity: 0;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 2. Success Overlay Styles --- */
+        #success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(44, 62, 80, 0.85); /* Dark overlay */
+            backdrop-filter: blur(8px);
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #success-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .success-box {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            /* Animation for entry */
+            transform: scale(0.9);
+            opacity: 0;
+            animation: zoomIn 0.3s 0.1s ease-out forwards;
+        }
+
+        .success-box .ph-check-circle {
+            font-size: 6rem;
+            color: var(--success-color);
+            line-height: 1;
+        }
+
+        .success-box h2 {
+            font-size: 2.5rem;
+            color: var(--success-color);
+            margin: 15px 0;
+        }
+        
+        .success-box p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        #close-success-btn {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        #close-success-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        @keyframes zoomIn {
+            to { transform: scale(1); opacity: 1; }
+        }
+
+
+        /* --- 3. Form Container Styles (MODIFIED) --- */
+        .form-container {
+            /* This is now the full-screen wrapper */
+            width: 100%;
+            min-height: 100vh;
+            
+            /* It centers the .form-card */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+            padding: 40px 20px; /* Padding for small screens */
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        
+        .form-container.show {
+            display: flex; /* Changed from block to flex */
+            opacity: 1;
+        }
+
+        /* (NEW) This is the new card wrapper for the form */
+        .form-card {
+            width: 100%;
+            max-width: 1200px; /* Increased width as requested */
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px 40px;
+        }
+
+        /* Form Header with Icon */
+        .form-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .form-header .header-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .form-header h2 {
+            color: var(--text-dark);
+            margin: 0 0 10px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .form-header p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Container for all field blocks */
+        #form-fields-container {
+            /* This is no longer a grid, just a container for blocks */
+        }
+        
+        /* --- 3a. Form Group Block Styles (NEW) --- */
+        .form-group-block {
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #fdfdfd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden; /* To contain border-radius */
+        }
+        
+        .form-group-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            background-color: var(--input-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-group-header i {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-right: 12px;
+            line-height: 1;
+        }
+
+        .form-group-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* This is the new grid container *inside* each block */
+        .form-group-content {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr; /* 1 column on mobile */
+            gap: 25px;
+        }
+
+        /* Form Styling (Original) */
+        #entry-form label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        #entry-form input[type="text"],
+        #entry-form input[type="email"],
+        #entry-form input[type="number"],
+        #entry-form input[type="date"] {
+            width: 100%;
+            padding: 14px 18px 14px 50px; /* Left padding for icon */
+            border: 2px solid var(--input-bg);
+            background-color: var(--input-bg);
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        #entry-form input[type="date"][readonly],
+        #entry-form input[type="text"][readonly] { /* Added readonly style for text */
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            color: var(--text-muted);
+        }
+
+        #entry-form input:focus {
+            border-color: var(--primary-color);
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        /* Button */
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 16px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            margin-top: 15px; /* Reduced margin-top */
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"]:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: translateY(0);
+        }
+
+        /* Loader & Messages */
+        .loader {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #888;
+        }
+
+        #form-message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 12px;
+            border-radius: 8px;
+            display: none; /* Hide until needed */
+        }
+        /* We only show the error message here now */
+        .error { 
+            color: #842029;
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            display: block;
+        }
+
+        /* --- RESPONSIVE MEDIA QUERY --- */
+        @media (min-width: 768px) {
+            /* This rule now applies to the content *inside* each block */
+            .form-group-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-card {
+                 padding: 40px 50px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .splash-title {
+                font-size: 2.5rem;
+            }
+            .finance-animation {
+                font-size: 5rem;
+            }
+            .success-box {
+                padding: 30px 20px;
+            }
+            .success-box h2 {
+                font-size: 2rem;
+            }
+            .form-card {
+                padding: 25px 20px;
+            }
+        }
+
+    </style>
+    </head>
+<body>
+
+    <!-- 1. Splash Screen -->
+    <div id="splash-screen">
+        <div class="finance-animation">
+            <i class="ph-fill ph-chart-line-up"></i>
+        </div>
+        <h1 class="splash-title">MYSAMADHAN</h1>
+    </div>
+
+    <!-- 2. Success Overlay (Hidden) -->
+    <div id="success-overlay">
+        <div class="success-box">
+            <i class="ph-fill ph-check-circle"></i>
+            <h2>SUCCESS!</h2>
+            <p>Your report has been successfully submitted to Google Sheet.</p>
+            <button id="close-success-btn">Add Another Report</button>
+        </div>
+    </div>
+
+    <!-- 3. Form Container (Initially Hidden, now full-screen) -->
+    <div class="form-container" id="main-form-container">
+        
+        <!-- (NEW) .form-card wrapper -->
+        <div class="form-card">
+            <form id="entry-form">
+                <div class="form-header">
+                    <i class="ph-fill ph-file-text header-icon"></i>
+                    <!-- Changed title as requested -->
+                    <h2>Todays Report</h2>
+                    <p>Fill in the fields to update the sheet.</p>
+                </div>
+                
+                <!-- Fields will be dynamically injected here by JS -->
+                <div id="form-fields-container">
+                    <div class="loader">Loading form fields...</div>
+                </div>
+                
+                <button type="submit" id="submit-btn">Submit to Sheet</button>
+                <!-- This message area is now for errors only -->
+                <div id="form-message"></div>
+            </form>
+        </div> <!-- End of .form-card -->
+
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRyoLpP_zce_nHdwT_fp4S12WCNMbtIIyFSJmlnNLocF6KhfL2GN_zuJqhQ86Y4gDuvrV6oK2OxIKy1/pub?gid=0&single=true&output=csv';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyT_4lhpVMAOJdlUWmumiWJsyWQFN5vR3HhoAVhq1VRAoF1fgHzwEKpfc6RwYfV5FYOMA/exec'; 
+        // (NEW) Employee Data URL
+        const EMPLOYEE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR45sel0mwJMAxPwUzQ_yjg6J3BvoBYCPgAuLRt7jTLq02DOKWuVQ1gE6IZRhomQDL7ECcQToOE3X-E/pub?gid=186175559&single=true&output=csv';
+        // ---------------------
+
+        // (NEW) Map to store employee data: <ID, {employeeName, coordinatorName}>
+        let employeeDataMap = new Map();
+
+        // DOM Elements
+        const splashScreen = document.getElementById('splash-screen');
+        const mainFormContainer = document.getElementById('main-form-container');
+        const successOverlay = document.getElementById('success-overlay');
+        const closeSuccessBtn = document.getElementById('close-success-btn');
+        
+        const formFieldsContainer = document.getElementById('form-fields-container');
+        const entryForm = document.getElementById('entry-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formMessage = document.getElementById('form-message');
+
+        /**
+         * Helper function to get today's date in YYYY-MM-DD format
+         */
+        function getTodayString() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        /**
+         * (NEW) Fetches employee data from CSV and populates the map
+         */
+        async function loadEmployeeData() {
+            try {
+                const response = await fetch(EMPLOYEE_CSV_URL);
+                if (!response.ok) throw new Error('Employee CSV network response was not ok');
+                
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+
+                if (data.length < 2) throw new Error('Employee CSV data is empty or invalid');
+
+                // Start from 1 to skip the header row
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    if (row.length >= 3) {
+                        const id = row[0].trim();
+                        const employeeName = row[1].trim();
+                        const coordinatorName = row[2].trim();
+                        
+                        if (id) { // Only add if ID is not empty
+                            employeeDataMap.set(id, { employeeName, coordinatorName });
+                        }
+                    }
+                }
+                console.log('Employee data loaded successfully:', employeeDataMap.size, 'records');
+
+            } catch (error) {
+                console.error('Failed to load employee data:', error);
+                // Non-blocking error: show in message bar
+                formMessage.textContent = `Warning: Could not load employee data. Auto-fill disabled.`;
+                formMessage.className = 'error'; 
+            }
+        }
+
+        /**
+         * (NEW) Handles auto-fill when Animator ID is entered
+         */
+        function handleAnimatorIdChange(animatorInput) {
+            const employeeId = animatorInput.value.trim();
+            // Find the coordinator input, its ID is dynamic based on header
+            const coordinatorInput = document.getElementById('coordinator-name');
+            
+            const data = employeeDataMap.get(employeeId);
+            
+            if (data) {
+                // Found! Fill the data
+                animatorInput.value = data.employeeName;
+                if (coordinatorInput) {
+                    coordinatorInput.value = data.coordinatorName;
+                }
+                
+                // Make fields read-only as requested ("NO EDIT")
+                animatorInput.readOnly = true;
+                if (coordinatorInput) {
+                    coordinatorInput.readOnly = true;
+                }
+            } else {
+                // Not found or ID was cleared. Ensure fields are editable.
+                animatorInput.readOnly = false;
+                if (coordinatorInput) {
+                    coordinatorInput.value = ''; // Clear coordinator if ID is invalid
+                    coordinatorInput.readOnly = false;
+                }
+            }
+        }
+
+        /**
+         * Main function: Handles splash screen and loads form
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Splash Screen Logic ---
+            setTimeout(() => {
+                splashScreen.classList.add('fade-out');
+                
+                // After fade out animation (500ms), hide splash and show form
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                    mainFormContainer.classList.add('show');
+                }, 500);
+
+            }, 2500); // Splash screen duration (2.5 seconds)
+
+            // --- Form Loading Logic ---
+            loadForm(); // Loads the form structure
+            loadEmployeeData(); // Loads the employee data for auto-fill
+            
+            // --- Success Overlay Logic ---
+            closeSuccessBtn.addEventListener('click', () => {
+                successOverlay.classList.remove('show');
+            });
+
+            // --- (NEW) Event Listener for Auto-fill (using Event Delegation) ---
+            formFieldsContainer.addEventListener('change', (e) => {
+                // We check for 'animator-name' which is the ID generated from "Animator Name" header
+                if (e.target.id === 'animator-name') {
+                    handleAnimatorIdChange(e.target);
+                }
+            });
+        });
+
+        /**
+         * Fetches headers from CSV and builds the form
+         */
+        async function loadForm() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+
+                if (data.length === 0) throw new Error('CSV data is empty or invalid');
+
+                const headers = data[0]; // Get headers from first row
+                buildEntryForm(headers);
+
+            } catch (error) {
+                console.error('Failed to load form:', error);
+                formFieldsContainer.innerHTML = `<div class="error" style="display:block;">Error loading form: ${error.message}</div>`;
+            }
+        }
+
+        /**
+         * Parses CSV text into an array of arrays
+         */
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            return lines.map(line => line.split(',').map(cell => cell.trim()));
+        }
+
+        /**
+         * (NEW) Helper function to create an HTML group block
+         */
+        function createGroupBlock(title, content, iconClass) {
+            return `
+                <div class="form-group-block">
+                    <div class="form-group-header">
+                        <i class="ph-fill ${iconClass}"></i>
+                        <h3>${title}</h3>
+                    </div>
+                    <div class="form-group-content">
+                        ${content}
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Builds the form fields dynamically (MODIFIED)
+         */
+        function buildEntryForm(formHeaders) {
+            const todayString = getTodayString(); 
+
+            // Create objects to hold HTML for each group
+            const groups = {
+                basic: '',
+                new: '',
+                old: '',
+                total: '',
+                other: ''
+            };
+
+            formHeaders.forEach(header => {
+                // IMPORTANT: Generate ID from header. 'animator-name' and 'coordinator-name' are critical.
+                const fieldName = header.toLowerCase().replace(/\s+/g, '-');
+                let iconHtml = '';
+                let inputHtml = '';
+                const headerLower = header.toLowerCase();
+
+                // 1. Generate the input HTML based on type
+                if (headerLower === 'date') {
+                    iconHtml = '<i class="ph-fill ph-calendar-blank"></i>';
+                    inputHtml = `<input
+                        type="date"
+                        id="${fieldName}"
+                        name="${header}"
+                        value="${todayString}"
+                        readonly
+                    >`;
+                } else if (headerLower === 'animator name') {
+                    // This is the trigger field
+                    iconHtml = '<i class="ph-fill ph-user"></i>';
+                    inputHtml = `<input
+                        type="text"
+                        id="${fieldName}"
+                        name="${header}"
+                        placeholder="Enter Employee ID..."
+                    >`;
+                } else if (headerLower === 'coordinator name') {
+                    // This is the target field
+                    iconHtml = '<i class="ph-fill ph-user-focus"></i>';
+                    inputHtml = `<input
+                        type="text"
+                        id="${fieldName}"
+                        name="${header}"
+                        placeholder="Auto-fills from ID"
+                        readonly 
+                    >`;
+                } else {
+                    // All other fields
+                    iconHtml = '<i class="ph-fill ph-hash"></i>';
+                    inputHtml = `<input
+                        type="number"
+                        id="${fieldName}"
+                        name="${header}"
+                        inputmode="numeric"
+                    >`;
+                }
+
+                // 2. Generate the full field HTML
+                const fieldHtml = `
+                    <div class="form-group">
+                        <label for="${fieldName}">${header}</label>
+                        <div class="input-wrapper">
+                            ${iconHtml}
+                            ${inputHtml}
+                        </div>
+                    </div>
+                `;
+
+                // 3. Sort the field HTML into the correct group
+                if (headerLower === 'date' || headerLower.includes('animator name') || headerLower.includes('coordinator name')) {
+                    groups.basic += fieldHtml;
+                } else if (headerLower.includes('new')) {
+                    groups.new += fieldHtml;
+                } else if (headerLower.includes('old')) {
+                    groups.old += fieldHtml;
+                } else if (headerLower.includes('total')) {
+                    groups.total += fieldHtml;
+                } else {
+                    groups.other += fieldHtml;
+                }
+            });
+
+            // 4. Build the final HTML with group blocks
+            let finalHtml = '';
+            if (groups.basic) {
+                finalHtml += createGroupBlock('Basic Information', groups.basic, 'ph-user-list');
+            }
+            if (groups.new) {
+                finalHtml += createGroupBlock('New Entries', groups.new, 'ph-plus-circle');
+            }
+            if (groups.old) {
+                finalHtml += createGroupBlock('Old Entries', groups.old, 'ph-timer');
+            }
+            if (groups.total) {
+                finalHtml += createGroupBlock('Total/Summary', groups.total, 'ph-sum');
+            }
+            if (groups.other) {
+                finalHtml += createGroupBlock('Other Data', groups.other, 'ph-file-text');
+            }
+
+            // 5. Inject the final HTML into the container
+            formFieldsContainer.innerHTML = finalHtml;
+        }
+
+        /**
+         * Handles the form submission
+         */
+        entryForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+
+            if (APPS_SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) {
+                formMessage.textContent = 'Error: Please update APPS_SCRIPT_URL in the <script> section.';
+                formMessage.className = 'error';
+                return;
+            }
+
+            // (NEW) Before submitting, temporarily remove readonly to send data
+            const animatorInput = document.getElementById('animator-name');
+            const coordinatorInput = document.getElementById('coordinator-name');
+            const fieldsToReenable = [];
+            
+            if (animatorInput && animatorInput.readOnly) {
+                animatorInput.readOnly = false;
+                fieldsToReenable.push(animatorInput);
+            }
+            if (coordinatorInput && coordinatorInput.readOnly) {
+                coordinatorInput.readOnly = false;
+                fieldsToReenable.push(coordinatorInput);
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            formMessage.textContent = '';
+            formMessage.className = '';
+
+            const formData = new FormData(entryForm);
+
+            // (NEW) Re-apply readonly status immediately after creating FormData
+            fieldsToReenable.forEach(field => field.readOnly = true);
+
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // --- SHOW SUCCESS OVERLAY ---
+                    successOverlay.classList.add('show');
+                    
+                    entryForm.reset(); 
+                    
+                    // Re-set the date field after reset
+                    const dateInput = entryForm.querySelector('input[type="date"]');
+                    if (dateInput) {
+                        dateInput.value = getTodayString();
+                    }
+
+                    // (NEW) Reset read-only status of auto-filled fields after success
+                    if (animatorInput) animatorInput.readOnly = false;
+                    if (coordinatorInput) coordinatorInput.readOnly = false;
+
+                } else {
+                    throw new Error(result.message || 'Unknown error occurred');
+                }
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                formMessage.textContent = `Error: ${error.message}`;
+                formMessage.className = 'error';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit to Sheet';
+            }
+        });
+
+    </script>
+</body>
+</html>
