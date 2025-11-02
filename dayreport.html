@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mysamadhan Reporting Dashboard</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Heroicons for Icons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
@@ -371,8 +368,7 @@
 </head>
 <body class="text-gray-900">
 
-    <!-- --- Coordinator Login Modal --- -->
-   <div id="login-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-gray-900 bg-opacity-75 backdrop-blur-sm">
+    <div id="login-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-gray-900 bg-opacity-75 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm p-8 rounded-2xl shadow-2xl m-4">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Login</h2>
             <p class="text-center text-gray-500 mb-6">Enter your ID or Admin credentials.</p>
@@ -399,20 +395,15 @@
     </div>
 
 
-    <!-- Splash Screen -->
     <div id="splash-screen" class="hidden">
-        <div id="rupee-animation-container"></div> <!-- Rupee container (z-0) -->
-        <div class="splash-text-container"> <!-- Text container (z-10) -->
-            <h1 class="splash-title">MYSAMADHAN.IN</h1>
+        <div id="rupee-animation-container"></div> <div class="splash-text-container"> <h1 class="splash-title">MYSAMADHAN.IN</h1>
             <p class="splash-subtitle">REPORT</p>
             <div class="splash-loader"></div>
         </div>
     </div>
 
-    <!-- Main Application Wrapper -->
     <div class="flex min-h-screen bg-gray-50 opacity-0" id="app-wrapper">
         
-    <!-- Sidebar Navigation -->
     <nav class="flex flex-row sm:flex-col w-full sm:w-20 bg-white text-gray-800 border-b sm:border-b-0 sm:border-r border-gray-200 slide-in-left">
             <a href="#" class="flex items-center justify-center py-5 text-blue-600">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -430,16 +421,13 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
         <main class="flex-1 flex flex-col overflow-y-auto">
             
-            <!-- Header -->
             <header class="flex items-center justify-between p-6 bg-white">
                 <h1 class="text-3xl font-bold text-gray-900 slide-in-down">
                     Mysamadhan Dashboard
                 </h1>
                 <div class="flex items-center space-x-4 slide-in-down" style="animation-delay: 0.2s;">
-                    <!-- Date Filter -->
                     <div class="hidden sm:block">
                         <label for="headerDateFilter" class="sr-only">Filter by Date</label>
                         <input type="date" id="headerDateFilter" class="header-date-filter">
@@ -447,7 +435,6 @@
                     <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                     </button>
-                    <!-- Display logged-in user name/avatar -->
                     <div class="flex items-center space-x-2">
                         <span id="userNameDisplay" class="text-sm font-medium text-gray-700 hidden sm:block">Admin</span>
                         <img id="userAvatar" class="object-cover w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff&bold=true" alt="User Avatar">
@@ -457,9 +444,7 @@
 
             <div class="p-6">
                 
-                <!-- Main KPI Cards (Top 3) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <!-- Total Members Card -->
                     <div class="flex items-center p-6 bg-white rounded-xl shadow-md fade-in-up" style="animation-delay: 0.1s;">
                         <div class="p-3 mr-4 text-blue-600 bg-blue-100 rounded-full">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.08-1.285-.23-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.08-1.285.23-1.857m0 0a5.002 5.002 0 01-4.47-2.768A5.002 5.002 0 017 10c0 .653.08 1.285.23 1.857m0 0A5.002 5.002 0 0012 13c1.22 0 2.36-.44 3.27-1.143m-6.54 0a5.002 5.002 0 015.54 0M12 10a5.002 5.002 0 01-4.77 1.857m4.77 0a5.002 5.002 0 00-4.77-1.857M12 10a3 3 0 100-6 3 3 0 000 6z"></path></svg>
@@ -469,7 +454,6 @@
                             <p id="kpi-total-rows" class="text-3xl font-semibold text-gray-900 mt-1">0</p>
                         </div>
                     </div>
-                    <!-- Total Loan Card -->
                     <div class="flex items-center p-6 bg-white rounded-xl shadow-md fade-in-up" style="animation-delay: 0.2s;">
                         <div class="p-3 mr-4 text-green-600 bg-green-100 rounded-full">
                              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM4 14V8c0-1.105.895-2 2-2h12c1.105 0 2 .895 2 2v6c0 1.105-.895 2-2 2H6c-1.105 0-2-.895-2-2zm0 0v2c0 1.105.895 2 2 2h12c1.105 0 2-.895 2-2v-2m0 0V8c0-1.105-.895-2-2-2H6c-1.105 0-2 .895-2 2v6m0 0v2c0 1.105.895 2 2 2h12c1.105 0 2-.895 2-2v-2"></path></svg>
@@ -479,7 +463,6 @@
                             <p id="kpi-total-loan" class="text-3xl font-semibold text-gray-900 mt-1">₹0</p>
                         </div>
                     </div>
-                    <!-- Total Saving Card -->
                     <div class="flex items-center p-6 bg-white rounded-xl shadow-md fade-in-up" style="animation-delay: 0.3s;">
                         <div class="p-3 mr-4 text-indigo-600 bg-indigo-100 rounded-full">
                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
@@ -491,35 +474,27 @@
                     </div>
                 </div>
 
-                <!-- Filter & Controls Bar -->
                 <div class="bg-white p-6 rounded-xl shadow-md mb-8 fade-in-up" style="animation-delay: 0.4s;">
                     <h2 class="text-xl font-semibold text-gray-800 mb-5">Data Controls</h2>
                     
-                    <!-- Filter Inputs -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
-                        <!-- Animator -->
                         <div>
                             <label for="animatorFilter" class="block text-sm font-medium text-gray-700 mb-1">Animator</label>
                             <select id="animatorFilter" class="filter-select">
                                 <option value="all">All Animators</option>
                             </select>
                         </div>
-                        <!-- Coordinator -->
                         <div>
                             <label for="coordinatorFilter" class="block text-sm font-medium text-gray-700 mb-1">Coordinator</label>
-                            <!-- --- UPDATED: Disabled style will be applied by JS --- -->
                             <select id="coordinatorFilter" class="filter-select">
                                 <option value="all">All Coordinators</option>
                             </select>
                         </div>
-                        <!-- Search -->
-                        <div class="sm:col-span-2 lg:col-span-1"> <!-- Make search span 2 cols on sm, 1 on lg -->
-                            <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Search Table</label>
+                        <div class="sm:col-span-2 lg:col-span-1"> <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Search Table</label>
                             <input type="text" id="searchInput" placeholder="Search..." class="filter-input">
                         </div>
                     </div>
                     
-                    <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-3">
                          <button id="showReportBtn" class="btn btn-primary">
                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -536,28 +511,23 @@
                     </div>
                 </div>
 
-                <!-- Loader -->
                 <div id="loader" class="flex justify-center items-center h-64">
                     <div class="loader"></div>
                 </div>
 
-                <!-- Error Message -->
                 <div id="error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert">
                     <strong class="font-bold">Error:</strong>
                     <span class="block sm:inline">Could not load data. Please check the console.</span>
                 </div>
 
-                <!-- Data Table Container -->
                 <div id="table-container" class="hidden fade-in-up" style="animation-delay: 0.5s;">
                     <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-md">
                         <div class="overflow-x-auto max-h-[60vh] relative">
                             <table id="data-table" class="min-w-full border-collapse">
                                 <thead id="table-head">
-                                    <!-- Header row will be injected by JS -->
-                                </thead>
+                                    </thead>
                                 <tbody id="table-body" class="bg-white divide-y divide-gray-200">
-                                    <!-- Data rows will be injected by JS -->
-                                </tbody>
+                                    </tbody>
                             </table>
                         </div>
                     </div>
@@ -566,7 +536,6 @@
                     </div>
                 </div>
                 
-                <!-- Footer -->
                 <footer class="mt-12 text-center text-gray-500 text-sm">
                     &copy; <span id="currentYear"></span> Mysamadhan. All rights reserved.
                 </footer>
@@ -574,11 +543,9 @@
         </main>
     </div>
 
-    <!-- Full Screen Report Modal -->
     <div id="report-modal" class="fixed inset-0 z-30 flex bg-gray-900 bg-opacity-50 backdrop-blur-sm hidden">
         
         <div id="modal-content" class="bg-gray-50 w-full h-full flex flex-col">
-            <!-- Modal Header -->
             <header class="flex items-center justify-between p-5 bg-white border-b border-gray-200 no-print w-full slide-in-down">
                 <h2 class="text-2xl font-semibold text-gray-800">
                     Summary Report
@@ -594,27 +561,22 @@
                 </div>
             </header>
             
-            <!-- 2-Column Modal Body -->
             <div id="report-modal-body" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
                 
-                <!-- Sidebar for Key Metrics -->
                 <aside id="report-modal-sidebar" class="w-full lg:w-1/3 xl:w-1/4 bg-white p-6 overflow-y-auto no-print border-r border-gray-200 fade-in-up">
                     <h3 class="text-2xl font-semibold text-gray-900 mb-6">Key Metrics</h3>
                     
                     <div class="space-y-4">
-                        <!-- KPI 1: Members -->
                         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5">
                             <h4 class="text-sm font-medium text-indigo-700 capitalize">Total Members</h4>
                             <p id="modal-kpi-total-rows" class="text-4xl font-semibold text-indigo-600 mt-1">0</p>
                         </div>
                         
-                        <!-- KPI 2: Loan -->
                         <div class="bg-green-50 border border-green-200 rounded-xl p-5">
                             <h4 class="text-sm font-medium text-green-700 capitalize">Total Loan</h4>
                             <p id="modal-kpi-total-loan" class="text-4xl font-semibold text-green-600 mt-1">₹0</p>
                         </div>
 
-                        <!-- KPI 3: Saving -->
                         <div class="bg-blue-50 border border-blue-200 rounded-xl p-5">
                             <h4 class="text-sm font-medium text-blue-700 capitalize">Total Saving</h4>
                             <p id="modal-kpi-total-saving" class="text-4xl font-semibold text-blue-600 mt-1">₹0</p>
@@ -622,24 +584,19 @@
                     </div>
                 </aside>
 
-                <!-- Main Content for Receipts -->
                 <main id="report-modal-main-content" class="flex-1 p-6 overflow-y-auto">
                     
-                    <!-- Print-only Key Metrics Header -->
                     <div class="hidden print:block">
                         <h3 class="text-2xl font-semibold text-gray-900 mb-4">Key Metrics</h3>
                         <div class="grid grid-cols-3 gap-6">
-                            <!-- KPI 1: Members -->
                             <div class="bg-gray-50 border border-gray-300 rounded-xl p-4">
                                 <h4 class="text-sm font-medium text-indigo-700 capitalize">Total Members</h4>
                                 <p id="print-kpi-total-rows" class="text-3xl font-semibold text-indigo-600 mt-1">0</p>
                             </div>
-                            <!-- KPI 2: Loan -->
                             <div class="bg-gray-50 border border-gray-300 rounded-xl p-4">
                                 <h4 class="text-sm font-medium text-green-700 capitalize">Total Loan</h4>
                                 <p id="print-kpi-total-loan" class="text-3xl font-semibold text-green-600 mt-1">₹0</p>
                             </div>
-                            <!-- KPI 3: Saving -->
                             <div class="bg-gray-50 border border-gray-300 rounded-xl p-4">
                                 <h4 class="text-sm font-medium text-blue-700 capitalize">Total Saving</h4>
                                 <p id="print-kpi-total-saving" class="text-3xl font-semibold text-blue-600 mt-1">₹0</p>
@@ -647,7 +604,6 @@
                         </div>
                     </div>
 
-                    <!-- Report Details Section -->
                     <div class="bg-white rounded-xl shadow-lg p-5 mb-6 border border-gray-200 fade-in-up" style="animation-delay: 0.1s;">
                         <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-3">Report Details</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
@@ -666,10 +622,8 @@
                         </div>
                     </div>
 
-                    <!-- 3-Receipt Layout -->
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-                        <!-- Receipt 1: Member Summary -->
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col fade-in-up" style="animation-delay: 0.2s;">
                             <div class="p-5 bg-gray-50 border-b border-gray-200 receipt-header">
                                 <h4 class="text-lg font-semibold text-indigo-700 capitalize">Member Summary</h4>
@@ -679,7 +633,6 @@
                             </div>
                         </div>
 
-                        <!-- Receipt 2: Loan Summary -->
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col fade-in-up" style="animation-delay: 0.3s;">
                             <div class="p-5 bg-gray-50 border-b border-gray-200 receipt-header">
                                 <h4 class="text-lg font-semibold text-green-700 capitalize">Loan Summary</h4>
@@ -689,7 +642,6 @@
                             </div>
                         </div>
 
-                        <!-- Receipt 3: Saving Summary -->
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col fade-in-up" style="animation-delay: 0.4s;">
                             <div class="p-5 bg-gray-50 border-b border-gray-200 receipt-header">
                                 <h4 class="text-lg font-semibold text-blue-700 capitalize">Saving Summary</h4>
@@ -699,8 +651,7 @@
                             </div>
                         </div>
 
-                    </div> <!-- /end grid -->
-                </main>
+                    </div> </main>
             </div>
         </div>
     </div>
@@ -795,9 +746,10 @@
         const closeModalBtn = document.getElementById('close-modal-btn');
         const printReportBtn = document.getElementById('print-report-btn');
         
-        // --- Login Modal Elements ---
+        // --- Login Modal Elements (MODIFIED) ---
         const loginModal = document.getElementById('login-modal');
-        const loginIdInput = document.getElementById('login-id-input');
+        const loginUserInput = document.getElementById('login-user-input'); // बदला गया
+        const loginPassInput = document.getElementById('login-pass-input'); // नया
         const loginButton = document.getElementById('login-button');
         const loginError = document.getElementById('login-error');
         
@@ -876,22 +828,69 @@
                 loginButton.classList.replace('btn-primary', 'btn-danger');
             }
         }
+        
+        /**
+         * Animates the login modal on error.
+         */
+        function shakeModal() {
+            loginModal.querySelector('.bg-white').animate([
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(0)' }
+            ], {
+                duration: 300,
+                easing: 'ease-in-out'
+            });
+        }
 
         /**
          * Handles the coordinator login attempt.
+         * --- MODIFIED FOR ADMIN/PASSWORD ---
          */
         function handleLogin() {
-            const inputId = loginIdInput.value.trim();
-            if (!inputId) {
-                // --- TRANSLATION: Please enter an ID. ---
+            const inputUser = loginUserInput.value.trim();
+            const inputPass = loginPassInput.value.trim();
+
+            // --- 1. ADMIN CHECK ---
+            if (inputUser.toLowerCase() === 'admin' && inputPass === 'Samadhan2121') {
+                console.log('Login successful. User: Admin');
+                loggedInCoordinatorName = 'Admin'; // Special value
+                
+                // Update header display
+                userNameDisplay.textContent = 'Admin';
+                // Admin के लिए लाल रंग का अवतार
+                userAvatar.src = `https://ui-avatars.com/api/?name=Admin&background=dc2626&color=fff&bold=true`; 
+                
+                // Hide login modal
+                loginModal.classList.add('fade-out');
+                setTimeout(() => loginModal.style.display = 'none', 500); 
+                
+                // Start the main application
+                startApp();
+                return; // Stop execution
+            }
+
+            // --- 2. COORDINATOR CHECK (ID only) ---
+            // यदि पासवर्ड दर्ज किया गया था, लेकिन वह एडमिन के लिए नहीं था, तो यह एक त्रुटि है।
+            if (inputPass !== '') {
+                loginError.textContent = 'Invalid login. Passwords are only for admin.';
+                shakeModal();
+                return;
+            }
+            
+            // यदि कोई यूजर आईडी दर्ज नहीं किया गया था
+            if (!inputUser) {
                 loginError.textContent = 'Please enter an ID.';
                 return;
             }
 
-            const coordinator = coordinatorData.find(c => c['Coordinator ID'] === inputId);
+            // Coordinator ID लूकअप के साथ आगे बढ़ें
+            const coordinator = coordinatorData.find(c => c['Coordinator ID'] === inputUser);
 
             if (coordinator) {
-                // --- SUCCESS ---
+                // --- SUCCESS (Coordinator) ---
                 loggedInCoordinatorName = coordinator['Full Name'];
                 console.log(`Login successful. Coordinator: ${loggedInCoordinatorName}`);
                 
@@ -907,22 +906,12 @@
                 startApp();
 
             } else {
-                // --- FAILURE ---
-                console.warn(`Login failed for ID: ${inputId}`);
-                // --- TRANSLATION: Invalid Coordinator ID. Please try again. ---
+                // --- FAILURE (Coordinator) ---
+                console.warn(`Login failed for ID: ${inputUser}`);
                 loginError.textContent = 'Invalid Coordinator ID. Please try again.';
-                loginIdInput.focus();
-                loginIdInput.select();
-                loginModal.querySelector('.bg-white').animate([
-                    { transform: 'translateX(0)' },
-                    { transform: 'translateX(-10px)' },
-                    { transform: 'translateX(10px)' },
-                    { transform: 'translateX(-10px)' },
-                    { transform: 'translateX(0)' }
-                ], {
-                    duration: 300,
-                    easing: 'ease-in-out'
-                });
+                loginUserInput.focus();
+                loginUserInput.select();
+                shakeModal(); // Added shake
             }
         }
 
@@ -1036,8 +1025,9 @@
                 coordinatorFilter.appendChild(option);
             });
 
-            // --- LOGIN LOCK ---
-            if (loggedInCoordinatorName) {
+            // --- LOGIN LOCK (MODIFIED) ---
+            // एडमिन लॉग इन होने पर फ़िल्टर को लॉक न करें
+            if (loggedInCoordinatorName && loggedInCoordinatorName !== 'Admin') {
                 const optionExists = Array.from(coordinatorFilter.options).some(
                     opt => opt.value === loggedInCoordinatorName
                 );
@@ -1062,12 +1052,15 @@
          */
         function filterAndPopulateAnimatorDropdown(currentData) {
             const currentAnimator = animatorFilter.value; // Preserve current selected animator
-            const isCoordinatorLoggedIn = !!loggedInCoordinatorName;
             
+            // --- MODIFIED: Check for Admin or specific coordinator ---
+            const isCoordinatorOrAdminLoggedIn = !!loggedInCoordinatorName;
+            const isSpecificCoordinatorLoggedIn = (loggedInCoordinatorName && loggedInCoordinatorName !== 'Admin');
+
             // 1. Filter data based on coordinator lock (if active)
-            const baseDataForAnimatorFilter = isCoordinatorLoggedIn
+            const baseDataForAnimatorFilter = isSpecificCoordinatorLoggedIn
                 ? currentData.filter(row => row[COORDINATOR_COLUMN] === loggedInCoordinatorName)
-                : currentData; // If not logged in, use all data (or already filtered data)
+                : currentData; // If Admin, use all data (or already filtered data)
             
             // 2. Get unique Animators from this filtered set
             const animators = new Set();
@@ -1091,8 +1084,8 @@
                 animatorFilter.value = 'all';
             }
 
-            // 5. If coordinator is logged in, disable the animator dropdown if there are no animators
-            if (isCoordinatorLoggedIn && animators.size === 0) {
+            // 5. If specific coordinator is logged in, disable the animator dropdown if there are no animators
+            if (isSpecificCoordinatorLoggedIn && animators.size === 0) {
                  animatorFilter.disabled = true;
                  animatorFilter.innerHTML = '<option value="all">No Animators Found</option>';
             } else {
@@ -1108,8 +1101,19 @@
             const searchTerm = searchInput.value.toLowerCase().trim();
             const animator = animatorFilter.value;
             
-            // If logged in, force the coordinator value. Otherwise, use the dropdown.
-            const coordinator = loggedInCoordinatorName ? loggedInCoordinatorName : coordinatorFilter.value;
+            // --- MODIFIED LOGIC ---
+            let coordinator;
+            if (loggedInCoordinatorName && loggedInCoordinatorName === 'Admin') {
+                // Admin लॉग इन है, ड्रॉपडाउन मान का उपयोग करें (डिफ़ॉल्ट 'all' है)
+                coordinator = coordinatorFilter.value;
+            } else if (loggedInCoordinatorName) {
+                // एक Coordinator लॉग इन है, उनके नाम को फ़ोर्स करें
+                coordinator = loggedInCoordinatorName;
+            } else {
+                // कोई भी लॉग इन नहीं है (होना नहीं चाहिए, लेकिन फ़ॉलबैक)
+                coordinator = coordinatorFilter.value;
+            }
+            // --- END MODIFIED LOGIC ---
 
             const selectedDateStr = headerDateFilter.value;
             
@@ -1141,6 +1145,8 @@
             // --- NEW LOGIC: Filter Animators only AFTER Coordinator/Date/Search has run ---
             // This is needed to dynamically update the Animator dropdown based on the
             // Coordinator selection, but we only do the re-populating if a coordinator is logged in.
+            
+            // --- MODIFIED: Re-populate animators if *any* user is logged in (admin or coord) ---
             if (loggedInCoordinatorName) {
                 // If logged in, we update the Animator dropdown options to reflect the coordinator's filtered list.
                 // We call this *before* the final Animator filter step to ensure the dropdown content is correct.
@@ -1197,8 +1203,17 @@
         function updateReportModal(data) {
             // 1. Get Filter Values
             const animatorName = animatorFilter.value;
-            // Get coordinator name from the locked-in value or the dropdown
-            const coordinatorName = loggedInCoordinatorName ? loggedInCoordinatorName : coordinatorFilter.value;
+            
+            // --- MODIFIED: Get coordinator name from logic ---
+            let coordinatorName;
+            if (loggedInCoordinatorName && loggedInCoordinatorName === 'Admin') {
+                coordinatorName = coordinatorFilter.value; // Use dropdown
+            } else if (loggedInCoordinatorName) {
+                coordinatorName = loggedInCoordinatorName; // Use locked-in name
+            } else {
+                coordinatorName = coordinatorFilter.value; // Fallback
+            }
+            
             const dateValue = headerDateFilter.value;
 
             // 2. Populate Report Details
@@ -1361,7 +1376,8 @@
             // --- NEW: Reset only unlocked filters and re-apply logic ---
             animatorFilter.value = 'all'; 
 
-            if (!loggedInCoordinatorName) {
+            // --- MODIFIED: Don't reset if it's a locked-in coordinator ---
+            if (loggedInCoordinatorName !== 'Admin') {
                 coordinatorFilter.value = 'all';
             }
             
@@ -1513,17 +1529,21 @@
                 currentYearEl.textContent = new Date().getFullYear();
             }
 
-            // --- LOGIN FLOW SETUP ---
+            // --- LOGIN FLOW SETUP (MODIFIED) ---
             if (loginButton) loginButton.addEventListener('click', handleLogin);
             
-            if (loginIdInput) {
-                loginIdInput.addEventListener('keyup', (event) => {
+            // --- MODIFIED FOR BOTH INPUTS ---
+            if (loginUserInput && loginPassInput) {
+                const loginOnEnter = (event) => {
                     if (event.key === 'Enter') {
                         event.preventDefault();
                         handleLogin();
                     }
-                });
-                loginIdInput.focus();
+                };
+                loginUserInput.addEventListener('keyup', loginOnEnter);
+                loginPassInput.addEventListener('keyup', loginOnEnter);
+                
+                loginUserInput.focus(); // फ़ोकस पहले फ़ील्ड पर रखें
             }
 
             // Fetch coordinator data immediately
