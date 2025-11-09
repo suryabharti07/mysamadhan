@@ -123,9 +123,24 @@
                 <button id="generateFinalDataButton" class="w-full md:w-auto px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                     Generate Final Data
                 </button>
-                <button id="generateListButton" class="w-full md:w-auto px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                    LIST
-                </button>
+                
+                <!-- NEW DROPDOWN BUTTON -->
+                <div class="relative inline-block text-left">
+                    <button id="listDropdownButton" class="w-full md:w-auto px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors inline-flex items-center">
+                        LIST
+                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    
+                    <div id="listDropdownMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-10">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="listDropdownButton">
+                            <a href="#" id="listAllButton" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">All</a>
+                            <a href="#" id="listReceiptButton" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">Receipt</a>
+                            <a href="#" id="listPaymentButton" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">Payment</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -219,7 +234,14 @@
             
             const resetButton = document.getElementById('resetButton');
             const generateFinalDataButton = document.getElementById('generateFinalDataButton');
-            const generateListButton = document.getElementById('generateListButton'); // New button
+            
+            // New List Dropdown buttons
+            const listDropdownButton = document.getElementById('listDropdownButton');
+            const listDropdownMenu = document.getElementById('listDropdownMenu');
+            const listAllButton = document.getElementById('listAllButton');
+            const listReceiptButton = document.getElementById('listReceiptButton');
+            const listPaymentButton = document.getElementById('listPaymentButton');
+
             const finalDataModal = document.getElementById('finalDataModal');
             const closeModalButton = document.getElementById('closeModalButton');
             const finalDataTableContainer = document.getElementById('finalDataTableContainer');
@@ -227,7 +249,7 @@
 
             const printButton = document.getElementById('printButton');
             const downloadPdfButton = document.getElementById('downloadPdfButton');
-            const downloadExcelButton = document.getElementById('downloadExcelButton'); // New Excel button
+            const downloadExcelButton = document.getElementById('downloadExcelButton');
 
 
             const headers = {
@@ -244,6 +266,7 @@
             let allPaymentData = [];
             let uniqueDates = [];
             let uniqueAnimators = [];
+            let currentListType = 'all'; // 'all', 'receipt', or 'payment'
 
             /**
              * Fetches and parses a single CSV file from a URL using provided headers.
@@ -587,15 +610,23 @@
 
             /**
              * Generates a detailed list of all transactions for all animators,
-             * based on the currently selected filters.
+             * based on the currently selected filters and currentListType.
              */
             function generateDetailedList() {
-                modalTitle.textContent = 'Filtered Animators Detailed Report';
                 let listHtml = '';
                 
                 const { filteredRecepts, filteredPayments } = getFilteredData();
                 const selectedDate = dateSelect.value === 'today' ? `${String(new Date().getDate()).padStart(2, '0')}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${new Date().getFullYear()}` : dateSelect.value;
                 const selectedUnder = underSelect.value;
+
+                // Set title based on currentListType
+                if (currentListType === 'receipt') {
+                    modalTitle.textContent = 'Filtered Animators Detailed Report (Receipts)';
+                } else if (currentListType === 'payment') {
+                    modalTitle.textContent = 'Filtered Animators Detailed Report (Payments)';
+                } else {
+                    modalTitle.textContent = 'Filtered Animators Detailed Report (All)';
+                }
 
                 listHtml += `
                     <div class="mb-4 text-center">
@@ -604,16 +635,31 @@
                     </div>
                 `;
 
-                // Get unique animators from the filtered data
-                const animatorsInList = [...new Set([...filteredRecepts.map(d => d['Animator Name']), ...filteredPayments.map(d => d['Animator Name'])])].filter(Boolean).sort();
+                // Get unique animators from the filtered data based on type
+                let animatorsInList;
+                if (currentListType === 'receipt') {
+                    animatorsInList = [...new Set(filteredRecepts.map(d => d['Animator Name']))].filter(Boolean).sort();
+                } else if (currentListType === 'payment') {
+                    animatorsInList = [...new Set(filteredPayments.map(d => d['Animator Name']))].filter(Boolean).sort();
+                } else { // 'all'
+                    animatorsInList = [...new Set([...filteredRecepts.map(d => d['Animator Name']), ...filteredPayments.map(d => d['Animator Name'])])].filter(Boolean).sort();
+                }
 
                 if (animatorsInList.length === 0) {
                      listHtml += `<p class="text-center text-gray-500 text-lg mt-8">No data found for the selected filters.</p>`;
                 } else {
+                    let dataFound = false;
                     animatorsInList.forEach(animator => {
-                        const animatorRecepts = filteredRecepts.filter(d => d['Animator Name'] === animator);
-                        const animatorPayments = filteredPayments.filter(d => d['Animator Name'] === animator);
+                        const animatorRecepts = (currentListType === 'payment') ? [] : filteredRecepts.filter(d => d['Animator Name'] === animator);
+                        const animatorPayments = (currentListType === 'receipt') ? [] : filteredPayments.filter(d => d['Animator Name'] === animator);
                         
+                        // Skip animator if they have no data for the selected type
+                        if (currentListType === 'receipt' && animatorRecepts.length === 0) return;
+                        if (currentListType === 'payment' && animatorPayments.length === 0) return;
+                        if (currentListType === 'all' && animatorRecepts.length === 0 && animatorPayments.length === 0) return;
+
+                        dataFound = true; // Mark that we found data to display
+
                         const totalReceipts = animatorRecepts.reduce((sum, item) => sum + parseFloat(item['Total'] || 0), 0);
                         const totalPayments = animatorPayments.reduce((sum, item) => sum + parseFloat(item['Total'] || 0), 0);
                         const balance = totalReceipts - totalPayments;
@@ -621,64 +667,91 @@
                         listHtml += `
                             <div class="bg-gray-100 p-4 rounded-md shadow-sm mb-4 page-break-after">
                                 <h3 class="text-xl font-bold text-blue-700 mb-2">Animator Name: ${animator}</h3>
+                        `;
+
+                        // Conditional summary based on type
+                        if (currentListType === 'all') {
+                            listHtml += `
                                 <div class="flex justify-between items-center mb-4 text-sm font-semibold text-gray-700">
                                     <div>Total Cash Received: <span class="text-green-600">₹${totalReceipts.toFixed(2)}</span></div>
                                     <div>Total Payments: <span class="text-red-600">₹${totalPayments.toFixed(2)}</span></div>
                                     <div>Balance: <span class="${balance >= 0 ? 'text-green-600' : 'text-red-600'}">₹${balance.toFixed(2)}</span></div>
                                 </div>
-                        `;
-                        // Removed the unwanted columns as requested
+                            `;
+                        } else if (currentListType === 'receipt') {
+                            listHtml += `
+                                <div class="flex justify-start items-center mb-4 text-sm font-semibold text-gray-700">
+                                    <div>Total Cash Received: <span class="text-green-600">₹${totalReceipts.toFixed(2)}</span></div>
+                                </div>
+                            `;
+                        } else if (currentListType === 'payment') {
+                            listHtml += `
+                                <div class="flex justify-start items-center mb-4 text-sm font-semibold text-gray-700">
+                                    <div>Total Payments: <span class="text-red-600">₹${totalPayments.toFixed(2)}</span></div>
+                                </div>
+                            `;
+                        }
+
+                        
                         const receptListHeaders = ['Group Name', 'Meeting Date', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'];
                         const paymentListHeaders = ['Group Name', 'Meeting Date', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total'];
                         
-                        // Receipts Table
-                        listHtml += `
-                            <div class="mt-2 bg-white p-4 rounded-md shadow-inner border border-gray-200">
-                                <h4 class="text-lg font-semibold text-green-600 mb-2">Receipts</h4>
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                ${receptListHeaders.map(h => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${h}</th>`).join('')}
-                                            </tr>
-                                        </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
-                                            ${animatorRecepts.map(item => `
+                        // Receipts Table (Conditional)
+                        if (currentListType !== 'payment' && animatorRecepts.length > 0) {
+                            listHtml += `
+                                <div class="mt-2 bg-white p-4 rounded-md shadow-inner border border-gray-200">
+                                    <h4 class="text-lg font-semibold text-green-600 mb-2">Receipts</h4>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
                                                 <tr>
-                                                    ${receptListHeaders.map(h => `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200">${item[h] || 'N/A'}</td>`).join('')}
+                                                    ${receptListHeaders.map(h => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${h}</th>`).join('')}
                                                 </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                ${animatorRecepts.map(item => `
+                                                    <tr>
+                                                        ${receptListHeaders.map(h => `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200">${item[h] || 'N/A'}</td>`).join('')}
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        }
 
-                        // Payments Table
-                        listHtml += `
-                            <div class="mt-4 bg-white p-4 rounded-md shadow-inner border border-gray-200">
-                                <h4 class="text-lg font-semibold text-red-600 mb-2">Payments</h4>
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                ${paymentListHeaders.map(h => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${h}</th>`).join('')}
-                                            </tr>
-                                        </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
-                                            ${animatorPayments.map(item => `
+                        // Payments Table (Conditional)
+                        if (currentListType !== 'receipt' && animatorPayments.length > 0) {
+                            listHtml += `
+                                <div class="mt-4 bg-white p-4 rounded-md shadow-inner border border-gray-200">
+                                    <h4 class="text-lg font-semibold text-red-600 mb-2">Payments</h4>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
                                                 <tr>
-                                                    ${paymentListHeaders.map(h => `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200">${item[h] || 'N/A'}</td>`).join('')}
+                                                    ${paymentListHeaders.map(h => `<th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">${h}</th>`).join('')}
                                                 </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                ${animatorPayments.map(item => `
+                                                    <tr>
+                                                        ${paymentListHeaders.map(h => `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-t border-gray-200">${item[h] || 'N/A'}</td>`).join('')}
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        }
 
                         listHtml += `</div>`;
                     });
+
+                    if (!dataFound) {
+                        listHtml += `<p class="text-center text-gray-500 text-lg mt-8">No data found for the selected filters.</p>`;
+                    }
                 }
 
                 finalDataTableContainer.innerHTML = listHtml;
@@ -805,7 +878,7 @@
                 const underValue = underSelect.value || 'All';
                 const dateValue = dateSelect.value === 'today' ? `${String(new Date().getDate()).padStart(2, '0')}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${new Date().getFullYear()}` : dateSelect.value.replace(/\//g, '-');
                 
-                const fileName = `report_${underValue}_${dateValue}.csv`;
+                const fileName = `report_${underValue}_${dateValue}_${currentListType}.csv`;
 
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement("a");
@@ -827,52 +900,92 @@
                 // Add filter info to CSV
                 csvContent += `Report for: ${selectedAnimator}\n`;
                 csvContent += `Collection Date: ${selectedDate}\n`;
-                csvContent += `Under: ${selectedUnder}\n\n`;
+                csvContent += `Under: ${selectedUnder}\n`;
 
-                const animatorsInList = [...new Set([...recepts.map(d => d['Animator Name']), ...payments.map(d => d['Animator Name'])])].filter(Boolean).sort();
+                // Add report type
+                if (currentListType === 'receipt') {
+                    csvContent += `Report Type: Receipts Only\n\n`;
+                } else if (currentListType === 'payment') {
+                    csvContent += `Report Type: Payments Only\n\n`;
+                } else {
+                    csvContent += `Report Type: All\n\n`;
+                }
+
+                // Get unique animators from the filtered data based on type
+                let animatorsInList;
+                if (currentListType === 'receipt') {
+                    animatorsInList = [...new Set(recepts.map(d => d['Animator Name']))].filter(Boolean).sort();
+                } else if (currentListType === 'payment') {
+                    animatorsInList = [...new Set(payments.map(d => d['Animator Name']))].filter(Boolean).sort();
+                } else { // 'all'
+                    animatorsInList = [...new Set([...recepts.map(d => d['Animator Name']), ...payments.map(d => d['Animator Name'])])].filter(Boolean).sort();
+                }
 
                 if (animatorsInList.length === 0) {
+                    csvContent += "No data found for the selected filters.\n";
                     return csvContent;
                 }
 
+                let dataFoundForAnimators = false;
                 animatorsInList.forEach(animator => {
-                    const animatorRecepts = recepts.filter(d => d['Animator Name'] === animator);
-                    const animatorPayments = payments.filter(d => d['Animator Name'] === animator);
+                    const animatorRecepts = (currentListType === 'payment') ? [] : recepts.filter(d => d['Animator Name'] === animator);
+                    const animatorPayments = (currentListType === 'receipt') ? [] : payments.filter(d => d['Animator Name'] === animator);
                     
+                    // Skip animator if they have no data for the selected type
+                    if (currentListType === 'receipt' && animatorRecepts.length === 0) return;
+                    if (currentListType === 'payment' && animatorPayments.length === 0) return;
+                    if (currentListType === 'all' && animatorRecepts.length === 0 && animatorPayments.length === 0) return;
+                    
+                    dataFoundForAnimators = true;
                     const totalReceipts = animatorRecepts.reduce((sum, item) => sum + parseFloat(item['Total'] || 0), 0);
                     const totalPayments = animatorPayments.reduce((sum, item) => sum + parseFloat(item['Total'] || 0), 0);
                     const balance = totalReceipts - totalPayments;
                     
                     // Add animator summary
                     csvContent += `Animator: ${animator}\n`;
-                    csvContent += `Total Cash Received: ${totalReceipts.toFixed(2)}, Total Payments: ${totalPayments.toFixed(2)}, Balance: ${balance.toFixed(2)}\n\n`;
                     
-                    // Add Receipts table
-                    csvContent += "Receipts\n";
-                    const receptListHeaders = ['Group Name', 'Meeting Date', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'];
-                    csvContent += receptListHeaders.join(',') + "\n";
-                    animatorRecepts.forEach(item => {
-                        const row = receptListHeaders.map(h => {
-                            const value = item[h] || '';
-                            return `"${value}"`; // Encapsulate values in quotes to handle commas
-                        }).join(',');
-                        csvContent += row + "\n";
-                    });
-                    csvContent += "\n";
+                    if (currentListType === 'all') {
+                        csvContent += `Total Cash Received: ${totalReceipts.toFixed(2)}, Total Payments: ${totalPayments.toFixed(2)}, Balance: ${balance.toFixed(2)}\n\n`;
+                    } else if (currentListType === 'receipt') {
+                        csvContent += `Total Cash Received: ${totalReceipts.toFixed(2)}\n\n`;
+                    } else if (currentListType === 'payment') {
+                        csvContent += `Total Payments: ${totalPayments.toFixed(2)}\n\n`;
+                    }
+                    
+                    // Add Receipts table (Conditional)
+                    if (currentListType !== 'payment' && animatorRecepts.length > 0) {
+                        csvContent += "Receipts\n";
+                        const receptListHeaders = ['Group Name', 'Meeting Date', 'Saving', 'Interest', 'Principal', 'Lpf', 'Msc', 'SS', 'Received from others', 'Total'];
+                        csvContent += receptListHeaders.join(',') + "\n";
+                        animatorRecepts.forEach(item => {
+                            const row = receptListHeaders.map(h => {
+                                const value = item[h] || '';
+                                return `"${value}"`; // Encapsulate values in quotes to handle commas
+                            }).join(',');
+                            csvContent += row + "\n";
+                        });
+                        csvContent += "\n";
+                    }
 
-                    // Add Payments table
-                    csvContent += "Payments\n";
-                    const paymentListHeaders = ['Group Name', 'Meeting Date', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total'];
-                    csvContent += paymentListHeaders.join(',') + "\n";
-                    animatorPayments.forEach(item => {
-                        const row = paymentListHeaders.map(h => {
-                            const value = item[h] || '';
-                            return `"${value}"`; // Encapsulate values in quotes to handle commas
-                        }).join(',');
-                        csvContent += row + "\n";
-                    });
-                    csvContent += "\n\n";
+                    // Add Payments table (Conditional)
+                    if (currentListType !== 'receipt' && animatorPayments.length > 0) {
+                        csvContent += "Payments\n";
+                        const paymentListHeaders = ['Group Name', 'Meeting Date', 'Loan Disbursed', 'Paid to Other Staff', 'Bank Deposite Amount (LPF)', 'Bank Deposite Amount (Group A/c)', 'Other Expanse', 'Saving Return', 'Incentive', 'Advance', 'Total'];
+                        csvContent += paymentListHeaders.join(',') + "\n";
+                        animatorPayments.forEach(item => {
+                            const row = paymentListHeaders.map(h => {
+                                const value = item[h] || '';
+                                return `"${value}"`; // Encapsulate values in quotes to handle commas
+                            }).join(',');
+                            csvContent += row + "\n";
+                        });
+                        csvContent += "\n\n";
+                    }
                 });
+
+                if (!dataFoundForAnimators) {
+                     csvContent += "No data found for the selected filters.\n";
+                }
                 return csvContent;
             }
             
@@ -882,7 +995,41 @@
             underSelect.addEventListener('change', filterTransactions);
             resetButton.addEventListener('click', resetFilters);
             generateFinalDataButton.addEventListener('click', generateFinalData);
-            generateListButton.addEventListener('click', generateDetailedList); // New event listener for the LIST button
+            
+            // New List Dropdown Listeners
+            listDropdownButton.addEventListener('click', () => {
+                listDropdownMenu.classList.toggle('hidden');
+            });
+
+            // Hide dropdown if clicking outside
+            document.addEventListener('click', (e) => {
+                if (!listDropdownButton.contains(e.target) && !listDropdownMenu.contains(e.target)) {
+                    listDropdownMenu.classList.add('hidden');
+                }
+            });
+
+            listAllButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentListType = 'all';
+                generateDetailedList();
+                listDropdownMenu.classList.add('hidden');
+            });
+
+            listReceiptButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentListType = 'receipt';
+                generateDetailedList();
+                listDropdownMenu.classList.add('hidden');
+            });
+
+            listPaymentButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentListType = 'payment';
+                generateDetailedList();
+                listDropdownMenu.classList.add('hidden');
+            });
+
+            // Modal Listeners
             closeModalButton.addEventListener('click', hideModal);
             finalDataModal.addEventListener('click', (e) => {
                 if (e.target.id === 'finalDataModal') {
